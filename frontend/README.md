@@ -7,10 +7,15 @@ The frontend for the product mvp.
 
 -  Clone this repo to your local machine using   
 ```
-git clone https://github.com/bengarcia0407/products-prototype-front.git
+git clone https://github.com/freeworldcertified/fwc.git
 ```
 
 ### Required to install
+
+- Go to frontend folder
+```
+cd front end
+```
 
 - Project requirements:
 ```
