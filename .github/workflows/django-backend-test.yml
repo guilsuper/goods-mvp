@@ -36,15 +36,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Setup .env for testing
+    - name: "Setup .env for testing"
       run: |
         echo '# Testing environment variables' > .env
-	echo '' >> .env
-	echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
-	echo 'DEBUG="True" >> .env
-	echo 'FRONTEND_HOST="http://localhost"' >> .env
-	echo 'EMAIL_PASSWORD="TESTING_PASSWORD"' >> .env
-	echo 'EMAIL_USER="TESTING_USERNAME"' >> .env
+        echo '' >> .env
+        echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
+        echo 'DEBUG="True" >> .env
+        echo 'FRONTEND_HOST="http://localhost"' >> .env
+        echo 'EMAIL_PASSWORD="TESTING_PASSWORD"' >> .env
+        echo 'EMAIL_USER="TESTING_USERNAME"' >> .env
 
     - name: Run Tests
       run: |
