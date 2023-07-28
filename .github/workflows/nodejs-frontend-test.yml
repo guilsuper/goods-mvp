@@ -1,4 +1,4 @@
-name: Django Backend Test
+name: Node.js Frontend Test
 
 on:
   push:
