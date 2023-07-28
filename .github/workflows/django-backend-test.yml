@@ -1,0 +1,36 @@
+name: Django Backend Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # allow workflow to be triggered manually
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+    strategy:
+      max-parallel: 1
+      matrix:
+        python-version: [3.10]
+# uncomment when @guilsuper's changes go in
+#    defaults:
+#      run:
+#        working-directory: ./backend
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      run: |
+        python manage.py test
