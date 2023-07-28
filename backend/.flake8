@@ -1,0 +1,18 @@
+[flake8]
+max-line-length=79
+exclude=
+        .git,
+        __pycache__,
+        .tox,
+        .eggs,
+        *.egg,
+        venv,
+        pip-download-cache,
+
+ignore=
+        W503,
+        F811
+
+docstring-convention=google
+inline-quotes="
+import-order-style=cryptography
