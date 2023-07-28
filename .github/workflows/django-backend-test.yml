@@ -17,10 +17,10 @@ jobs:
       max-parallel: 1
       matrix:
         python-version: ["3.11"]
-# uncomment when @guilsuper's changes go in
-#    defaults:
-#      run:
-#        working-directory: ./backend
+
+    defaults:
+      run:
+        working-directory: ./backend
 
     steps:
     - name: Checkout
