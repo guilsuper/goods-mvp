@@ -11,7 +11,7 @@ const ActivatePage = () => {
 
     useEffect(() => {
         activate()
-    }, [])
+    })
 
     const activate = async () => {
         let response = await fetch("/api/activate/" + uidb64 + "/" + token)
