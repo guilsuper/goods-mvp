@@ -38,8 +38,6 @@ jobs:
 
     - name: "Setup .env for testing"
       run: |
-        echo '# Testing environment variables' > .env
-        echo '' >> .env
         echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
         echo 'DEBUG="True" >> .env
         echo 'FRONTEND_HOST="http://localhost"' >> .env
