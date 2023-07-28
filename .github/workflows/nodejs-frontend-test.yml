@@ -1,0 +1,45 @@
+name: Django Backend Test
+
+on:
+  push:
+    branches: [ "main", "bakerkj/github-actions-experimentation-3" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # allow workflow to be triggered manually
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+    strategy:
+      max-parallel: 1
+      matrix:
+	node-version: ["14.x"]
+
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+	  
+    - name: Install
+      run: |
+        npm clean-install
+
+    - name: Build
+      run: |
+        npm run build --if-present
+
+    - name: Run Tests
+      run: |
+        npm test
