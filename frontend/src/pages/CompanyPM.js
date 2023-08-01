@@ -40,7 +40,7 @@ const CompanyPM = () => {
       setPM(data)
     }
     getPMs()
-  }, [])
+  }, [authTokens, navigate])
 
   return (
     <Container>

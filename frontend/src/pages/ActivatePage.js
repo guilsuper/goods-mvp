@@ -28,7 +28,7 @@ const ActivatePage = () => {
       }
     }
     activate()
-  }, [])
+  }, [navigate, token, uidb64])
 
   return (
     <Container>

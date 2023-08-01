@@ -49,7 +49,7 @@ const EditProductForm = () => {
       }
     }
     getProductInfo()
-  }, [])
+  }, [authTokens, navigate, product_sku])
 
   const submitHandler = async (event) => {
     event.preventDefault()

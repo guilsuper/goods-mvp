@@ -46,7 +46,7 @@ const EditPMForm = () => {
       }
     }
     getPMInfo()
-  }, [])
+  }, [authTokens, navigate, pm_username])
 
   const submitHandler = async (event) => {
     event.preventDefault()

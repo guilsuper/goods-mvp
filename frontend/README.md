@@ -14,7 +14,7 @@ git clone https://github.com/freeworldcertified/fwc.git
 
 - Go to frontend folder
 ```
-cd front end
+cd frontend
 ```
 
 - Project requirements:

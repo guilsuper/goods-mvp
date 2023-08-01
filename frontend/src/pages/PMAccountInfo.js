@@ -41,7 +41,7 @@ const PMAccountInfo = () => {
       }
     }
     getPMInfo()
-  }, [])
+  }, [authTokens, navigate, pm_username])
 
   const isAllowedToChange = (user) => {
     if (user.group === "PM") {

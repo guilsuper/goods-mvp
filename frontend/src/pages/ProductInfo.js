@@ -42,7 +42,7 @@ const ProductInfo = () => {
       }
     }
     getProductInfo()
-  }, [])
+  }, [navigate, product_sku])
 
   const isAllowedToChange = (user) => {
     if (user.boss){

@@ -27,7 +27,7 @@ const CompanyProducts = () => {
       setProducts(data)
     }
     getProducts()
-  }, [])
+  }, [user])
 
   return (
     <Container>
