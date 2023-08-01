@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     "django_filters",
     "phonenumber_field",
     "rest_framework_simplejwt",
-    "rest_framework_simplejwt.token_blacklist"
+    "rest_framework_simplejwt.token_blacklist",
+    "django_countries",
 ]
 
 MIDDLEWARE = [
