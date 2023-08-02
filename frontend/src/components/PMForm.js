@@ -12,8 +12,9 @@ const PMForm = () => {
   let navigate = useNavigate()
 
   const submitHandler = async (event) => {
-
-      let data = {}
+    event.preventDefault()
+    event.persist()
+    let data = {}
 
       Object.keys(event.target).forEach(function(attr){
         if (!isNaN(attr)){
