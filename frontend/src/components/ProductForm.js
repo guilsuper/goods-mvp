@@ -15,6 +15,8 @@ const ProductForm = () => {
   let navigate = useNavigate()
 
   const submitHandler = async (event) => {
+    event.preventDefault()
+    event.persist()
 
     let data = {}
 
