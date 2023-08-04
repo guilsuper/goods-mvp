@@ -10,6 +10,23 @@ from django_countries.fields import CountryField
 from phonenumber_field.modelfields import PhoneNumberField
 
 
+class PRODUCT_TYPES(models.TextChoices):
+    """Allowed coices for product types."""
+
+    convenience_goods = "Convenience Goods"
+    raw_materials = "Raw Materials"
+    component_parts = "Component Parts"
+    software = "Software"
+    hardware = "Hardware"
+    consumer_electronics = "Consumer Electronics"
+    cookware = "Cookware"
+    appliances = "Appliances"
+    homegoods = "Homegoods"
+    clothing = "Clothing"
+    jewelry = "Jewelry"
+    art = "Art"
+
+
 class CustomUserManager(BaseUserManager):
     """Administrator model manager."""
 
@@ -69,22 +86,6 @@ class Administrator(AbstractUser):
 class Product(models.Model):
     """Product model."""
 
-    class PRODUCT_TYPES(models.TextChoices):
-        """Allowed coices for product types."""
-
-        convenience_goods = "Convenience Goods"
-        raw_materials = "Raw Materials"
-        component_parts = "Component Parts"
-        software = "Software"
-        hardware = "Hardware"
-        consumer_electronics = "Consumer Electronics"
-        cookware = "Cookware"
-        appliances = "Appliances"
-        homegoods = "Homegoods"
-        clothing = "Clothing"
-        jewelry = "Jewelry"
-        art = "Art"
-
     sku_id = models.IntegerField(unique=True)
     public_facing_id = models.IntegerField()
     public_facing_name = models.CharField(max_length=500)
@@ -110,22 +111,6 @@ class Product(models.Model):
 
 class SubComponent(models.Model):
     """Product model."""
-
-    class PRODUCT_TYPES(models.TextChoices):
-        """Allowed coices for product types."""
-
-        convenience_goods = "Convenience Goods"
-        raw_materials = "Raw Materials"
-        component_parts = "Component Parts"
-        software = "Software"
-        hardware = "Hardware"
-        consumer_electronics = "Consumer Electronics"
-        cookware = "Cookware"
-        appliances = "Appliances"
-        homegoods = "Homegoods"
-        clothing = "Clothing"
-        jewelry = "Jewelry"
-        art = "Art"
 
     sub_sku_id = models.IntegerField()
     sub_public_facing_name = models.CharField(max_length=500, null=True)

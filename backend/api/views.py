@@ -109,7 +109,7 @@ class ActivationView(RetrieveAPIView):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             admin = Administrator.objects.get(id=uid)
-        except(
+        except (
             TypeError, ValueError,
             OverflowError, Administrator.DoesNotExist
         ):
