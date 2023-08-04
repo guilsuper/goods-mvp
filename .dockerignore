@@ -5,7 +5,7 @@
 *.css.map
 *.egg-info
 *.sql.gz
-products-prototype-backend/db.sqlite3
+db.sqlite3
 .cache
 .project
 .idea
@@ -29,7 +29,7 @@ stats
 
 */Dockerfile
 */.dockerignore
-products-prototype-backend/venv
+venv
 
-products-prototype-front/build
-products-prototype-front/node_modules
+build
+node_modules
