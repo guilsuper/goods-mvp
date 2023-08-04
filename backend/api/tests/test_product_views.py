@@ -188,3 +188,50 @@ class TestProductViews(TestCase):
             Product.objects.get(sku_id=self.product2.sku_id).sctr_cogs,
             self.product2.sctr_cogs
         )
+
+    def test_product_patch_pm(self):
+        """Tests product patch url as a PM."""
+        # Try to patch as a PM with empty data
+        response = self.client.patch(
+            reverse(
+                "product-patch-delete-retrieve",
+                kwargs={"sku_id": self.product.sku_id}
+            ),
+            **self.credentials_pm
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+        # Try to patch as a PM with data
+        response = self.client.patch(
+            reverse(
+                "product-patch-delete-retrieve",
+                kwargs={"sku_id": self.product.sku_id}
+            ),
+            data={"sctr_cogs": "30"},
+            content_type="application/json",
+            **self.credentials_pm
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            Product.objects.get(sku_id=self.product.sku_id).sctr_cogs,
+            30
+        )
+
+        # Try to patch not the own product as a PM with data
+        response = self.client.patch(
+            reverse(
+                "product-patch-delete-retrieve",
+                kwargs={"sku_id": self.product2.sku_id}
+            ),
+            data={"sctr_cogs": "30"},
+            content_type="application/json",
+            **self.credentials_pm
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            Product.objects.get(sku_id=self.product2.sku_id).sctr_cogs,
+            self.product2.sctr_cogs
+        )
