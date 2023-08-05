@@ -5,7 +5,7 @@ The backend for the product mvp.
 
 ### Clone or Download
 
--  Clone this repo to your local machine using   
+-  Clone this repo to your local machine using
 ```
 git clone https://github.com/freeworldcertified/fwc.git
 ```
@@ -20,13 +20,14 @@ cd backend
 - Setup virtual environment inside your project folder
 ```
 python -m venv venv
+./venv/Scripts/activate
 ```
 
 ### Required to install
 
 - Project requirements:
 ```
-pip install -r /requirements.txt
+pip install -r ./requirements.txt
 ```
 
 ### Environment
