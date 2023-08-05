@@ -116,20 +116,14 @@ class PMSerializer(ModelSerializer):
     def create(self, validated_data):
         """Overwritten create method for PMSerializer."""
         validated_data["is_active"] = False
-        validated_data["boss"] = self.context["request"].user
 
-        validated_data["company_name"] = self.context[
-            "request"
-        ].user.company_name
-        validated_data["company_address"] = self.context[
-            "request"
-        ].user.company_address
-        validated_data["industry"] = self.context[
-            "request"
-        ].user.industry
-        validated_data["company_size"] = self.context[
-            "request"
-        ].user.company_size
+        boss = self.context["request"].user
+        validated_data["boss"] = boss
+
+        validated_data["company_name"] = boss.company_name
+        validated_data["company_address"] = boss.company_address
+        validated_data["industry"] = boss.industry
+        validated_data["company_size"] = boss.company_size
 
         return Administrator.objects.create_user(**validated_data, group="PM")
 
