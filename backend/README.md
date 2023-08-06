@@ -7,10 +7,15 @@ The backend for the product mvp.
 
 -  Clone this repo to your local machine using   
 ```
-git clone https://github.com/bengarcia0407/products-prototype-backend.git
+git clone https://github.com/freeworldcertified/fwc.git
 ```
 
 ### Create a virtual environment
+
+- Go to backend folder
+```
+cd backend
+```
 
 - Setup virtual environment inside your project folder
 ```
@@ -26,20 +31,20 @@ pip install -r /requirements.txt
 
 ### Environment
 
-- Add the environment variables file (.env) to the project folder (/"Your app folder"/).
+- Add the environment variables file (.env) to the project folder (/"~/fwc/backend"/).
 It must contain the following settings:
 ```
-SECRET_KEY="YOUR VALUE"
-DEBUG="YOUR VALUE"
-FRONTEND_HOST="YOUR VALUE"
-EMAIL_PASSWORD="YOUR VALUE"
-EMAIL_USER="YOUR VALUE"
+SECRET_KEY="+6vtkpuu+#39e@sfy00(-10+6bagg6q_x3ci-v-8f8%%d#9t&u"
+DEBUG=False
+FRONTEND_HOST="http://localhost:3000"
+
+EMAIL_PASSWORD='dwlpkjnuyzemrcrj'
+EMAIL_USER='dummy.dontuse@gmail.com'
 ```
 
 ### How to run locally
 
 - Start the terminal.
-- Go to the directory "Your way to the project"/"Your app folder"/
 - Run the following command
 ```
 python manage.py makemigrations
