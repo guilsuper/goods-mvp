@@ -6,7 +6,7 @@ This illustrates how to use PIL to generate QRcode images.
 
 '''
 
-from PIL import Image, ImageDraw, ImageFont #Save and display the image
+from PIL import Image, ImageDraw, ImageFont
 import qrcode
 
 def make(url, fname):
@@ -34,5 +34,5 @@ def make(url, fname):
            (img.size[1] - logo.size[1]) // 2)
     img.paste(logo, pos)
     img.save(fname)
-    
+
 make('https://freeworldcertified.org/', 'fwc-qrcode.png')
