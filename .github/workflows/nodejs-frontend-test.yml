@@ -2,7 +2,7 @@ name: Node.js Frontend Test
 
 on:
   push:
-    branches: [ "main", "bakerkj/github-actions-experimentation-3" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
