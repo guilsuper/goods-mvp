@@ -129,9 +129,9 @@ class TestProductViews(TestCase):
 
         self.assertEqual(current_product.owner, self.admin)
 
-    def test_product_patch_no_auth(self):
-        """Tests product patch url with no headers."""
-        # Try to patch as unauthorized user
+    def test_product_update_no_auth(self):
+        """Tests product update url with no headers."""
+        # Try to update a product as unauthorized user
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -142,9 +142,9 @@ class TestProductViews(TestCase):
 
         self.assertEqual(response.status_code, 401)
 
-    def test_product_patch_admin(self):
-        """Tests product patch url as administrator."""
-        # Try to patch as an admin with empty data
+    def test_product_update_admin(self):
+        """Tests product update url as administrator."""
+        # Try to update a product as an admin with empty data
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -155,7 +155,7 @@ class TestProductViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Try to patch as an admin with data
+        # Try to update a product as an admin with data
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -172,7 +172,7 @@ class TestProductViews(TestCase):
             30
         )
 
-        # Try to patch not the own product as an admin with data
+        # Try to update not the own product as an admin with data
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -189,9 +189,9 @@ class TestProductViews(TestCase):
             self.product2.sctr_cogs
         )
 
-    def test_product_patch_pm(self):
-        """Tests product patch url as a PM."""
-        # Try to patch as a PM with empty data
+    def test_product_update_pm(self):
+        """Tests product update url as a PM."""
+        # Try to update a product as a PM with empty data
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -202,7 +202,7 @@ class TestProductViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Try to patch as a PM with data
+        # Try to update a product as a PM with data
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -219,7 +219,7 @@ class TestProductViews(TestCase):
             30
         )
 
-        # Try to patch not the own product as a PM with data
+        # Try to update not the own product as a PM with data
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
