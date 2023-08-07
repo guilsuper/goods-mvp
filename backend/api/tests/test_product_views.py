@@ -77,7 +77,8 @@ class TestProductViews(TestCase):
 
     def test_product_create_admin(self):
         """Product-create url as administrator."""
-        # Try to create as an admin with empty data
+        # Try to create as an admin with no specified fields
+        # The product won't be created
         response = self.client.post(
             reverse("product-create"),
             **self.credentials_admin
@@ -86,7 +87,8 @@ class TestProductViews(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(len(Product.objects.all()), 2)
 
-        # Try to create as an admin with correct data
+        # Try to create as an admin with a correct specified fields
+        # The product will be created
         response = self.client.post(
             reverse("product-create"),
             data=self.product_dict,
@@ -104,7 +106,8 @@ class TestProductViews(TestCase):
 
     def test_product_create_pm(self):
         """Product-create url as PM."""
-        # Try to create as a pm with empty data
+        # Try to create as a pm with no specified fields
+        # The product won't be created
         response = self.client.post(
             reverse("product-create"),
             **self.credentials_pm
@@ -113,7 +116,8 @@ class TestProductViews(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(len(Product.objects.all()), 2)
 
-        # Try to create as a pm with correct data
+        # Try to create as a pm with a correct specified fields
+        # The product will be created
         response = self.client.post(
             reverse("product-create"),
             data=self.product_dict,
@@ -132,6 +136,7 @@ class TestProductViews(TestCase):
     def test_product_update_no_auth(self):
         """Tests product update url with no headers."""
         # Try to update a product as unauthorized user
+        # The user is not allowed to update it
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -144,7 +149,8 @@ class TestProductViews(TestCase):
 
     def test_product_update_admin(self):
         """Tests product update url as administrator."""
-        # Try to update a product as an admin with empty data
+        # Try to update a product as an admin with no specified fields
+        # The request will be successful, but without any changes
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -155,7 +161,8 @@ class TestProductViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Try to update a product as an admin with data
+        # Try to update a product as an admin with specified fields
+        # Changes will be applied
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -172,7 +179,8 @@ class TestProductViews(TestCase):
             30
         )
 
-        # Try to update not the own product as an admin with data
+        # Try to update not the own product as an admin with specified fields
+        # The admin is not allowed to update it
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -191,7 +199,8 @@ class TestProductViews(TestCase):
 
     def test_product_update_pm(self):
         """Tests product update url as a PM."""
-        # Try to update a product as a PM with empty data
+        # Try to update a product as a PM with no specified fields
+        # The request will be successful, but without any changes
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -202,7 +211,8 @@ class TestProductViews(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        # Try to update a product as a PM with data
+        # Try to update a product as a PM with specified fields
+        # Changes will be applied
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
@@ -219,7 +229,8 @@ class TestProductViews(TestCase):
             30
         )
 
-        # Try to update not the own product as a PM with data
+        # Try to update not the own product as a PM with specified fields
+        # The PM is not allowed to update it
         response = self.client.patch(
             reverse(
                 "product-patch-delete-retrieve",
