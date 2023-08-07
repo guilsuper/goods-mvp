@@ -4,7 +4,10 @@ repos:
     - id: flake8
       name: flake8
       entry: flake8 --config=.flake8
-      exclude: migrations
+
+      # Flake doesn't ignore these folders by itself
+      exclude: "(migrations|frontend|templates)/.*"
+
       language: python
       additional_dependencies: [
         flake8-docstrings,

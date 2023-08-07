@@ -1,7 +1,7 @@
 """Module contains database tables as models."""
 
 from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser, Group
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -30,15 +30,12 @@ class PRODUCT_TYPES(models.TextChoices):
 class CustomUserManager(BaseUserManager):
     """Administrator model manager."""
 
-    def create_user(self, password, group, **extra_fields):
+    def create_user(self, password, **extra_fields):
         """Overwritten create_user for password encoding."""
         user = self.model(**extra_fields)
 
         user.set_password(password)
         user.save()
-
-        group, _ = Group.objects.get_or_create(name=group)
-        group.user_set.add(user)
 
         return user
 
@@ -47,7 +44,7 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_staff", True)
 
-        return self.create_user(password, "Stuff", **extra_fields)
+        return self.create_user(password, **extra_fields)
 
 
 class Administrator(AbstractUser):

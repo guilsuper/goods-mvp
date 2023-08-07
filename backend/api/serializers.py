@@ -2,6 +2,8 @@
 
 from api.models import Administrator, Product
 
+from django.contrib.auth.models import Group
+
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
@@ -55,10 +57,14 @@ class AdministratorSerializer(ModelSerializer):
         """Overwritten create method for AdministratorSerializer."""
         validated_data["is_active"] = False
 
-        return Administrator.objects.create_user(
+        admin = Administrator.objects.create_user(
             **validated_data,
-            group="Administrator"
         )
+        # Add admin to group
+        group, _ = Group.objects.get_or_create(name="Administrator")
+        group.user_set.add(admin)
+
+        return admin
 
     def update(self, instance, validated_data):
         """Overwritten update method for AdministratorSerializer."""
@@ -125,7 +131,12 @@ class PMSerializer(ModelSerializer):
         validated_data["industry"] = boss.industry
         validated_data["company_size"] = boss.company_size
 
-        return Administrator.objects.create_user(**validated_data, group="PM")
+        # Add pm to group
+        pm = Administrator.objects.create_user(**validated_data)
+        group, _ = Group.objects.get_or_create(name="PM")
+        group.user_set.add(pm)
+
+        return pm
 
     def update(self, instance, validated_data):
         """Overwritten update method for PMSerializer."""

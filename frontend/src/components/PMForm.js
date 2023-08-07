@@ -16,57 +16,57 @@ const PMForm = () => {
     event.persist()
     let data = {}
 
-      Object.keys(event.target).forEach(function(attr){
-        if (!isNaN(attr)){
-          if (event.target[attr].style){
-              // Clear bg color
-              event.target[attr].style = ""
-          }
-          if (event.target[attr].value !== ""){
-              // Add key and value pair to data from form field
-              data[event.target[attr].id] = event.target[attr].value
-          }
+    Object.keys(event.target).forEach(function(attr){
+      if (!isNaN(attr)){
+        if (event.target[attr].style){
+          // Clear bg color
+          event.target[attr].style = ""
         }
-      })
-
-      // Config for POST request
-      const config = {
-        method: "POST",
-        headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + authTokens.access
-        },
-        body: JSON.stringify(data)
-      }
-
-      let response = ""
-      try {
-          response = await fetch("/api/pm/create/", config)
-      }
-      catch (error) {
-          alert("Server is not working")
-          return
-      }
-
-      const result = await response.json()
-
-      if (response.status === 201) {
-        alert("Successfully created")
-        navigate("/account/pm")
-      }
-      else if (response.status === 400) {
-        let message = "Invalid input data:"
-        for (const invalid_element in result){
-          event.target[invalid_element].style = "border-color: red"
-  
-          message += "\n" + invalid_element + ": " + result[invalid_element]
+        if (event.target[attr].value !== ""){
+          // Add key and value pair to data from form field
+          data[event.target[attr].id] = event.target[attr].value
         }
-        alert(message)
       }
-      else {
-        alert("Not authenticated or permission denied")
+    })
+
+    // Config for POST request
+    const config = {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + authTokens.access
+      },
+      body: JSON.stringify(data)
+    }
+
+    let response = ""
+    try {
+      response = await fetch("/api/pm/create/", config)
+    }
+    catch (error) {
+      alert("Server is not working")
+      return
+    }
+
+    const result = await response.json()
+
+    if (response.status === 201) {
+      alert("Successfully created")
+      navigate("/account/pm")
+    }
+    else if (response.status === 400) {
+      let message = "Invalid input data:"
+      for (const invalid_element in result){
+        event.target[invalid_element].style = "border-color: red"
+
+        message += "\n" + invalid_element + ": " + result[invalid_element]
       }
+      alert(message)
+    }
+    else {
+      alert("Not authenticated or permission denied")
+    }
   }
 
   return (

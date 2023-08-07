@@ -1,6 +1,10 @@
 FROM python:3
+
+# PYTHONDONTWRITEBYTECODE optimizes the python execution.
+# PYTHONUNBUFFERED to see the Django logs in the console.
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+
 WORKDIR /backend
 COPY ./requirements.txt /backend/
 COPY . /backend/

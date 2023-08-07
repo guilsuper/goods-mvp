@@ -2,6 +2,9 @@
 max-line-length=79
 exclude=
         .git,
+        .gitignore,
+        .dockerignore,
+        requirements.txt,
         __pycache__,
         .tox,
         .eggs,
@@ -9,6 +12,10 @@ exclude=
         venv,
         pip-download-cache,
         migrations,
+        Dockerfile,
+        docker-entrypoint.sh,
+        docker-compose.yaml,
+        frontend,
         *.md,
         .flake8,
         .pre-commit-config.yaml

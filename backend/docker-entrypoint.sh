@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # Apply database migrations
 python manage.py makemigrations
