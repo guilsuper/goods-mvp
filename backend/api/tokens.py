@@ -1,9 +1,7 @@
 """Utils for creating a token."""
-from api.models import Administrator
-
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-
 import six
+from api.models import Administrator
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class TokenGenerator(PasswordResetTokenGenerator):

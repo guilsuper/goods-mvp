@@ -1,25 +1,18 @@
 """API urls module."""
-
-from api.views import (
-    ActivationView,
-    CreateAdministratorView,
-    PMCreateView,
-    PMListView,
-    PMRetrieveUpdateDestroyView,
-    ProductCreateView,
-    ProductListView,
-    ProductRetrieveUpdateDestroyView,
-    SelfRetrieveUpdateDestroyView,
-    Smoke
-)
-
+from api.views import ActivationView
+from api.views import CreateAdministratorView
+from api.views import PMCreateView
+from api.views import PMListView
+from api.views import PMRetrieveUpdateDestroyView
+from api.views import ProductCreateView
+from api.views import ProductListView
+from api.views import ProductRetrieveUpdateDestroyView
+from api.views import SelfRetrieveUpdateDestroyView
+from api.views import Smoke
 from django.urls import path
-
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView
-)
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenVerifyView
 
 
 urlpatterns = [

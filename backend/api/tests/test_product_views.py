@@ -4,15 +4,12 @@ product-create, product-get
 product-patch-delete-retrieve
 """
 from api.models import Product
-from api.tests.factories.Factories import (
-    AdministratorFactory,
-    GroupFactory,
-    ProductFactory
-)
-
-from django.test import Client, TestCase
+from api.tests.factories.Factories import AdministratorFactory
+from api.tests.factories.Factories import GroupFactory
+from api.tests.factories.Factories import ProductFactory
+from django.test import Client
+from django.test import TestCase
 from django.urls import reverse
-
 from rest_framework_simplejwt.tokens import AccessToken
 
 
