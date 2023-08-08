@@ -1,15 +1,17 @@
 #!/bin/env python3
 
-'''Copyright 2023 Free World Certified - all rights reserved.
+"""Copyright 2023 Free World Certified - all rights reserved.
 
 This illustrates how to use PIL to generate QRcode images.
+"""
 
-'''
+from PIL import Image
 
-from PIL import Image, ImageDraw, ImageFont
 import qrcode
 
+
 def make(url, fname):
+    """Make a QR code containing url in file fname."""
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_H,  # the most
@@ -21,18 +23,19 @@ def make(url, fname):
 
     img = qr.make_image(fill_color="darkblue", back_color="white")
 
-    logo = Image.open('FreeWorldCertified-logo.png')
- 
+    logo = Image.open("FreeWorldCertified-logo.png")
+
     # taking base width
     basewidth = 100
- 
+
     # adjust image size
-    wpercent = (basewidth/float(logo.size[0]))
-    hsize = int((float(logo.size[1])*float(wpercent)))
-    logo = logo.resize((basewidth, hsize), resample=Image.BICUBIC) #Image.ANTIALIAS)
+    wpercent = (basewidth / float(logo.size[0]))
+    hsize = int((float(logo.size[1]) * float(wpercent)))
+    logo = logo.resize((basewidth, hsize), resample=Image.BICUBIC)  # Image.ANTIALIAS)
     pos = ((img.size[0] - logo.size[0]) // 2,
            (img.size[1] - logo.size[1]) // 2)
     img.paste(logo, pos)
     img.save(fname)
 
-make('https://freeworldcertified.org/', 'fwc-qrcode.png')
+
+make("https://freeworldcertified.org/", "fwc-qrcode.png")
