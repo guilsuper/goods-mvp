@@ -28,7 +28,7 @@ const EditProductForm = () => {
           "Authorization": "Bearer " + authTokens.access
         },
       }
-  
+
       let response = ""
       try {
         response = await fetch("/api/product/patch_delete_retrieve/" + product_sku + "/" , config)
@@ -37,9 +37,9 @@ const EditProductForm = () => {
         alert("Server is not working")
         return
       }
-  
+
       const result = await response.json()
-  
+
       if (response.status !== 200) {
         alert("Action not allowed")
         navigate("/")
@@ -144,7 +144,7 @@ const EditProductForm = () => {
           <Form.Label>SCTR COGS</Form.Label>
           <Form.Control type="text" placeholder={product.sctr_cogs} />
         </Form.Group>
-        
+
         <Form.Group className="mb-3" controlId="product_input_manufacturer">
           <Form.Label>Product input manufacturer</Form.Label>
           <Form.Control type="text" placeholder={product.product_input_manufacturer} />

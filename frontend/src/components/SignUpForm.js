@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const SignUpForm = () => {
-  
+
   let navigate = useNavigate()
 
   const submitHandler = async (event) => {
