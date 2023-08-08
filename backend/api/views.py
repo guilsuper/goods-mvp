@@ -10,6 +10,7 @@ from api.permissions import (
 from api.serializers import (
     AdministratorRetrieveSerializer,
     AdministratorSerializer,
+    CompanySerializer,
     PMRetrieveSerializer,
     PMSerializer,
     ProductCreateSerializer,
@@ -28,11 +29,13 @@ from rest_framework.generics import (
     ListAPIView, RetrieveAPIView,
     RetrieveUpdateDestroyAPIView
 )
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly
 )
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 
 class Smoke(ListAPIView):
@@ -62,7 +65,7 @@ class ProductListView(ListAPIView):
 class ProductRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """View has patch, get and delete methods for product model."""
 
-    permission_classes = [IsAuthenticatedOrReadOnly, IsProductOwner | ReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsProductOwner]
     queryset = Product.objects.all()
     lookup_field = "sku_id"
 
@@ -74,20 +77,68 @@ class ProductRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             return ProductCreateSerializer
 
 
+class CreateAdministratorAndCompanyView(APIView):
+    """Administrator and company initial creation."""
+
+    # To accept multipart/form-data in case we use file field
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, *args, **kwargs):
+        """Overwritten post method for Administrator creation."""
+        data = request.data
+        admin = AdministratorSerializer(data=data)
+        company = CompanySerializer(data=data)
+
+        if admin.is_valid() and company.is_valid():
+            admin = admin.save()
+
+            if send_activation_email(
+                admin.id,
+            ):
+                company = company.save()
+
+                # set company and save model instance
+                admin.company = company
+
+                # add initial user to PM group
+                # it is a client's requirement
+                admin.add_group("PM")
+                admin.save()
+
+                return Response(
+                    data=data,
+                    status=status.HTTP_201_CREATED
+                )
+            else:
+                admin.delete()
+
+        # You need to call is_valid before accessing the errors attribute
+        # admin.is_valid() is called every time
+        # but if admin.is_valid() is false, company.is_valid() wasn't called
+        company.is_valid()
+
+        errors = {**admin.errors, **company.errors}
+
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CreateAdministratorView(CreateAPIView):
     """Administrator creation."""
 
     serializer_class = AdministratorSerializer
+    permission_classes = [IsAuthenticated, IsAdministrator]
 
     def post(self, request, *args, **kwargs):
         """Overwritten post method for Administrator creation."""
-        serializer = self.get_serializer(data=request.data)
+        admin = self.get_serializer(data=request.data)
 
-        if serializer.is_valid():
-            admin = serializer.save()
+        if admin.is_valid():
+            admin = admin.save()
             if send_activation_email(
                 admin.id,
             ):
+                admin.company = request.user.company
+
                 return Response(
                     data=request.data,
                     status=status.HTTP_201_CREATED
@@ -95,7 +146,7 @@ class CreateAdministratorView(CreateAPIView):
             else:
                 admin.delete()
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(admin.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ActivationView(RetrieveAPIView):
@@ -155,15 +206,10 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
     def get(self, request):
         """Returns serialized request.user."""
-        group = "PM" if request.user.groups.filter(
-            name="PM"
-        ).exists() else "Administrator"
-
         self.serializer_class = self.get_serializer_class()
         return Response(
             {
                 **self.serializer_class(request.user).data,
-                **{"group": group}
             }
         )
 
@@ -201,6 +247,8 @@ class PMCreateView(CreateAPIView):
             if send_activation_email(
                 pm.id,
             ):
+                pm.company = request.user.company
+
                 return Response(
                     data=request.data,
                     status=status.HTTP_201_CREATED
@@ -217,7 +265,7 @@ class PMRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     serializer_class = PMRetrieveSerializer
     permission_classes = [IsAuthenticated, IsAdministrator, IsBoss]
     queryset = Administrator.objects.filter(groups__name="PM")
-    lookup_field = "username"
+    lookup_field = "email"
 
     def get_serializer_class(self):
         """Get serializer depending on the request method."""
@@ -237,5 +285,5 @@ class PMListView(ListAPIView):
         """Filter the PMs."""
         return Administrator.objects.filter(
             groups__name="PM",
-            boss=self.request.user
+            company=self.request.user.company
         )

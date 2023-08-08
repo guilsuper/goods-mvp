@@ -21,9 +21,9 @@ class IsBoss(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         """If Administrator is a PM's boss."""
-        if not obj.boss:
+        if not request.user.groups.filter(name="Administrator").exists():
             return False
-        return obj.boss == request.user
+        return obj.company == request.user.company
 
 
 class IsProductOwner(permissions.BasePermission):
@@ -34,11 +34,7 @@ class IsProductOwner(permissions.BasePermission):
 
         Or a PM, which boss is administrator of product.
         """
-        if request.user.groups.filter(name="Administrator").exists():
-            return obj.owner == request.user
-        elif request.user.groups.filter(name="PM").exists():
-            return obj.owner == request.user.boss
-        return False
+        return obj.company == request.user.company
 
 
 class IsAccountOwner(permissions.BasePermission):

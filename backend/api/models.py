@@ -1,7 +1,7 @@
 """Module contains database tables as models."""
 
 from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -25,6 +25,37 @@ class PRODUCT_TYPES(models.TextChoices):
     clothing = "Clothing"
     jewelry = "Jewelry"
     art = "Art"
+
+
+class Company(models.Model):
+    """Company model."""
+
+    company_website = models.URLField(max_length=200, unique=True)
+    company_name = models.CharField(max_length=200)
+
+    company_jurisdiction = models.CharField(
+        max_length=400,
+        null=True
+    )
+    company_headquarters_physical_address = models.CharField(
+        max_length=400,
+        null=True
+    )
+
+    # This field is needed for future
+    company_unique_identifier = models.FileField(
+        upload_to="company_identifiers/%Y/%m",
+        null=True
+    )
+
+    industry = models.CharField(max_length=50, null=True)
+    company_size = models.IntegerField(
+        validators=[
+            MinValueValidator(1)
+        ],
+        null=True
+    )
+    company_phonenumber = PhoneNumberField(null=True)
 
 
 class CustomUserManager(BaseUserManager):
@@ -51,22 +82,21 @@ class Administrator(AbstractUser):
     """Main user class."""
 
     email = models.EmailField(max_length=250, unique=True)
-    phonenumber = PhoneNumberField(null=True)
+    phonenumber = PhoneNumberField(null=True, blank=True)
 
-    company_name = models.CharField(max_length=200, null=True)
-    company_address = models.TextField(max_length=1000, null=True)
-    industry = models.CharField(max_length=50, null=True)
-    company_size = models.IntegerField(
-        validators=[
-            MinValueValidator(1)
-        ],
-        null=True
-    )
+    first_name = models.CharField(max_length=150, null=True, blank=True)
+    last_name = models.CharField(max_length=150, null=True, blank=True)
 
-    first_name = models.CharField(max_length=150)
-    last_name = models.CharField(max_length=150)
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True)
 
-    boss = models.ForeignKey("self", on_delete=models.SET_NULL, null=True)
+    objects = CustomUserManager()
+
+    REQUIRED_FIELDS = []
+
+    # Override (delete) username default field from django.
+    username = None
+    # Use email as a username (need for authentication)
+    USERNAME_FIELD = "email"
 
     objects = CustomUserManager()
 
@@ -78,6 +108,11 @@ class Administrator(AbstractUser):
     def __str__(self):
         """Str magic method for Administrator model."""
         return self.username
+
+    def add_group(self, group):
+        """Add user to the group."""
+        group, _ = Group.objects.get_or_create(name=group)
+        group.user_set.add(self)
 
 
 class Product(models.Model):
@@ -103,7 +138,7 @@ class Product(models.Model):
         choices=PRODUCT_TYPES.choices
     )
 
-    owner = models.ForeignKey(Administrator, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
 class SubComponent(models.Model):

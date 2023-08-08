@@ -1,46 +1,49 @@
-import React from "react";
-import Button from "react-bootstrap/Button";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import FormContainer from "../utils/FormContainer";
 import { useNavigate } from "react-router-dom";
+import SignUp from "./SignUpSteps/SignUp";
 
 
 const SignUpForm = () => {
   
   let navigate = useNavigate()
 
+  let [ state, setState ] = useState({
+    step: 1,
+
+    // Company administrator email
+    email: "",
+    password: "",
+    company_website: "",
+    company_name: "",
+
+    company_jurisdiction: "",
+    company_headquarters_physical_address: "",
+
+    industry: "",
+    company_size: "",
+    company_phonenumber: "",
+  })
+
   const submitHandler = async (event) => {
     event.preventDefault()
     event.persist()
 
-    let data = {}
+    const formData = new FormData();
 
-    // set data value from the form
-    Object.keys(event.target).forEach(function(attr){
-      if (!isNaN(attr)){
-        if (event.target[attr].style){
-            // Clear bg color
-            event.target[attr].style = ""
-        }
-        if (event.target[attr].value !== ""){
-            // Add key and value pair to data from form field
-            data[event.target[attr].id] = event.target[attr].value
-        }
-      }
-    })
+    // Add the text data from the state to the FormData
+    for (const [key, value] of Object.entries(state)) {
+      formData.append(key, value);
+    }
 
     const config = {
       method: "POST",
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data)
+      body: formData,
     }
 
     let response = ""
     try {
-      response = await fetch("/api/admin/create/", config)
+      response = await fetch("/api/admin_and_company/create/", config)
     }
     catch (error) {
       alert("Server is not working")
@@ -56,8 +59,6 @@ const SignUpForm = () => {
     else if (response.status === 400) {
       let message = "Invalid input data:"
       for (const invalid_element in result){
-        event.target[invalid_element].style = "border-color: red"
-
         message += "\n" + invalid_element + ": " + result[invalid_element]
       }
       alert(message)
@@ -66,66 +67,29 @@ const SignUpForm = () => {
       alert("Not authenticated or permission denied")
     }
   }
+  // proceed to the next step
+  const nextStep = () => {
+    setState(prevState => ({
+      ...prevState,
+      step: prevState.step + 1
+    }))
+  }
 
-  return (
-    <FormContainer>
-      <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="username">
-          <Form.Label>Username</Form.Label>
-          <Form.Control type="text" placeholder="Enter username" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Enter password" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_name">
-          <Form.Label>Company name</Form.Label>
-          <Form.Control type="text" placeholder="Enter company name" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_address">
-          <Form.Label>Company address</Form.Label>
-          <Form.Control type="text" placeholder="Enter company address" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="industry">
-          <Form.Label>Industry</Form.Label>
-          <Form.Control type="text" placeholder="Enter an industry" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_size">
-          <Form.Label>Company size</Form.Label>
-          <Form.Control type="text" placeholder="Enter company size" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="first_name">
-          <Form.Label>First name</Form.Label>
-          <Form.Control type="text" placeholder="Enter first name" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="last_name">
-          <Form.Label>Last name</Form.Label>
-          <Form.Control type="text" placeholder="Enter last name" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder="Enter email" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="phonenumber">
-          <Form.Label>Phone</Form.Label>
-          <Form.Control type="text" placeholder="Enter phone" />
-        </Form.Group>
-
-        <Button className="mb-3" variant="primary" type="submit">
-          Sign Up
-        </Button>
-      </Form>
-    </FormContainer>
-  )
+  switch(state.step) {
+    case 1:
+      return (
+        <Form>
+          <SignUp
+            nextStep={ nextStep }
+            setState={ setState }
+            state={ state }
+            handleSubmit={ submitHandler }
+          />
+        </Form>
+      )
+    default: 
+        // do nothing
+  }
 }
 
 export default SignUpForm

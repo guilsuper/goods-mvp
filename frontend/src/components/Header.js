@@ -31,7 +31,7 @@ const Header = () => {
         <DropdownButton
           as={ButtonGroup}
           variant="success"
-          title={user.username}
+          title={user.email}
           align={isToggle ? "start" : "end"}
           className="me-3"
         >
@@ -40,6 +40,12 @@ const Header = () => {
         </DropdownButton>
       )
     }
+  }
+
+  const isAdmin = () => {
+    let is_admin = false
+    user.groups.map(pair => (pair.name === "Administrator" ? is_admin = true : " "))
+    return is_admin
   }
 
   return (
@@ -65,7 +71,7 @@ const Header = () => {
           <NavLink eventKey="4" as={Link} to="#contact">Contact</NavLink>
           <NavLink eventKey="5" as={Link} to="#about">About</NavLink>
           {user ? <NavLink eventKey="6" as={Link} to="/account/products">Our products</NavLink> : " "}
-          {user && user.group === "Administrator" ? <NavLink eventKey="7" as={Link} to="/account/pm">
+          { user && isAdmin() ? <NavLink eventKey="7" as={Link} to="/account/pm">
             Create PM
           </NavLink> : " "}
         </Nav>

@@ -10,7 +10,7 @@ const EditPMForm = () => {
   // updateUser for updating current user localStorage
   // user is needed to display local storage information
   let { authTokens } = useContext(AuthContext)
-  let { pm_username } = useParams()
+  let { pm_email } = useParams()
   let [ pm, setPM] = useState([])
   // If successfully editted, go to home page to prevent multiple editting
   let navigate = useNavigate()
@@ -28,7 +28,7 @@ const EditPMForm = () => {
   
       let response = ""
       try {
-        response = await fetch("/api/pm/patch_delete_retrieve/" + pm_username + "/" , config)
+        response = await fetch("/api/pm/patch_delete_retrieve/" + pm_email + "/" , config)
       }
       catch (error) {
         alert("Server is not working")
@@ -46,7 +46,7 @@ const EditPMForm = () => {
       }
     }
     getPMInfo()
-  }, [authTokens, navigate, pm_username])
+  }, [authTokens, navigate, pm_email])
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -81,7 +81,7 @@ const EditPMForm = () => {
 
     let response = ""
     try {
-      response = await fetch("/api/pm/patch_delete_retrieve/" + pm_username + "/", config)
+      response = await fetch("/api/pm/patch_delete_retrieve/" + pm_email + "/", config)
     }
     catch (error) {
       alert("Server is not responding")
@@ -111,9 +111,9 @@ const EditPMForm = () => {
   return (
     <FormContainer>
       <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="username">
-            <Form.Label>Username</Form.Label>
-            <Form.Control type="text" placeholder={pm.username} />
+      <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" placeholder={pm.email} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="password">
@@ -129,11 +129,6 @@ const EditPMForm = () => {
         <Form.Group className="mb-3" controlId="last_name">
             <Form.Label>Last name</Form.Label>
             <Form.Control type="text" placeholder={pm.last_name} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder={pm.email} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="phonenumber">

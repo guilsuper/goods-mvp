@@ -71,9 +71,9 @@ const PMForm = () => {
 
   return (
     <Form onSubmit={submitHandler}>
-      <Form.Group className="mb-3" controlId="username">
-        <Form.Label>Username</Form.Label>
-        <Form.Control type="text" placeholder="Enter username" />
+      <Form.Group className="mb-3" controlId="email">
+        <Form.Label>Email</Form.Label>
+        <Form.Control type="email" placeholder="Enter email" />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="password">
@@ -89,11 +89,6 @@ const PMForm = () => {
       <Form.Group className="mb-3" controlId="last_name">
         <Form.Label>Last name</Form.Label>
         <Form.Control type="text" placeholder="Enter last name" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="email">
-        <Form.Label>Email</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="phonenumber">

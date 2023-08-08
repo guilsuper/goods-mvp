@@ -2,6 +2,7 @@
 
 from api.views import (
     ActivationView,
+    CreateAdministratorAndCompanyView,
     CreateAdministratorView,
     PMCreateView,
     PMListView,
@@ -10,7 +11,7 @@ from api.views import (
     ProductListView,
     ProductRetrieveUpdateDestroyView,
     SelfRetrieveUpdateDestroyView,
-    Smoke
+    Smoke,
 )
 
 from django.urls import path
@@ -37,6 +38,11 @@ urlpatterns = [
         name="product-patch-delete-retrieve"
     ),
 
+    path(
+        "admin_and_company/create/",
+        CreateAdministratorAndCompanyView.as_view(),
+        name="company-admin-create"
+    ),
     path(
         "admin/create/",
         CreateAdministratorView.as_view(),
