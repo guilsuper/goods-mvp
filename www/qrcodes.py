@@ -3,6 +3,8 @@
 """Copyright 2023 Free World Certified - all rights reserved.
 
 This illustrates how to use PIL to generate QRcode images.
+
+Requires pip installing pillow and qrcode
 """
 
 from PIL import Image
