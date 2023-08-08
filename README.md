@@ -1,5 +1,9 @@
-# Product MVP
-Join the free world certification.
+# Free World Certified
+
+## Welcome!
+
+This monorepo contains the application and website for
+freeworldcertified.org
 
 ## Installation
 
