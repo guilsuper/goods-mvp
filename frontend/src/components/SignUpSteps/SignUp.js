@@ -39,6 +39,7 @@ const SignUp = ({ nextStep, setState, state }) => {
 
   return (
     <FormContainer>
+      <h2 className="text-center">Sign Up</h2>
       <Form.Group className="mb-3" controlId="email">
         <Form.Label>Company Administrator Email Address</Form.Label>
         <Form.Control

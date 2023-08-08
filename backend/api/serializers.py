@@ -18,7 +18,10 @@ class CompanySerializer(ModelSerializer):
             "company_name",
             "company_website",
             "company_jurisdiction",
-            "company_headquarters_physical_address"
+            "company_headquarters_physical_address",
+            "industry",
+            "company_size",
+            "company_phonenumber"
         )
 
 
