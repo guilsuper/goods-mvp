@@ -16,31 +16,29 @@ const AccountInfo = () => {
     }
 
     const config = {
-        method: "DELETE",
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + authTokens.access
-        },
+      method: "DELETE",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + authTokens.access
+      },
     }
 
     let response = ""
     try {
-        response = await fetch("/api/delete_current_user/", config)
+        response = await fetch("/api/self/patch_delete_retrieve/", config)
     }
     catch (error) {
         alert("Server is not working")
         return
     }
 
-    const result = await response.json()
-
-    if (result){
+    if (response.status === 204){
         alert("Successfully deleted")
         logoutUser()
     }
     else {
-      alert("Wasn't deleted")
+      alert("Wasn't deleted or permission denied")
     }
   }
 
@@ -66,15 +64,24 @@ const AccountInfo = () => {
         <Row><p>{user.email}</p></Row>
         <Row className="text-secondary"><p>Phone</p></Row>
         <Row><p>{user.phonenumber}</p></Row>
-
-        <Row>
-          <Col md={4}>
-            <Button variant="primary" as={Link} to="/account/edit">Edit</Button>
-          </Col>
-          <Col md={{ span: 4, offset: 4 }}>
-            <Button variant="danger" onClick={deleteAccount}>Delete account</Button>
-          </Col>
-        </Row>
+        {
+          user.group === "PM" ?
+          <>
+            <Row className="text-secondary"><p>Boss</p></Row>
+            <Row><p>{user.boss}</p></Row>
+          </> : " "
+        }
+        {
+          user.group === "Administrator" ?
+          <Row>
+            <Col md={4}>
+              <Button variant="primary" as={Link} to="/account/edit">Edit</Button>
+            </Col>
+            <Col md={{ span: 4, offset: 4 }}>
+              <Button variant="danger" onClick={deleteAccount}>Delete account</Button>
+            </Col>
+          </Row> : " "
+        }
 
       </Col>
     </Container>

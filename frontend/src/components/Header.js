@@ -1,59 +1,78 @@
-import React, { useContext } from "react";
-import { Navbar, Nav, Form, Button, ButtonGroup, Container, Dropdown } from "react-bootstrap";
+import React, { useContext, useState } from "react";
+import { Navbar, Nav, NavLink, Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
 
 const Header = () => {
 
-    let {authTokens, logoutUser, user} = useContext(AuthContext)
+  let {authTokens, logoutUser, user} = useContext(AuthContext)
 
-    const authButton = () => {
-        if (authTokens === null) {
-            return (
-                <ButtonGroup>
-                    <Button variant="dark" as={Link} to="/sign-in">Sign-in</Button>
-                    <Button variant="primary" as={Link} to="/sign-up">Sign-up</Button>
-                </ButtonGroup>
-            )
-        } else {
-            return (
-              <Dropdown>
-                <Dropdown.Toggle variant="success">
-                  {user.username}
-                </Dropdown.Toggle>
+  let [isToggle, setToggle] = useState(false)
 
-                <Dropdown.Menu>
-                  <Dropdown.Item href="/account/info">Profile settings</Dropdown.Item>
-                  <Dropdown.Item onClick={logoutUser}>Signout</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            )
-        }
+  const updateToggle = () => {
+    // Tracks if burger menu is toggled
+    // If yes, dropdown menu should align start, else -- end
+    // so it doesn't go outside the screen
+    setToggle(!isToggle)
+  }
+
+  const authButton = () => {
+    // If authorize display the dropdown menu, else -- sign in and sign up buttons
+    if (authTokens === null) {
+      return (
+        <ButtonGroup className="me-3">
+          <Button variant="dark" as={Link} to="/sign-in">Sign-in</Button>
+          <Button variant="primary" as={Link} to="/sign-up">Sign-up</Button>
+        </ButtonGroup>
+      )
+    } else {
+      return (
+        <DropdownButton
+          as={ButtonGroup}
+          variant="success"
+          title={user.username}
+          align={isToggle ? "start" : "end"}
+          className="me-3"
+        >
+          <Dropdown.Item eventKey="1" href="/account/info">Profile settings</Dropdown.Item>
+          <Dropdown.Item eventKey="2" onClick={logoutUser}>Signout</Dropdown.Item>
+        </DropdownButton>
+      )
     }
+  }
 
-    return (
-        <>
-            <Navbar bg="dark" data-bs-theme="dark">
-                <Container>
-                      <Navbar.Brand href="/">MVP</Navbar.Brand>
-                      <Nav className="me-auto">
-                          <Nav.Link href="/">Home</Nav.Link>
-                          <Nav.Link href="/products">Products</Nav.Link>
-                          <Nav.Link href="#services">Services</Nav.Link>
-                          <Nav.Link href="#contact">Contact</Nav.Link>
-                          <Nav.Link href="#about">About</Nav.Link>
-                          {user ? <Nav.Link href="/account/create_product">{user.company_name} FWC Product</Nav.Link> : " "}
-                      </Nav>
-
-                      <Form inline="true" className="mx-3">
-                          {authButton()}
-                      </Form>
-                </Container>
-            </Navbar>
-            <br />
-        </>
-    );
+  return (
+    <Navbar
+      collapseOnSelect
+      expand="sm"
+      bg="dark"
+      data-bs-theme="dark"
+      className="ps-3 mb-3"
+    >
+      <Navbar.Brand href="/">MVP</Navbar.Brand>
+      <Navbar.Toggle 
+        aria-controls="navbarScroll"
+        data-bs-target="#navbarScroll"
+        className="mt-1 mx-auto ms-1"
+        onClick={updateToggle}
+      />
+      <Navbar.Collapse id="navbarScroll">
+        <Nav>
+          <NavLink eventKey="1" as={Link} to="/">Home</NavLink>
+          <NavLink eventKey="2" as={Link} to="/products">Products</NavLink>
+          <NavLink eventKey="3" as={Link} to="#services">Services</NavLink>
+          <NavLink eventKey="4" as={Link} to="#contact">Contact</NavLink>
+          <NavLink eventKey="5" as={Link} to="#about">About</NavLink>
+          {user ? <NavLink eventKey="6" as={Link} to="/account/products">Our products</NavLink> : " "}
+          {user && user.group === "Administrator" ? <NavLink eventKey="7" as={Link} to="/account/pm">
+            Create PM
+          </NavLink> : " "}
+        </Nav>
+      </Navbar.Collapse>
+      {authButton()}
+    </Navbar>
+  )
 }
 
 export default Header

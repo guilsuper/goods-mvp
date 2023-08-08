@@ -16,6 +16,9 @@ from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 
 
+# Parse a .env file,
+# then load all the variables found as environment variables.
+# Search in increasingly higher folders for the given file (.env by default)
 load_dotenv(find_dotenv())
 
 
@@ -30,9 +33,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ["DEBUG"]
+DEBUG = os.environ.get("DEBUG", True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOST", "127.0.0.1")]
 
 
 # Application definition
@@ -47,11 +50,13 @@ INSTALLED_APPS = [
 
     "api",
     "rest_framework",
+    "rest_framework.authtoken",
     "corsheaders",
     "django_filters",
     "phonenumber_field",
     "rest_framework_simplejwt",
-    "rest_framework_simplejwt.token_blacklist"
+    "rest_framework_simplejwt.token_blacklist",
+    "django_countries",
 ]
 
 MIDDLEWARE = [
@@ -123,12 +128,22 @@ WSGI_APPLICATION = "product_mvp.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "develop": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    },
+    "production": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_NAME"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
     }
 }
 
+default_database = os.environ.get("DJANGO_DATABASE", "develop")
+DATABASES["default"] = DATABASES[default_database]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

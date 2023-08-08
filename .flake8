@@ -1,0 +1,29 @@
+[flake8]
+max-line-length=79
+exclude=
+        .git,
+        .gitignore,
+        .dockerignore,
+        requirements.txt,
+        __pycache__,
+        .tox,
+        .eggs,
+        *.egg,
+        venv,
+        pip-download-cache,
+        migrations,
+        Dockerfile,
+        docker-entrypoint.sh,
+        docker-compose.yaml,
+        frontend,
+        *.md,
+        .flake8,
+        .pre-commit-config.yaml
+
+ignore=
+        W503,
+        F811
+
+docstring-convention=google
+inline-quotes="
+import-order-style=cryptography

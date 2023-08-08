@@ -3,26 +3,23 @@ import { Col, Row, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 
-const ListItem = ({product}) => {
-  // Renders product object as a column that contains 3 rows.
+const PMItem = ({PM}) => {
+  // Renders PM object as a column with 2 rows
   return (
     <Col
       xs={3}
       className="border m-3 p-4 rounded"
-      as={Link} to={"/products/" + product.sku_id}
+      as={Link} to={"/account/pm/info/" + PM.username}
       style={{ color: "inherit", textDecoration: "inherit"}}
     >
       <Row>
         <Image src="/logo192.png"/>
       </Row>
       <Row>
-        {"Product SKU id: " + product.sku_id}
-      </Row>
-      <Row>
-        {"Product facing name: " + product.public_facing_name}
+        {"Username: " + PM.username}
       </Row>
     </Col>
   )
 }
 
-export default ListItem
+export default PMItem

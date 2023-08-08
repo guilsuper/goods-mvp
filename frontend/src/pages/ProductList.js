@@ -12,7 +12,14 @@ const ProductList = () => {
   }, [])
 
   let getProducts = async () => {
-    let response = await fetch("/api/product/get/")
+    let response = ""
+    try {
+      response = await fetch("/api/product/get/")
+    }
+    catch (error) {
+      alert("Server is not responding")
+      return
+    }
     let data = await response.json()
     setProducts(data)
   }
@@ -43,7 +50,14 @@ const ProductList = () => {
       }
     })
 
-    const response = await fetch("/api/product/get/" + query, config)
+    let response = ""
+    try {
+      response = await fetch("/api/product/get/" + query, config)
+    }
+    catch (error) {
+      alert("Server is not responding")
+      return
+    }
     const result = await response.json()
     setProducts(result)
   }

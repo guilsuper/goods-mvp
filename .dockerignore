@@ -1,0 +1,39 @@
+# All regex for Django and React application was taken from these links:
+# https://github.com/edoburu/django-project-template/blob/master/.dockerignore
+# https://gist.github.com/jkinkead/55db75d57df756c6d66b4c3f395df521
+
+*.pyc
+*.pyo
+*.mo
+*.db
+*.css.map
+*.egg-info
+*.sql.gz
+db.sqlite3
+.cache
+.project
+.idea
+.pydevproject
+.idea/workspace.xml
+.DS_Store
+*/.git/
+.gitignore
+.sass-cache
+.vagrant/
+*/__pycache__
+dist
+docs
+.env
+logs
+src/{{ project_name }}/settings/local.py
+src/node_modules
+web/media
+web/static/CACHE
+stats
+
+*/Dockerfile
+*/.dockerignore
+venv
+
+build
+node_modules

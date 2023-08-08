@@ -1,0 +1,51 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - prod-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_DATABASE=production
+      - DEBUG=False
+      - ALLOWED_HOST=backend
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - db
+    networks:
+      - prod-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: ["npm", "start"]
+    volumes:
+      - ./frontend:/front
+    ports:
+      - "3000:3000"
+    stdin_open:
+      true
+    depends_on:
+      - backend
+    networks:
+      - prod-net
+
+networks:
+  prod-net:
+    driver: bridge

@@ -22,5 +22,6 @@ class ProductFilter(django_filters.FilterSet):
             "sctr_cogs": ["gte", "lte"],
 
             "product_input_manufacturer": ["icontains"],
-            "product_input_type": ["icontains"]
+            "product_input_type": ["icontains"],
+            "owner__username": ["exact"]
         }

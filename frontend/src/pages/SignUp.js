@@ -6,7 +6,7 @@ import SignUpForm from "../components/SignUpForm";
 const SignUp = () => {
   return (
     <Container>
-        <SignUpForm />
+      <SignUpForm />
     </Container>
   )
 }
