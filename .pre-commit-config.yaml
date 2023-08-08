@@ -6,9 +6,14 @@ repos:
       entry: flake8 --config=.flake8
 
       # Flake doesn't ignore these folders by itself
-      exclude: "(migrations|frontend|templates)/.*"
+      exclude: "(migrations|templates)/.*"
 
       language: python
+
+      types: [
+        python,
+      ]
+      
       additional_dependencies: [
         flake8-docstrings,
         flake8-import-order,
