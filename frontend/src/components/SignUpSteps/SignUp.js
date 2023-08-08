@@ -3,10 +3,10 @@ import FormContainer from "../../utils/FormContainer";
 import { Button, Form } from "react-bootstrap";
 
 
-const SignUp = ({ nextStep, setState, state, handleSubmit }) => {
+const SignUp = ({ nextStep, setState, state }) => {
 
   const [formValues, setFormValues] = useState({
-    email: "",
+    company_administrator_email: "",
     password: "",
     company_website: "",
     company_name: ""
@@ -31,10 +31,10 @@ const SignUp = ({ nextStep, setState, state, handleSubmit }) => {
     }))
   }
 
-  const updateStateSubmit = (event) => {
+  const goNext = (event) => {
     event.preventDefault();
 
-    handleSubmit(event)
+    nextStep();
   }
 
   return (
@@ -58,7 +58,7 @@ const SignUp = ({ nextStep, setState, state, handleSubmit }) => {
           onChange={handleChange}
         />
       </Form.Group>
-
+      
       <Form.Group className="mb-3" controlId="company_website">
         <Form.Label>Company website</Form.Label>
         <Form.Control
@@ -79,8 +79,8 @@ const SignUp = ({ nextStep, setState, state, handleSubmit }) => {
         />
       </Form.Group>
 
-      <Button onClick={ updateStateSubmit } className="mb-3 mx-auto" variant="primary">
-        Sign Up
+      <Button onClick={ goNext } className="mb-3 mx-auto" variant="primary">
+        Continue
       </Button>
     </FormContainer>
   )

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import SignUp from "./SignUpSteps/SignUp";
+import CompanyVerification from "./SignUpSteps/CompanyVerification";
 
 
 const SignUpForm = () => {
@@ -75,15 +76,32 @@ const SignUpForm = () => {
     }))
   }
 
+  const prevStep = () => {
+    setState(prevState => ({
+      ...prevState,
+      step: prevState.step - 1
+    }))
+  }
+
   switch(state.step) {
     case 1:
       return (
-        <Form>
+        <Form onSubmit={submitHandler}>
           <SignUp
             nextStep={ nextStep }
             setState={ setState }
             state={ state }
-            handleSubmit={ submitHandler }
+          />
+        </Form>
+      )
+    case 2:
+      return (
+        <Form onSubmit={submitHandler}>
+          <CompanyVerification
+            prevStep={ prevStep }
+            nextStep={ nextStep }
+            setState={ setState }
+            state={ state }
           />
         </Form>
       )
