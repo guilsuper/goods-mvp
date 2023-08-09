@@ -2,12 +2,22 @@
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (
+    MaxValueValidator,
+    MinValueValidator,
+    RegexValidator
+)
 from django.db import models
 
 from django_countries.fields import CountryField
 
 from phonenumber_field.modelfields import PhoneNumberField
+
+
+full_domain_validator = RegexValidator(
+    r"[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+",
+    "Invalid domain, it should be like example.com.eu or example.com"
+)
 
 
 class PRODUCT_TYPES(models.TextChoices):
@@ -30,7 +40,11 @@ class PRODUCT_TYPES(models.TextChoices):
 class Company(models.Model):
     """Company model."""
 
-    company_website = models.URLField(max_length=200, unique=True)
+    company_website = models.CharField(
+        max_length=255,
+        validators=[full_domain_validator],
+        unique=True
+    )
     company_name = models.CharField(max_length=200)
 
     company_jurisdiction = models.CharField(
@@ -107,7 +121,7 @@ class Administrator(AbstractUser):
 
     def __str__(self):
         """Str magic method for Administrator model."""
-        return self.username
+        return self.email
 
     def add_group(self, group):
         """Add user to the group."""

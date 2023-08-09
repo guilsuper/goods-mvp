@@ -5,7 +5,9 @@ from api.models import Administrator, Product
 from api.permissions import (
     IsAccountOwner,
     IsAdministrator,
-    IsBoss, IsProductOwner, ReadOnly
+    IsCompanyAdministrator,
+    IsProductOwner,
+    ReadOnly
 )
 from api.serializers import (
     AdministratorRetrieveSerializer,
@@ -263,7 +265,11 @@ class PMRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """PM get, patch and delete methods."""
 
     serializer_class = PMRetrieveSerializer
-    permission_classes = [IsAuthenticated, IsAdministrator, IsBoss]
+    permission_classes = [
+        IsAuthenticated,
+        IsAdministrator,
+        IsCompanyAdministrator
+    ]
     queryset = Administrator.objects.filter(groups__name="PM")
     lookup_field = "email"
 

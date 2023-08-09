@@ -16,7 +16,7 @@ class ReadOnly(permissions.BasePermission):
         return False
 
 
-class IsBoss(permissions.BasePermission):
+class IsCompanyAdministrator(permissions.BasePermission):
     """Allow boss of an object to edit or read it."""
 
     def has_object_permission(self, request, view, obj):

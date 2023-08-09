@@ -62,7 +62,7 @@ urlpatterns = [
     path("pm/create/", PMCreateView.as_view(), name="pm-create"),
     path("pm/list/", PMListView.as_view(), name="pm-list"),
     path(
-        "pm/patch_delete_retrieve/<str:username>/",
+        "pm/patch_delete_retrieve/<str:email>/",
         PMRetrieveUpdateDestroyView.as_view(),
         name="pm-patch-delete-retrieve"
     ),

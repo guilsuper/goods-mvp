@@ -30,13 +30,13 @@ class GroupFactory(factory.django.DjangoModelFactory):
 
 
 class CompanyFactory(DjangoModelFactory):
-    """Comapny factory."""
+    """Company factory."""
 
     class Meta:
         """Defined model to use Company factory."""
         model = "api.Company"
 
-    company_website = factory.Sequence(lambda n: f"https://Company{n}.com")
+    company_website = factory.Sequence(lambda n: f"Company{n}.com")
     company_name = factory.Sequence(lambda n: f"St. Company, {n}")
 
     company_jurisdiction = factory.Sequence(lambda n: f"St. Admin, {n}")
