@@ -5,7 +5,7 @@ import SignUp from "./SignUpSteps/SignUp";
 
 
 const SignUpForm = () => {
-  
+
   let navigate = useNavigate()
 
   let [ state, setState ] = useState({

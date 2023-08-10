@@ -9,7 +9,7 @@ const ActivatePage = () => {
   let navigate = useNavigate()
 
   useEffect(() => {
-    
+
     async function activate() {
       let response = ""
       try {

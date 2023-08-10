@@ -20,7 +20,7 @@ const PMAccountInfo = () => {
           "Authorization": "Bearer " + authTokens.access
         },
       }
-  
+
       let response = ""
       try {
         response = await fetch("/api/pm/patch_delete_retrieve/" + pm_email + "/" , config)

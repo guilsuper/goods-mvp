@@ -1,5 +1,6 @@
 """Module contains healthcheck test."""
-from django.test import Client, TestCase
+from django.test import Client
+from django.test import TestCase
 
 
 class TestSmoke(TestCase):

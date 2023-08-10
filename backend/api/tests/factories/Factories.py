@@ -1,9 +1,8 @@
 """Module contains Product and Administrator factories."""
 from datetime import date
 
-from django.contrib.auth.models import Group
-
 import factory
+from django.contrib.auth.models import Group
 from factory.django import DjangoModelFactory
 
 

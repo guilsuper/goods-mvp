@@ -1,5 +1,4 @@
 """API views module."""
-
 from api.filter import ProductFilter
 from api.models import Administrator, Product
 from api.permissions import (
@@ -20,11 +19,9 @@ from api.serializers import (
 )
 from api.tokens import account_activation_token
 from api.utils import send_activation_email
-
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
-
 from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,

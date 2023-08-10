@@ -9,7 +9,7 @@ freeworldcertified.org
 
 ### Clone or Download
 
--  Clone this repo to your local machine using   
+-  Clone this repo to your local machine using
 ```
 git clone https://github.com/freeworldcertified/fwc.git
 ```
