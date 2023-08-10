@@ -1,38 +1,33 @@
 """API views module."""
 from api.filter import ProductFilter
-from api.models import Administrator, Product
-from api.permissions import (
-    IsAccountOwner,
-    IsAdministrator,
-    IsCompanyAdministrator,
-    IsProductOwner,
-    ReadOnly
-)
-from api.serializers import (
-    AdministratorRetrieveSerializer,
-    AdministratorSerializer,
-    CompanySerializer,
-    PMRetrieveSerializer,
-    PMSerializer,
-    ProductCreateSerializer,
-    ProductGetSerializer
-)
+from api.models import Administrator
+from api.models import Product
+from api.permissions import IsAccountOwner
+from api.permissions import IsAdministrator
+from api.permissions import IsCompanyAdministrator
+from api.permissions import IsProductOwner
+from api.permissions import ReadOnly
+from api.serializers import AdministratorRetrieveSerializer
+from api.serializers import AdministratorSerializer
+from api.serializers import CompanySerializer
+from api.serializers import PMRetrieveSerializer
+from api.serializers import PMSerializer
+from api.serializers import ProductCreateSerializer
+from api.serializers import ProductGetSerializer
 from api.tokens import account_activation_token
 from api.utils import send_activation_email
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from rest_framework import status
-from rest_framework.generics import (
-    CreateAPIView,
-    ListAPIView, RetrieveAPIView,
-    RetrieveUpdateDestroyAPIView
-)
-from rest_framework.parsers import FormParser, MultiPartParser
-from rest_framework.permissions import (
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly
-)
+from rest_framework.generics import CreateAPIView
+from rest_framework.generics import ListAPIView
+from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.parsers import FormParser
+from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 

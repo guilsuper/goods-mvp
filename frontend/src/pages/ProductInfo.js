@@ -30,7 +30,7 @@ const ProductInfo = () => {
         alert("Server is not working")
         return
       }
-  
+
       let result = await response.json()
 
       if (response.status !== 200) {
