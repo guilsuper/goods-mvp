@@ -58,7 +58,7 @@ const SignUp = ({ nextStep, setState, state }) => {
           onChange={handleChange}
         />
       </Form.Group>
-      
+
       <Form.Group className="mb-3" controlId="company_website">
         <Form.Label>Company domain</Form.Label>
         <Form.Control
