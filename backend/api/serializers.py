@@ -1,9 +1,7 @@
 """Module with serializers."""
-
-from api.models import Administrator, Product
-
+from api.models import Administrator
+from api.models import Product
 from django.contrib.auth.models import Group
-
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 

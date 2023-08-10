@@ -1,12 +1,10 @@
 """Module contains database tables as models."""
-
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
-
 from django_countries.fields import CountryField
-
 from phonenumber_field.modelfields import PhoneNumberField
 
 

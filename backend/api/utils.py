@@ -3,7 +3,6 @@ import os
 
 from api.models import Administrator
 from api.tokens import account_activation_token
-
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes

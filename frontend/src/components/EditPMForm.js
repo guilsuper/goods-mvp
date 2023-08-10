@@ -25,7 +25,7 @@ const EditPMForm = () => {
           "Authorization": "Bearer " + authTokens.access
         },
       }
-  
+
       let response = ""
       try {
         response = await fetch("/api/pm/patch_delete_retrieve/" + pm_username + "/" , config)
@@ -34,9 +34,9 @@ const EditPMForm = () => {
         alert("Server is not working")
         return
       }
-  
+
       const result = await response.json()
-  
+
       if (response.status !== 200) {
         alert("Action not allowed")
         navigate("/")

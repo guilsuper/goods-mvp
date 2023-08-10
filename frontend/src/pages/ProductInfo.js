@@ -21,7 +21,7 @@ const ProductInfo = () => {
           "Content-Type": "application/json",
         },
       }
-  
+
       let response = ""
       try {
         response = await fetch("/api/product/patch_delete_retrieve/" + product_sku + "/" , config)
@@ -30,7 +30,7 @@ const ProductInfo = () => {
         alert("Server is not working")
         return
       }
-  
+
       const result = await response.json()
 
       if (response.status !== 200) {
@@ -90,7 +90,7 @@ const ProductInfo = () => {
       <Col className="p-5 mb-5 mx-auto w-75 rounded shadow">
         <Row className="text-secondary"><p>SKU</p></Row>
         <Row><p>{product.sku_id}</p></Row>
-        
+
         <Row className="text-secondary"><p>Public facing id</p></Row>
         <Row><p>{product.public_facing_id}</p></Row>
 
