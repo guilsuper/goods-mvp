@@ -49,7 +49,7 @@ const CompanyVerification = ({ prevStep, nextStep, setState, state }) => {
 
   return (
     <FormContainer>
-      <h2 className="text-center">Comapny Verification</h2>
+      <h2 className="text-center">Company Verification</h2>
       <Form.Group className="mb-3" controlId="company_jurisdiction">
         <Form.Label>Company Jurisdiction of Incorporation</Form.Label>
         <Form.Control
