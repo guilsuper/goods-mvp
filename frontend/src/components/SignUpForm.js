@@ -6,7 +6,7 @@ import CompanyVerification from "./SignUpSteps/CompanyVerification";
 
 
 const SignUpForm = () => {
-  
+
   let navigate = useNavigate()
 
   let [ state, setState ] = useState({
@@ -105,7 +105,7 @@ const SignUpForm = () => {
           />
         </Form>
       )
-    default: 
+    default:
         // do nothing
   }
 }

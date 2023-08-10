@@ -1,8 +1,6 @@
 """Module with ProductFIlter."""
-
-from api.models import Product
-
 import django_filters
+from api.models import Product
 
 
 class ProductFilter(django_filters.FilterSet):

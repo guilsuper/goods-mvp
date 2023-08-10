@@ -1,5 +1,5 @@
 [flake8]
-max-line-length=79
+max-line-length=99
 exclude=
         .git,
         .gitignore,
@@ -17,6 +17,7 @@ exclude=
         docker-compose.yaml,
         frontend,
         *.md,
+        *.txt,
         .flake8,
         .pre-commit-config.yaml
 

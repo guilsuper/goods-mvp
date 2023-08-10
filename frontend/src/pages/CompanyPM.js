@@ -30,7 +30,7 @@ const CompanyPM = () => {
         alert("Server is not responding")
         return
       }
-      
+
       let data = await response.json()
 
       if (response.status !== 200) {

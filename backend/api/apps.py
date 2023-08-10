@@ -1,5 +1,4 @@
 """Module with API configurations."""
-
 from django.apps import AppConfig
 
 

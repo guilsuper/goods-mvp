@@ -1,5 +1,4 @@
 """Module contains DRF permission classes."""
-
 from rest_framework import permissions
 
 
@@ -16,11 +15,11 @@ class ReadOnly(permissions.BasePermission):
         return False
 
 
-class IsBoss(permissions.BasePermission):
-    """Allow boss of an object to edit or read it."""
+class IsCompanyAdministrator(permissions.BasePermission):
+    """Allow company admin of a PM to edit or read it."""
 
     def has_object_permission(self, request, view, obj):
-        """If Administrator is a PM's boss."""
+        """If Administrator and PM in the same company."""
         if not request.user.groups.filter(name="Administrator").exists():
             return False
         return obj.company == request.user.company
@@ -30,10 +29,7 @@ class IsProductOwner(permissions.BasePermission):
     """Object-level permission to only allow PM edit or read it."""
 
     def has_object_permission(self, request, view, obj):
-        """If user is a product administrator.
-
-        Or a PM, which boss is administrator of product.
-        """
+        """If user's company is the same as product company."""
         return obj.company == request.user.company
 
 

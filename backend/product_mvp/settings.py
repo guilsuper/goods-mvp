@@ -8,12 +8,12 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
 import os
 from datetime import timedelta
 from pathlib import Path
 
-from dotenv import find_dotenv, load_dotenv
+from dotenv import find_dotenv
+from dotenv import load_dotenv
 
 
 # Parse a .env file,
@@ -196,7 +196,7 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_FROM = os.environ["EMAIL_USER"]

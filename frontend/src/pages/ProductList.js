@@ -113,7 +113,7 @@ const ProductList = () => {
                   <Form.Label>SCTR COGS greater than...</Form.Label>
                   <Form.Control type="text" placeholder="Enter SCTR COGS" />
                 </Form.Group>
-                
+
                 <Form.Group className="mb-3" controlId="product_input_manufacturer__icontains">
                   <Form.Label>Product input manufacturer contains...</Form.Label>
                   <Form.Control type="text" placeholder="Enter product input manufacturer" />
