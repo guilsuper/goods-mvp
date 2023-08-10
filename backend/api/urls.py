@@ -1,5 +1,6 @@
 """API urls module."""
 from api.views import ActivationView
+from api.views import CreateAdministratorAndCompanyView
 from api.views import CreateAdministratorView
 from api.views import PMCreateView
 from api.views import PMListView
@@ -31,6 +32,11 @@ urlpatterns = [
     ),
 
     path(
+        "admin_and_company/create/",
+        CreateAdministratorAndCompanyView.as_view(),
+        name="company-admin-create"
+    ),
+    path(
         "admin/create/",
         CreateAdministratorView.as_view(),
         name="admin-create"
@@ -49,7 +55,7 @@ urlpatterns = [
     path("pm/create/", PMCreateView.as_view(), name="pm-create"),
     path("pm/list/", PMListView.as_view(), name="pm-list"),
     path(
-        "pm/patch_delete_retrieve/<str:username>/",
+        "pm/patch_delete_retrieve/<str:email>/",
         PMRetrieveUpdateDestroyView.as_view(),
         name="pm-patch-delete-retrieve"
     ),

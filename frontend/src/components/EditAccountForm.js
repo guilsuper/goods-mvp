@@ -77,34 +77,14 @@ const EditAccountForm = () => {
   return (
     <FormContainer>
       <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="username">
-          <Form.Label>Username</Form.Label>
-          <Form.Control type="text" placeholder={user.username} />
+      <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control type="email" placeholder={user.email} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="password">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Enter new password" />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_name">
-          <Form.Label>Company name</Form.Label>
-          <Form.Control type="text" placeholder={user.company_name} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_address">
-          <Form.Label>Company address</Form.Label>
-          <Form.Control type="text" placeholder={user.company_address} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="industry">
-          <Form.Label>Industry</Form.Label>
-          <Form.Control type="text" placeholder={user.industry} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_size">
-          <Form.Label>Company size</Form.Label>
-          <Form.Control type="text" placeholder={user.company_size} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="first_name">
@@ -115,11 +95,6 @@ const EditAccountForm = () => {
         <Form.Group className="mb-3" controlId="last_name">
           <Form.Label>Last name</Form.Label>
           <Form.Control type="text" placeholder={user.last_name} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder={user.email} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="phonenumber">

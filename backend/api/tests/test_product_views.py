@@ -5,6 +5,7 @@ product-patch-delete-retrieve
 """
 from api.models import Product
 from api.tests.factories.Factories import AdministratorFactory
+from api.tests.factories.Factories import CompanyFactory
 from api.tests.factories.Factories import GroupFactory
 from api.tests.factories.Factories import ProductFactory
 from django.test import Client
@@ -21,22 +22,24 @@ class TestProductViews(TestCase):
         self.client = Client()
 
         self.admin_group = GroupFactory(name="Administrator")
+        self.company = CompanyFactory()
 
-        self.username = "admin"
+        self.email = "admin@gmail.com"
         self.password = "admin"
         self.admin = AdministratorFactory(
-            username=self.username,
+            email=self.email,
             password=self.password,
+            company=self.company
         )
         self.admin.groups.add(self.admin_group)
 
-        self.pm_username = "pmpm"
+        self.pm_email = "pmpm@gmail.com"
         self.pm_password = "pmpm"
         self.pm = AdministratorFactory(
-            username=self.pm_username,
+            email=self.pm_email,
             password=self.pm_password,
             groups=[GroupFactory(name="PM")],
-            boss=self.admin
+            company=self.company
         )
         self.admin2 = AdministratorFactory()
 
@@ -50,15 +53,16 @@ class TestProductViews(TestCase):
             "HTTP_AUTHORIZATION": "Bearer " + self.access_token_pm
         }
 
-        self.product = ProductFactory(owner=self.admin)
-        self.product2 = ProductFactory(owner=self.admin2)
+        self.product = ProductFactory(company=self.company)
+        self.product2 = ProductFactory(company=self.admin2.company)
         self.product_dict = ProductFactory.build().__dict__
         self.product_dict.pop("id")
-        self.product_dict.pop("owner_id")
+        self.product_dict.pop("company_id")
 
     def test_product_get(self):
         """Tests product-get."""
         # Try to get products as unauthorized user
+        # Returns all visible products
         response = self.client.get(reverse("product-get"))
 
         self.assertEqual(response.status_code, 200)
@@ -67,6 +71,7 @@ class TestProductViews(TestCase):
     def test_product_create_no_auth(self):
         """Tests product-create url with no headers."""
         # Try to create as unauthorized user
+        # The user is not allowed to create it
         response = self.client.post(reverse("product-create"))
 
         self.assertEqual(response.status_code, 401)
@@ -99,7 +104,7 @@ class TestProductViews(TestCase):
             sku_id=self.product_dict["sku_id"]
         ).first()
 
-        self.assertEqual(current_product.owner, self.admin)
+        self.assertEqual(current_product.company, self.admin.company)
 
     def test_product_create_pm(self):
         """Product-create url as PM."""
@@ -128,7 +133,7 @@ class TestProductViews(TestCase):
             sku_id=self.product_dict["sku_id"]
         ).first()
 
-        self.assertEqual(current_product.owner, self.admin)
+        self.assertEqual(current_product.company, self.admin.company)
 
     def test_product_update_no_auth(self):
         """Tests product update url with no headers."""

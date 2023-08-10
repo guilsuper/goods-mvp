@@ -17,6 +17,7 @@ exclude=
         docker-compose.yaml,
         frontend,
         *.md,
+        *.txt,
         .flake8,
         .pre-commit-config.yaml
 
