@@ -27,6 +27,7 @@ jobs:
         cache: 'pip'
 
     - name: "Setup .env for testing"
+      working-directory: ./backend
       run: |
         echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
         echo 'DEBUG="True"' >> .env
