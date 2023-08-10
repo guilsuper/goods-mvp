@@ -59,12 +59,12 @@ const SignUp = ({ nextStep, setState, state }) => {
           onChange={handleChange}
         />
       </Form.Group>
-      
+
       <Form.Group className="mb-3" controlId="company_website">
-        <Form.Label>Company website</Form.Label>
+        <Form.Label>Company domain</Form.Label>
         <Form.Control
           type="text"
-          placeholder="Enter company website"
+          placeholder="Enter company domain, like example.com"
           value={formValues.company_website}
           onChange={handleChange}
         />

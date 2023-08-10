@@ -3,7 +3,6 @@ import os
 
 from api.models import Administrator
 from api.tokens import account_activation_token
-
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -25,7 +24,6 @@ def send_activation_email(user_id: int) -> bool:
     message = render_to_string(
         "template_activate_account.html",
         {
-            "first_name": admin.first_name,
             "frontend_url": os.environ["FRONTEND_HOST"],
             "uid": urlsafe_base64_encode(force_bytes(admin.pk)),
             "token": account_activation_token.make_token(admin),

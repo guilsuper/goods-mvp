@@ -7,7 +7,7 @@ import CompanyProfile from "./SignUpSteps/CompanyProfile";
 
 
 const SignUpForm = () => {
-  
+
   let navigate = useNavigate()
 
   let [ state, setState ] = useState({

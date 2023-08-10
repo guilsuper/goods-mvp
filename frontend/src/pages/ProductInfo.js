@@ -21,7 +21,7 @@ const ProductInfo = () => {
           "Content-Type": "application/json",
         },
       }
-  
+
       let response = ""
       try {
         response = await fetch("/api/product/patch_delete_retrieve/" + product_sku + "/" , config)
@@ -30,14 +30,16 @@ const ProductInfo = () => {
         alert("Server is not working")
         return
       }
-  
-      const result = await response.json()
+
+      let result = await response.json()
 
       if (response.status !== 200) {
         alert("Action not allowed")
         navigate_effect("/")
       }
       else {
+        result = {...result, ...result.company}
+        delete result.company
         setProduct(result)
       }
     }
@@ -45,10 +47,11 @@ const ProductInfo = () => {
   }, [navigate, product_sku])
 
   const isAllowedToChange = (user) => {
-    if (user.boss){
-      return user.boss === product.owner
+    // If not authorized
+    if (!user){
+      return false
     }
-    return user.username === product.owner
+    return (user.company.company_name === product.company_name)
   }
 
   const deleteProduct = async (event) => {
@@ -90,7 +93,7 @@ const ProductInfo = () => {
       <Col className="p-5 mb-5 mx-auto w-75 rounded shadow">
         <Row className="text-secondary"><p>SKU</p></Row>
         <Row><p>{product.sku_id}</p></Row>
-        
+
         <Row className="text-secondary"><p>Public facing id</p></Row>
         <Row><p>{product.public_facing_id}</p></Row>
 
@@ -116,7 +119,7 @@ const ProductInfo = () => {
         <Row><p>{product.cogs_coutry_recipients}</p></Row>
 
         <Row className="text-secondary"><p>Product owner</p></Row>
-        <Row><p>{product.owner}</p></Row>
+        <Row><p>{product.company_name}</p></Row>
 
         {
           isAllowedToChange(user) ?
