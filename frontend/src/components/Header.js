@@ -50,7 +50,7 @@ const Header = () => {
       data-bs-theme="dark"
       className="ps-3 mb-3"
     >
-      <Navbar.Brand href="/">MVP</Navbar.Brand>
+      <Navbar.Brand href="/">FreeWorldCertified.org</Navbar.Brand>
       <Navbar.Toggle
         aria-controls="navbarScroll"
         data-bs-target="#navbarScroll"
