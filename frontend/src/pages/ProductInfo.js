@@ -47,10 +47,7 @@ const ProductInfo = () => {
   }, [navigate, product_sku])
 
   const isAllowedToChange = (user) => {
-    if (user.company.company_name === product.company_name){
-      return true
-    }
-    return false
+    return (user.company.company_name === product.company_name)
   }
 
   const deleteProduct = async (event) => {

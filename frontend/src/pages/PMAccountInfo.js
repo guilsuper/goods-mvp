@@ -47,10 +47,7 @@ const PMAccountInfo = () => {
   }, [authTokens, navigate, pm_email])
 
   const isAllowedToChange = (user) => {
-    if (user.company.company_name === pm.company_name){
-      return true
-    }
-    return false
+    return (user.company.company_name === pm.company_name)
   }
 
   const deletePM = async (event) => {
