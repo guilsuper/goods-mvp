@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import React, { useContext, useState } from "react";
 import { Navbar, Nav, NavLink, Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
 import { Link } from "react-router-dom";

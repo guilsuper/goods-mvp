@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Module with ProductFIlter."""
 import django_filters
 from api.models import Product

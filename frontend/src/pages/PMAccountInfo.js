@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import React, { useContext, useEffect, useState } from 'react'
 import { Row, Col, Container, Button } from 'react-bootstrap'
 import { Link, useNavigate, useParams } from 'react-router-dom'

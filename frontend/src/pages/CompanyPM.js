@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import React, {useState, useEffect, useContext} from 'react';
 import { Col, Container, Row } from "react-bootstrap";
 import AuthContext from "../context/AuthContext";

@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """URL configuration for product_mvp project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:

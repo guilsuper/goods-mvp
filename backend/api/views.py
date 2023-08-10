@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """API views module."""
 from api.filter import ProductFilter
 from api.models import Administrator

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import React, { useContext } from "react";
 import Container from "react-bootstrap/Container";
 import AuthContext from "../context/AuthContext";

@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains Product and Administrator factories."""
 from datetime import date
 

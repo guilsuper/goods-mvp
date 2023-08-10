@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains healthcheck test."""
 from django.test import Client
 from django.test import TestCase
