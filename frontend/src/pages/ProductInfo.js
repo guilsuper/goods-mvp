@@ -47,6 +47,10 @@ const ProductInfo = () => {
   }, [navigate, product_sku])
 
   const isAllowedToChange = (user) => {
+    // If not authorized
+    if (!user){
+      return false
+    }
     return (user.company.company_name === product.company_name)
   }
 

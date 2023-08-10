@@ -13,7 +13,12 @@ class CompanySerializer(ModelSerializer):
         """Meta class for company serializer."""
 
         model = Company
-        fields = ("company_name", "company_website")
+        fields = (
+            "company_name",
+            "company_website",
+            "company_jurisdiction",
+            "company_headquarters_physical_address"
+        )
 
 
 class GroupSerializer(ModelSerializer):

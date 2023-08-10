@@ -45,11 +45,9 @@ class Company(models.Model):
 
     company_jurisdiction = models.CharField(
         max_length=400,
-        null=True
     )
     company_headquarters_physical_address = models.CharField(
         max_length=400,
-        null=True
     )
 
     # This field is needed for future
