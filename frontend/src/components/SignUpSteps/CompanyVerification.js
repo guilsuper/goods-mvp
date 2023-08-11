@@ -30,6 +30,17 @@ const CompanyVerification = ({ prevStep, nextStep, setState, state }) => {
     }));
   }
 
+  const goNext = (event) => {
+    event.preventDefault();
+
+    setState((prevState) => ({
+      ...prevState,
+      ...formValues
+    }));
+
+    nextStep();
+  }
+
   const goBack = event => {
     event.preventDefault();
 
@@ -38,6 +49,7 @@ const CompanyVerification = ({ prevStep, nextStep, setState, state }) => {
 
   return (
     <FormContainer>
+      <h2 className="text-center">Company Verification</h2>
       <Form.Group className="mb-3" controlId="company_jurisdiction">
         <Form.Label>Company Jurisdiction of Incorporation</Form.Label>
         <Form.Control
@@ -64,8 +76,8 @@ const CompanyVerification = ({ prevStep, nextStep, setState, state }) => {
           </Button>
         </Col>
         <Col>
-          <Button className="mb-3 mx-auto" variant="primary" type="submit">
-            SignUp
+          <Button onClick={ goNext } className="mb-3 mx-auto" variant="primary">
+            Continue
           </Button>
         </Col>
       </Row>

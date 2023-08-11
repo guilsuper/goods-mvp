@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import SignUp from "./SignUpSteps/SignUp";
 import CompanyVerification from "./SignUpSteps/CompanyVerification";
+import CompanyProfile from "./SignUpSteps/CompanyProfile";
 
 
 const SignUpForm = () => {
@@ -24,6 +25,9 @@ const SignUpForm = () => {
     industry: "",
     company_size: "",
     company_phonenumber: "",
+    first_name: "",
+    last_name: "",
+    phonenumber: ""
   })
 
   const submitHandler = async (event) => {
@@ -68,18 +72,19 @@ const SignUpForm = () => {
       alert("Not authenticated or permission denied")
     }
   }
-  // proceed to the next step
-  const nextStep = () => {
-    setState(prevState => ({
-      ...prevState,
-      step: prevState.step + 1
-    }))
-  }
 
   const prevStep = () => {
     setState(prevState => ({
       ...prevState,
       step: prevState.step - 1
+    }))
+  }
+
+  // proceed to the next step
+  const nextStep = () => {
+    setState(prevState => ({
+      ...prevState,
+      step: prevState.step + 1
     }))
   }
 
@@ -105,6 +110,17 @@ const SignUpForm = () => {
           />
         </Form>
       )
+    case 3:
+        return (
+          <Form onSubmit={submitHandler}>
+            <CompanyProfile
+              prevStep={ prevStep }
+              setState={ setState }
+              state={ state }
+              handleSubmit={ submitHandler }
+            />
+          </Form>
+        )
     default:
         // do nothing
   }
