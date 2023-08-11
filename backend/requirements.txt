@@ -17,6 +17,10 @@ flake8==6.0.0
 flake8-docstrings==1.7.0
 flake8-import-order==0.18.2
 flake8-quotes==3.3.2
+google-api-core==2.11.1
+google-auth==2.22.0
+google-cloud-secret-manager==2.10.0
+googleapis-common-protos==1.60.0
 identify==2.5.24
 mccabe==0.7.0
 nodeenv==1.8.0
@@ -32,6 +36,7 @@ python-dateutil==2.8.2
 python-dotenv==1.0.0
 pytz==2023.3
 PyYAML==6.0
+sendgrid==6.10.0
 six==1.16.0
 snowballstemmer==2.2.0
 sqlparse==0.4.4
