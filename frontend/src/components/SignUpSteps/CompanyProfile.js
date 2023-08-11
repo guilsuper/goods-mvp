@@ -32,7 +32,7 @@ const CompanyProfile = ({ prevStep, setState, state, handleSubmit }) => {
 
   const goBack = event => {
     event.preventDefault();
-  
+
     prevStep();
   }
 
@@ -68,7 +68,7 @@ const CompanyProfile = ({ prevStep, setState, state, handleSubmit }) => {
             />
         </Form.Group>
         <Form.Label>Industry</Form.Label>
-        <Form.Control 
+        <Form.Control
           type="text"
           placeholder="Enter an industry"
           value={formValues.industry}
@@ -85,7 +85,7 @@ const CompanyProfile = ({ prevStep, setState, state, handleSubmit }) => {
           onChange={handleChange}
         />
       </Form.Group>
-      
+
       <Form.Group className="mb-3" controlId="company_phonenumber">
         <Form.Label>Company phonenumber</Form.Label>
         <Form.Control

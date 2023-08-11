@@ -121,7 +121,7 @@ const SignUpForm = () => {
             />
           </Form>
         )
-    default: 
+    default:
         // do nothing
   }
 }
