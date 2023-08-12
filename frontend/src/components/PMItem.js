@@ -13,14 +13,14 @@ const PMItem = ({PM}) => {
     <Col
       xs={3}
       className="border m-3 p-4 rounded"
-      as={Link} to={"/account/pm/info/" + PM.username}
+      as={Link} to={"/account/pm/info/" + PM.email}
       style={{ color: "inherit", textDecoration: "inherit"}}
     >
       <Row>
         <Image src="/logo192.png"/>
       </Row>
       <Row>
-        {"Username: " + PM.username}
+        {"Email: " + PM.email}
       </Row>
     </Col>
   )

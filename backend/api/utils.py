@@ -25,7 +25,6 @@ def send_activation_email(user_id: int) -> bool:
     message = render_to_string(
         "template_activate_account.html",
         {
-            "username": admin.username,
             "frontend_url": os.environ["FRONTEND_HOST"],
             "uid": urlsafe_base64_encode(force_bytes(admin.pk)),
             "token": account_activation_token.make_token(admin),

@@ -16,29 +16,22 @@ class ReadOnly(permissions.BasePermission):
         return False
 
 
-class IsBoss(permissions.BasePermission):
-    """Allow boss of an object to edit or read it."""
+class IsCompanyAdministrator(permissions.BasePermission):
+    """Allow company admin of a PM to edit or read it."""
 
     def has_object_permission(self, request, view, obj):
-        """If Administrator is a PM's boss."""
-        if not obj.boss:
+        """If Administrator and PM in the same company."""
+        if not request.user.groups.filter(name="Administrator").exists():
             return False
-        return obj.boss == request.user
+        return obj.company == request.user.company
 
 
 class IsProductOwner(permissions.BasePermission):
     """Object-level permission to only allow PM edit or read it."""
 
     def has_object_permission(self, request, view, obj):
-        """If user is a product administrator.
-
-        Or a PM, which boss is administrator of product.
-        """
-        if request.user.groups.filter(name="Administrator").exists():
-            return obj.owner == request.user
-        elif request.user.groups.filter(name="PM").exists():
-            return obj.owner == request.user.boss
-        return False
+        """If user's company is the same as product company."""
+        return obj.company == request.user.company
 
 
 class IsAccountOwner(permissions.BasePermission):

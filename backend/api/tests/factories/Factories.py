@@ -29,6 +29,25 @@ class GroupFactory(factory.django.DjangoModelFactory):
         return group
 
 
+class CompanyFactory(DjangoModelFactory):
+    """Company factory."""
+
+    class Meta:
+        """Defined model to use Company factory."""
+        model = "api.Company"
+
+    company_website = factory.Sequence(lambda n: f"Company{n}.com")
+    company_name = factory.Sequence(lambda n: f"St. Company, {n}")
+
+    company_jurisdiction = factory.Sequence(lambda n: f"St. Admin, {n}")
+    company_headquarters_physical_address = factory.Sequence(
+        lambda n: f"St. Company, {n}"
+    )
+
+    industry = factory.Sequence(lambda n: f"St. Company, {n}")
+    company_size = 200
+
+
 class AdministratorFactory(DjangoModelFactory):
     """Administrator factory (groups is Administrator)."""
 
@@ -36,18 +55,15 @@ class AdministratorFactory(DjangoModelFactory):
         """Defined model to use Administrator factory."""
         model = "api.Administrator"
 
-    username = factory.Sequence(lambda n: f"Admin {n}")
     password = factory.PostGenerationMethodCall("set_password", "admin")
-    company_name = factory.Sequence(lambda n: f"Company {n}")
-    company_address = factory.Sequence(lambda n: str(n) * 8)
-    company_size = 123
-    industry = factory.Sequence(lambda n: str(n) * 8)
+
     first_name = factory.Sequence(lambda n: str(n) * 8)
     last_name = factory.Sequence(lambda n: str(n) * 8)
     email = factory.Sequence(lambda n: str(n) * 8 + "@gmail.com")
     phonenumber = "+380999999999"
     is_active = True
-    boss = None
+
+    company = factory.SubFactory(CompanyFactory)
 
     @factory.post_generation
     def groups(self, create, extracted, **kwargs):
@@ -67,12 +83,6 @@ class ProductFactory(DjangoModelFactory):
         """Product factory model and fields."""
 
         model = "api.Product"
-        django_get_or_create = (
-            "sku_id", "public_facing_id", "public_facing_name",
-            "description", "sctr_date", "sctr_cogs",
-            "cogs_coutry_recipients", "product_input_manufacturer",
-            "product_input_type", "owner"
-        )
 
     sku_id = factory.Sequence(lambda n: int(str(n) * 8))
     public_facing_id = factory.Sequence(lambda n: int(str(n) * 8))
@@ -86,4 +96,4 @@ class ProductFactory(DjangoModelFactory):
     product_input_manufacturer = "AAAA"
     product_input_type = "Art"
 
-    owner = factory.SubFactory(AdministratorFactory)
+    company = factory.SubFactory(CompanyFactory)

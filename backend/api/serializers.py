@@ -1,10 +1,38 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module with serializers."""
 from api.models import Administrator
+from api.models import Company
 from api.models import Product
 from django.contrib.auth.models import Group
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
+
+
+class CompanySerializer(ModelSerializer):
+    """Company base serializer."""
+
+    class Meta:
+        """Meta class for company serializer."""
+
+        model = Company
+        fields = (
+            "company_name",
+            "company_website",
+            "company_jurisdiction",
+            "company_headquarters_physical_address",
+            "industry",
+            "company_size",
+            "company_phonenumber"
+        )
+
+
+class GroupSerializer(ModelSerializer):
+    """User groups serializer."""
+
+    class Meta:
+        """Metaclass for serializer, to retrieve only group name."""
+
+        model = Group
+        fields = ("name",)
 
 
 class ProductCreateSerializer(ModelSerializer):
@@ -14,14 +42,13 @@ class ProductCreateSerializer(ModelSerializer):
         """Metaclass for the ProductSerializer."""
 
         model = Product
-        exclude = ("id", "owner")
+        exclude = ("id", "company")
 
     def create(self, validated_data):
-        """Overwritten create method for setting up the product owner."""
+        """Overwritten create method for setting up the product company."""
         user = self.context["request"].user
-        validated_data["owner"] = user.boss if user.groups.filter(
-            name="PM"
-        ).exists() else user
+
+        validated_data["company"] = user.company
 
         return super().create(validated_data)
 
@@ -29,7 +56,7 @@ class ProductCreateSerializer(ModelSerializer):
 class ProductGetSerializer(ModelSerializer):
     """Product basic serilizer."""
 
-    owner = serializers.CharField(source="owner.username")
+    company = CompanySerializer()
 
     class Meta:
         """Metaclass for the ProductSerializer."""
@@ -45,11 +72,11 @@ class AdministratorSerializer(ModelSerializer):
         """Metaclass for the AdministratorSerializer."""
 
         model = Administrator
+
+        # Serializer sets company field in create method
         fields = (
-            "username", "password", "company_name",
-            "company_address", "industry", "company_size",
-            "first_name", "last_name", "email",
-            "phonenumber",
+            "password", "email", "phonenumber",
+            "first_name", "last_name"
         )
 
     def create(self, validated_data):
@@ -78,31 +105,30 @@ class AdministratorSerializer(ModelSerializer):
 class AdministratorRetrieveSerializer(ModelSerializer):
     """Administrator retrieve serilizer."""
 
+    groups = GroupSerializer(many=True)
+    company = CompanySerializer()
+
     class Meta:
         """Metaclass for the AdministratorRetrieveSerializer."""
 
         model = Administrator
-        fields = (
-            "username", "company_name", "company_address",
-            "industry", "company_size", "first_name",
-            "last_name", "email", "phonenumber",
-            "boss"
+        exclude = (
+            "id", "is_superuser", "is_staff", "user_permissions"
         )
 
 
 class PMRetrieveSerializer(ModelSerializer):
     """PM retrieve serilizer."""
-    boss = serializers.CharField(source="boss.username")
+
+    groups = GroupSerializer(many=True)
+    company = CompanySerializer()
 
     class Meta:
         """Metaclass for the PMRetrieveSerializer."""
 
         model = Administrator
-        fields = (
-            "username", "company_name", "company_address",
-            "industry", "company_size", "first_name",
-            "last_name", "email", "phonenumber",
-            "boss", "is_active"
+        exclude = (
+            "id", "is_superuser", "is_staff", "user_permissions"
         )
 
 
@@ -114,21 +140,15 @@ class PMSerializer(ModelSerializer):
 
         model = Administrator
         fields = (
-            "username", "phonenumber", "password",
-            "first_name", "last_name", "email",
+            "password", "email", "phonenumber",
+            "first_name", "last_name"
         )
 
     def create(self, validated_data):
         """Overwritten create method for PMSerializer."""
         validated_data["is_active"] = False
 
-        boss = self.context["request"].user
-        validated_data["boss"] = boss
-
-        validated_data["company_name"] = boss.company_name
-        validated_data["company_address"] = boss.company_address
-        validated_data["industry"] = boss.industry
-        validated_data["company_size"] = boss.company_size
+        validated_data["company"] = self.context["request"].user.company
 
         # Add pm to group
         pm = Administrator.objects.create_user(**validated_data)

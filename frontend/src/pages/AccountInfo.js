@@ -46,20 +46,16 @@ const AccountInfo = () => {
     }
   }
 
+  const isAdmin = () => {
+    let is_admin = false
+    user.groups.map(pair => (pair.name === "Administrator" ? is_admin = true : " "))
+    return is_admin
+  }
+
   return (
     <Container>
       <h3 className="text-center">User information</h3>
       <Col className="p-5 mb-5 mx-auto w-75 rounded shadow">
-        <Row className="text-secondary"><p>Username</p></Row>
-        <Row><p>{user.username}</p></Row>
-        <Row className="text-secondary"><p>Company Name</p></Row>
-        <Row><p>{user.company_name}</p></Row>
-        <Row className="text-secondary"><p>Company Address</p></Row>
-        <Row><p>{user.company_address}</p></Row>
-        <Row className="text-secondary"><p>Industry</p></Row>
-        <Row><p>{user.industry}</p></Row>
-        <Row className="text-secondary"><p>Company Size</p></Row>
-        <Row><p>{user.company_size}</p></Row>
         <Row className="text-secondary"><p>User First Name</p></Row>
         <Row><p>{user.first_name}</p></Row>
         <Row className="text-secondary"><p>User Last Name</p></Row>
@@ -69,14 +65,7 @@ const AccountInfo = () => {
         <Row className="text-secondary"><p>Phone</p></Row>
         <Row><p>{user.phonenumber}</p></Row>
         {
-          user.group === "PM" ?
-          <>
-            <Row className="text-secondary"><p>Boss</p></Row>
-            <Row><p>{user.boss}</p></Row>
-          </> : " "
-        }
-        {
-          user.group === "Administrator" ?
+          isAdmin() ?
           <Row>
             <Col md={4}>
               <Button variant="primary" as={Link} to="/account/edit">Edit</Button>

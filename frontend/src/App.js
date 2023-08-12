@@ -46,8 +46,8 @@ function App() {
               <Route exact path="/account/products/edit/:product_sku" element={<EditProductForm />}/>
               <Route exact path="/account/edit" element={<EditAccountForm />}/>
               <Route exact path="/account/pm" element={<CompanyPM />}/>
-              <Route exact path="/account/pm/edit/:pm_username" element={<EditPMForm />}/>
-              <Route exact path="/account/pm/info/:pm_username" element={<PMAccountInfo />}/>
+              <Route exact path="/account/pm/edit/:pm_email" element={<EditPMForm />}/>
+              <Route exact path="/account/pm/info/:pm_email" element={<PMAccountInfo />}/>
             </Route>
           </Routes>
           <Footer />
