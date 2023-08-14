@@ -1,0 +1,83 @@
+services:
+  e2e-tests:
+    build:
+      context: ./e2e-tests
+      dockerfile: Dockerfile
+    volumes:
+      - ./e2e-tests:/e2e-tests
+    environment:
+      - FRONTEND=frontend
+    env_file:
+      - ./e2e-tests/.env
+    depends_on:
+      backend:
+          condition: service_started
+      frontend:
+          condition: service_healthy
+    networks:
+      - prod-net
+
+  db-test:
+    image: postgres
+    volumes:
+      - ./e2e-tests/data/db-test:/var/lib/postgresql/data-test
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    networks:
+      - prod-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_DATABASE=production
+      - DEBUG=False
+      - ALLOWED_HOST=backend
+      - POSTGRES_HOST=db-test
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db-test:
+        condition: service_healthy
+    networks:
+      - prod-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    command: ["npm", "start"]
+    volumes:
+      - ./frontend:/front
+    ports:
+      - "3000:3000"
+    stdin_open:
+      true
+    environment:
+      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    networks:
+      - prod-net
+
+networks:
+  prod-net:
+    driver: bridge

@@ -35,3 +35,10 @@ docker-compose up --build
 ```
 pre-commit install
 ```
+
+### To run the end-to-end tests
+
+- Run this command from project directory:
+```
+docker-compose -f docker-compose.test.yaml up --abort-on-container-exit --build
+```
