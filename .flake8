@@ -12,7 +12,6 @@ exclude=
         venv,
         pip-download-cache,
         migrations,
-        conftest.py,
         Dockerfile,
         docker-entrypoint.sh,
         docker-compose.yaml,

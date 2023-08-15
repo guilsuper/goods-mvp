@@ -6,9 +6,7 @@ services:
     volumes:
       - ./e2e-tests:/e2e-tests
     environment:
-      - FRONTEND=frontend
-    env_file:
-      - ./e2e-tests/.env
+      - FRONTEND=http://frontend:3000
     depends_on:
       backend:
           condition: service_started
@@ -67,6 +65,10 @@ services:
     stdin_open:
       true
     environment:
+      # React variable to ingore Host header
+      # Any selenium requests to the frontend without it
+      # Cause the "Invalid host header" error
+      # This feature is acceptable for testing and development
       - DANGEROUSLY_DISABLE_HOST_CHECK=true
     depends_on:
       - backend

@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Contains pytest configurations."""
 import pytest
 from product_mvp import settings
