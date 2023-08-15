@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Button, Form} from "react-bootstrap";
 import AuthContext from "../context/AuthContext";

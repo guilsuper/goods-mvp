@@ -1,4 +1,5 @@
 #!/bin/env python3
+# Copyright 2023 Free World Certified -- all rights reserved.
 '''Example that illustrates
 
 1) using Google Secret Manager from python

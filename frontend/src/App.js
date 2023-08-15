@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import {
   BrowserRouter as Router, Routes, Route
 } from "react-router-dom";

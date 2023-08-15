@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """WSGI config for product_mvp project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
