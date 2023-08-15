@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Utils for creating a token."""
 import six
 from api.models import Administrator

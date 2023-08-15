@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Module with serializers."""
 from api.models import Administrator
 from api.models import Company

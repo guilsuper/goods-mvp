@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains DRF permission classes."""
 from rest_framework import permissions
 

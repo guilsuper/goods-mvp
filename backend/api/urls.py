@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """API urls module."""
 from api.views import ActivationView
 from api.views import CreateAdministratorAndCompanyView

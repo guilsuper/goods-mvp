@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router';
