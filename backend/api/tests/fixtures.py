@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains useful fixtures."""
 import pytest
 from api.tests.factories.factories import AdministratorFactory

@@ -54,7 +54,9 @@ class AdministratorFactory(DjangoModelFactory):
     class Meta:
         """Defined model to use Administrator factory."""
         model = "api.Administrator"
-        # Factory package recommendation
+
+        # This option helps with factory transition in future
+        # according to the official changeLog 3.3.0 (2023-07-19)
         skip_postgeneration_save = True
 
     password = factory.PostGenerationMethodCall("set_password", "admin")
