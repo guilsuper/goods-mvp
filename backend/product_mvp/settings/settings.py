@@ -69,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
+    "request_logging.middleware.LoggingMiddleware",
 ]
 
 AUTH_USER_MODEL = "api.Administrator"
