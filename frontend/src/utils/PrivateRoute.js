@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import { Navigate, Outlet } from "react-router-dom";
 
 

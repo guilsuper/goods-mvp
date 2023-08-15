@@ -1,3 +1,4 @@
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains database tables as models."""
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import React, {useState, useEffect, Fragment} from "react";
 import ListItem from "../components/ListItem";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";

@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright 2023 Free World Certified -- all rights reserved.
 """Django's command-line utility for administrative tasks."""
 import os
 import sys

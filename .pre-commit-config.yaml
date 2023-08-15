@@ -90,13 +90,30 @@ repos:
       language: python
       files: (requirements|constraints).*\.txt$
 
-
     - id: trailing-whitespace
       name: trim trailing whitespace
       description: trims trailing whitespace
       entry: trailing-whitespace-fixer
       language: python
       types: [text]
+
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.3
+    hooks:
+    - name: Insert license in comments (.js)
+      id: insert-license
+      files: \.(js)$
+      args:
+        - --use-current-year
+        - --comment-style
+        - /*| *| */
+    - name: Insert license in comments (.py)
+      id: insert-license
+      files: \.(py)$
+      exclude: "(backend/api/migrations/)"
+      args:
+        - --use-current-year
+        - --no-extra-eol
 
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.10.0

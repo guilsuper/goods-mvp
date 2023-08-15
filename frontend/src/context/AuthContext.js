@@ -1,3 +1,7 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
 import { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
