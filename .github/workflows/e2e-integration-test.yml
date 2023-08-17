@@ -1,0 +1,28 @@
+# For more information please look here:
+# .github/workflows/readme.txt
+# and
+# https://docs.github.com/en/actions
+
+name: End to End Integration Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # allow workflow to be triggered manually
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: isbang/compose-action@v1.5.1
+      with:
+        compose-file: "./docker-compose.test.yaml"
