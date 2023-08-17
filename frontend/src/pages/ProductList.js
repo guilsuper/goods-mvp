@@ -2,64 +2,60 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, {useState, useEffect, Fragment} from "react";
-import ListItem from "../components/ListItem";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
-
+import React, { useState, useEffect, Fragment } from 'react'
+import ListItem from '../components/ListItem'
+import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 
 const ProductList = () => {
-
-  let [products, setProducts] = useState([])
+  const [products, setProducts] = useState([])
 
   useEffect(() => {
     getProducts()
   }, [])
 
-  let getProducts = async () => {
-    let response = ""
+  const getProducts = async () => {
+    let response = ''
     try {
-      response = await fetch("/api/product/get/")
-    }
-    catch (error) {
-      alert("Server is not responding")
+      response = await fetch('/api/product/get/')
+    } catch (error) {
+      alert('Server is not responding')
       return
     }
-    let data = await response.json()
+    const data = await response.json()
     setProducts(data)
   }
 
-  let submitHandler = async (event) => {
-    event.preventDefault();
-    event.persist();
+  const submitHandler = async (event) => {
+    event.preventDefault()
+    event.persist()
 
-    let params = {}
+    const params = {}
 
-    Object.keys(event.target).forEach(function(attr){
-      if (!isNaN(attr)){
+    Object.keys(event.target).forEach(function (attr) {
+      if (!isNaN(attr)) {
         params[event.target[attr].id] = event.target[attr].value
       }
     })
     const config = {
-      method: "GET",
+      method: 'GET',
       headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      }
     }
 
-    let query = "?"
-    Object.keys(params).forEach(function(param){
+    let query = '?'
+    Object.keys(params).forEach(function (param) {
       if (params[param]) {
-        query += param + "=" + params[param] + "&"
+        query += param + '=' + params[param] + '&'
       }
     })
 
-    let response = ""
+    let response = ''
     try {
-      response = await fetch("/api/product/get/" + query, config)
-    }
-    catch (error) {
-      alert("Server is not responding")
+      response = await fetch('/api/product/get/' + query, config)
+    } catch (error) {
+      alert('Server is not responding')
       return
     }
     const result = await response.json()

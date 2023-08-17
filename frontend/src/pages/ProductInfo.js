@@ -2,91 +2,84 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useEffect, useState } from 'react';
-import { Col, Row, Container, Button } from 'react-bootstrap';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
-
+import React, { useContext, useEffect, useState } from 'react'
+import { Col, Row, Container, Button } from 'react-bootstrap'
+import { useNavigate, useParams, Link } from 'react-router-dom'
+import AuthContext from '../context/AuthContext'
 
 const ProductInfo = () => {
-  let { user, authTokens } = useContext(AuthContext)
-  let { product_sku } = useParams()
-  let [ product, setProduct ] = useState([])
+  const { user, authTokens } = useContext(AuthContext)
+  const { productSku } = useParams()
+  const [product, setProduct] = useState([])
 
-  let navigate = useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    let navigate_effect = navigate
-    async function getProductInfo() {
+    async function getProductInfo () {
       const config = {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-        },
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
       }
 
-      let response = ""
+      let response = ''
       try {
-        response = await fetch("/api/product/patch_delete_retrieve/" + product_sku + "/" , config)
-      }
-      catch (error) {
-        alert("Server is not working")
+        response = await fetch('/api/product/patch_delete_retrieve/' + productSku + '/', config)
+      } catch (error) {
+        alert('Server is not working')
         return
       }
 
       let result = await response.json()
 
       if (response.status !== 200) {
-        alert("Action not allowed")
-        navigate_effect("/")
-      }
-      else {
-        result = {...result, ...result.company}
+        alert('Action not allowed')
+        navigate('/')
+      } else {
+        result = { ...result, ...result.company }
         delete result.company
         setProduct(result)
       }
     }
     getProductInfo()
-  }, [navigate, product_sku])
+  }, [navigate, productSku])
 
   const isAllowedToChange = (user) => {
     // If not authorized
-    if (!user){
+    if (!user) {
       return false
     }
     return (user.company.company_name === product.company_name)
   }
 
   const deleteProduct = async (event) => {
-
-    if (!window.confirm("Are you sure you want to permanently delete this product?")){
+    if (!window.confirm('Are you sure you want to permanently delete this product?')) {
       return
     }
 
     const config = {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + authTokens.access
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
     }
 
-    let response = ""
+    let response = ''
     try {
-      response = await fetch("/api/product/patch_delete_retrieve/" + product_sku + "/", config)
-    }
-    catch (error) {
-      alert("Server is not working")
+      response = await fetch('/api/product/patch_delete_retrieve/' + productSku + '/', config)
+    } catch (error) {
+      alert('Server is not working')
       return
     }
 
-    if (response.status === 204){
-      alert("Successfully deleted")
-      navigate("/account/products")
-    }
-    else {
+    if (response.status === 204) {
+      alert('Successfully deleted')
+      navigate('/account/products')
+    } else {
       alert("Wasn't deleted or permission denied")
     }
   }
@@ -126,15 +119,16 @@ const ProductInfo = () => {
         <Row><p>{product.company_name}</p></Row>
 
         {
-          isAllowedToChange(user) ?
-          <Row>
+          isAllowedToChange(user)
+            ? <Row>
             <Col md={4}>
-              <Button variant="primary" as={Link} to={"/account/products/edit/" + product.sku_id}>Edit</Button>
+              <Button variant="primary" as={Link} to={'/account/products/edit/' + product.sku_id}>Edit</Button>
             </Col>
             <Col md={{ span: 4, offset: 4 }}>
               <Button variant="danger" onClick={deleteProduct}>Delete product</Button>
             </Col>
-          </Row> : " "
+          </Row>
+            : ' '
         }
 
       </Col>

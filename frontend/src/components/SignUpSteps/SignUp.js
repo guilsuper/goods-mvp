@@ -2,19 +2,24 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState, useEffect } from "react";
-import FormContainer from "../../utils/FormContainer";
-import { Button, Form } from "react-bootstrap";
-
+import React, { useState, useEffect } from 'react'
+import FormContainer from '../../utils/FormContainer'
+import PropTypes from 'prop-types'
+import { Button, Form } from 'react-bootstrap'
 
 const SignUp = ({ nextStep, setState, state }) => {
+  SignUp.propTypes = {
+    state: PropTypes.object,
+    nextStep: PropTypes.func,
+    setState: PropTypes.func
+  }
 
   const [formValues, setFormValues] = useState({
-    company_administrator_email: "",
-    password: "",
-    company_website: "",
-    company_name: ""
-  });
+    company_administrator_email: '',
+    password: '',
+    company_website: '',
+    company_name: ''
+  })
 
   useEffect(() => {
     setFormValues((prevState) => ({
@@ -24,7 +29,7 @@ const SignUp = ({ nextStep, setState, state }) => {
   }, [setFormValues, state])
 
   const handleChange = (event) => {
-    const { id, value } = event.target;
+    const { id, value } = event.target
     setState((prevState) => ({
       ...prevState,
       [id]: value
@@ -36,9 +41,9 @@ const SignUp = ({ nextStep, setState, state }) => {
   }
 
   const goNext = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    nextStep();
+    nextStep()
   }
 
   return (

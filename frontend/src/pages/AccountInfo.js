@@ -2,54 +2,46 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext } from "react";
-import Container from "react-bootstrap/Container";
-import AuthContext from "../context/AuthContext";
-import { Col, Row, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-
+import React, { useContext } from 'react'
+import Container from 'react-bootstrap/Container'
+import AuthContext from '../context/AuthContext'
+import { Col, Row, Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
 const AccountInfo = () => {
-
-  let {user, logoutUser, authTokens} = useContext(AuthContext)
-
+  const { user, logoutUser, authTokens } = useContext(AuthContext)
   const deleteAccount = async (event) => {
-
-    if (!window.confirm("Are you sure you want to permanently delete your account?")){
+    if (!window.confirm('Are you sure you want to permanently delete your account?')) {
       return
     }
 
     const config = {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + authTokens.access
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
     }
 
-    let response = ""
+    let response = ''
     try {
-        response = await fetch("/api/self/patch_delete_retrieve/", config)
-    }
-    catch (error) {
-        alert("Server is not working")
-        return
+      response = await fetch('/api/self/patch_delete_retrieve/', config)
+    } catch (error) {
+      alert('Server is not working')
+      return
     }
 
-    if (response.status === 204){
-        alert("Successfully deleted")
-        logoutUser()
-    }
-    else {
+    if (response.status === 204) {
+      alert('Successfully deleted')
+      logoutUser()
+    } else {
       alert("Wasn't deleted or permission denied")
     }
   }
 
   const isAdmin = () => {
-    let is_admin = false
-    user.groups.map(pair => (pair.name === "Administrator" ? is_admin = true : " "))
-    return is_admin
+    return user.groups.map(pair => (pair.name === 'Administrator'))
   }
 
   return (
@@ -65,15 +57,16 @@ const AccountInfo = () => {
         <Row className="text-secondary"><p>Phone</p></Row>
         <Row><p>{user.phonenumber}</p></Row>
         {
-          isAdmin() ?
-          <Row>
+          isAdmin()
+            ? <Row>
             <Col md={4}>
               <Button variant="primary" as={Link} to="/account/edit">Edit</Button>
             </Col>
             <Col md={{ span: 4, offset: 4 }}>
               <Button variant="danger" onClick={deleteAccount}>Delete account</Button>
             </Col>
-          </Row> : " "
+          </Row>
+            : ' '
         }
 
       </Col>
