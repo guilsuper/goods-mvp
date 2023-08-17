@@ -44,9 +44,18 @@ services:
       - DJANGO_DATABASE=production
       - DEBUG=False
       - ALLOWED_HOST=backend
+
       - POSTGRES_HOST=db-test
-    env_file:
-      - ./backend/.env
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+
+      - SECRET_KEY='8_*lw4(^907@enln%2r(av@__8_$w46n-h+s7s_7lm%ar5c_e6'
+      - FRONTEND_HOST=http://localhost:3000
+
+      - EMAIL_PASSWORD=ywlpkjngyzemrcrj
+      - EMAIL_USER=dummy@gmail.com
     depends_on:
       db-test:
         condition: service_healthy
