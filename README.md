@@ -42,3 +42,12 @@ pre-commit install
 ```
 docker-compose -f docker-compose.test.yaml up --abort-on-container-exit --build
 ```
+
+### Node version
+
+- You need to use node version 16 and above.
+- Use this command to check your version:
+```
+node -v
+```
+- If it fails, consider running [nvm](https://github.com/nvm-sh/nvm), and using that to run version 16 or above.
