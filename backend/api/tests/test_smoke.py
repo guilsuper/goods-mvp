@@ -1,17 +1,11 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains healthcheck test."""
+import pytest
 from django.test import Client
-from django.test import TestCase
 
 
-class TestSmoke(TestCase):
-    """Healthcheck test."""
-
-    def setUp(self):
-        """Client setup."""
-        self.client = Client()
-
-    def test_smoke(self):
-        """The healthcheck test."""
-        response = self.client.get("/api/")
-        self.assertEqual(response.status_code, 200)
+@pytest.mark.django_db()
+def test_smoke(client: Client):
+    """The healthcheck test."""
+    response = client.get("/api/")
+    assert response.status_code == 200
