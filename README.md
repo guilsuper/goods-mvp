@@ -45,7 +45,7 @@ docker-compose -f docker-compose.test.yaml up --abort-on-container-exit --build
 
 ### Node version
 
-- You need to use node version 16 and above.
+- node version 12.x does not work. node 16.x does work. other node versions may work we have not confirmed.
 - Use this command to check your version:
 ```
 node -v
