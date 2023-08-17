@@ -2,78 +2,73 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import { useNavigate } from "react-router-dom";
-import SignUp from "./SignUpSteps/SignUp";
-import CompanyVerification from "./SignUpSteps/CompanyVerification";
-import CompanyProfile from "./SignUpSteps/CompanyProfile";
-
+import React, { useState } from 'react'
+import Form from 'react-bootstrap/Form'
+import { useNavigate } from 'react-router-dom'
+import SignUp from './SignUpSteps/SignUp'
+import CompanyVerification from './SignUpSteps/CompanyVerification'
+import CompanyProfile from './SignUpSteps/CompanyProfile'
 
 const SignUpForm = () => {
+  const navigate = useNavigate()
 
-  let navigate = useNavigate()
-
-  let [ state, setState ] = useState({
+  const [state, setState] = useState({
     step: 1,
 
     // Company administrator email
-    email: "",
-    password: "",
-    company_website: "",
-    company_name: "",
+    email: '',
+    password: '',
+    company_website: '',
+    company_name: '',
 
-    company_jurisdiction: "",
-    company_headquarters_physical_address: "",
+    company_jurisdiction: '',
+    company_headquarters_physical_address: '',
 
-    industry: "",
-    company_size: "",
-    company_phonenumber: "",
-    first_name: "",
-    last_name: "",
-    phonenumber: ""
+    industry: '',
+    company_size: '',
+    company_phonenumber: '',
+    first_name: '',
+    last_name: '',
+    phonenumber: ''
   })
 
   const submitHandler = async (event) => {
     event.preventDefault()
     event.persist()
 
-    const formData = new FormData();
+    const formData = new FormData()
 
     // Add the text data from the state to the FormData
     for (const [key, value] of Object.entries(state)) {
-      formData.append(key, value);
+      formData.append(key, value)
     }
 
     const config = {
-      method: "POST",
-      body: formData,
+      method: 'POST',
+      body: formData
     }
 
-    let response = ""
+    let response = ''
     try {
-      response = await fetch("/api/admin_and_company/create/", config)
-    }
-    catch (error) {
-      alert("Server is not working")
+      response = await fetch('/api/admin_and_company/create/', config)
+    } catch (error) {
+      alert('Server is not working')
       return
     }
 
     const result = await response.json()
 
     if (response.status === 201) {
-      alert("Successfully created. Check your email.")
-      navigate("/")
-    }
-    else if (response.status === 400) {
-      let message = "Invalid input data:"
-      for (const invalid_element in result){
-        message += "\n" + invalid_element + ": " + result[invalid_element]
+      alert('Successfully created. Check your email.')
+      navigate('/')
+    } else if (response.status === 400) {
+      let message = 'Invalid input data:'
+      for (const invalidElement in result) {
+        message += '\n' + invalidElement + ': ' + result[invalidElement]
       }
       alert(message)
-    }
-    else {
-      alert("Not authenticated or permission denied")
+    } else {
+      alert('Not authenticated or permission denied')
     }
   }
 
@@ -92,7 +87,7 @@ const SignUpForm = () => {
     }))
   }
 
-  switch(state.step) {
+  switch (state.step) {
     case 1:
       return (
         <Form onSubmit={submitHandler}>
@@ -115,16 +110,15 @@ const SignUpForm = () => {
         </Form>
       )
     case 3:
-        return (
+      return (
           <Form onSubmit={submitHandler}>
             <CompanyProfile
               prevStep={ prevStep }
               setState={ setState }
               state={ state }
-              handleSubmit={ submitHandler }
             />
           </Form>
-        )
+      )
     default:
         // do nothing
   }

@@ -2,101 +2,101 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import { createContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-
+import React, { createContext, useState } from 'react'
+import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext()
 
-
 export default AuthContext
 
+export const AuthProvider = (props) => {
+  AuthProvider.propTypes = {
+    children: PropTypes.any
+  }
 
-export const AuthProvider = ({children}) => {
+  const children = props.children
 
-let [authTokens, setAuthTokens] = useState( () =>
-    localStorage.getItem("authTokens") ? JSON.parse(localStorage.getItem("authTokens")) : null
-)
-let [user, setUser] = useState( () =>
-    localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null
-)
+  const [authTokens, setAuthTokens] = useState(() =>
+    localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null
+  )
+  const [user, setUser] = useState(() =>
+    localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+  )
 
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
-  let updateUser = async () => {
+  const updateUser = async () => {
     const config = {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + authTokens.access
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
     }
 
-    let response = ""
+    let response = ''
     try {
-        response = await fetch("/api/self/patch_delete_retrieve/", config)
+      response = await fetch('/api/self/patch_delete_retrieve/', config)
+    } catch (error) {
+      alert('Server is not working')
+      return
     }
-    catch (error) {
-        alert("Server is not working")
-        return
-    }
-    let data = await response.json()
+    const data = await response.json()
 
-    localStorage.setItem("user", JSON.stringify(data))
+    localStorage.setItem('user', JSON.stringify(data))
     setUser(data)
   }
 
-  let signInUser = async (event, tokens) => {
-
+  const signInUser = async (event, tokens) => {
     const config = {
-      method: "GET",
+      method: 'GET',
       headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + tokens.access
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + tokens.access
+      }
     }
 
-    let response = ""
+    let response = ''
     try {
-        response = await fetch("/api/self/patch_delete_retrieve/", config)
+      response = await fetch('/api/self/patch_delete_retrieve/', config)
+    } catch (error) {
+      alert('Server is not working')
+      return
     }
-    catch (error) {
-        alert("Server is not working")
-        return
-    }
-    let data = await response.json()
+    const data = await response.json()
 
-    localStorage.setItem("authTokens", JSON.stringify(tokens))
-    localStorage.setItem("user", JSON.stringify(data))
+    localStorage.setItem('authTokens', JSON.stringify(tokens))
+    localStorage.setItem('user', JSON.stringify(data))
 
     setAuthTokens(tokens)
     setUser(data)
 
-    navigate("/account/info")
+    navigate('/account/info')
   }
 
-  let logoutUser = () => {
-    localStorage.removeItem("authTokens")
-    localStorage.removeItem("user")
+  const logoutUser = () => {
+    localStorage.removeItem('authTokens')
+    localStorage.removeItem('user')
 
     setAuthTokens(null)
     setUser(null)
 
-    navigate("/sign-in")
+    navigate('/sign-in')
   }
 
-  let context_data = {
-    user: user,
-    authTokens: authTokens,
-    signInUser: signInUser,
-    updateUser: updateUser,
-    logoutUser: logoutUser,
+  const contextData = {
+    user,
+    authTokens,
+    signInUser,
+    updateUser,
+    logoutUser
   }
 
   return (
-    <AuthContext.Provider value={context_data}>
+    <AuthContext.Provider value={contextData}>
       {children}
     </AuthContext.Provider>
   )

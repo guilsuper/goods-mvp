@@ -2,33 +2,29 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
-import { useNavigate, useParams } from 'react-router';
-
+import React, { useEffect, useState } from 'react'
+import { Container } from 'react-bootstrap'
+import { useNavigate, useParams } from 'react-router'
 
 const ActivatePage = () => {
-  let {uidb64, token} = useParams()
-  let [message, setMessage] = useState([])
-  let navigate = useNavigate()
+  const { uidb64, token } = useParams()
+  const [message, setMessage] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
-
-    async function activate() {
-      let response = ""
+    async function activate () {
+      let response = ''
       try {
-        response = await fetch("/api/activate/" + uidb64 + "/" + token)
-      }
-      catch (error) {
-        alert("Server is not responding")
+        response = await fetch('/api/activate/' + uidb64 + '/' + token)
+      } catch (error) {
+        alert('Server is not responding')
         return
       }
 
-      if (response.status === 200){
-        setMessage("Successfully activated!")
-      }
-      else{
-        navigate("/sign-up")
+      if (response.status === 200) {
+        setMessage('Successfully activated!')
+      } else {
+        navigate('/sign-up')
       }
     }
     activate()

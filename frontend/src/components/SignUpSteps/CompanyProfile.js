@@ -2,18 +2,23 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState, useEffect } from "react";
-import FormContainer from "../../utils/FormContainer";
-import { Button, Form, Col, Row } from "react-bootstrap";
+import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
+import FormContainer from '../../utils/FormContainer'
+import { Button, Form, Col, Row } from 'react-bootstrap'
 
-
-const CompanyProfile = ({ prevStep, setState, state, handleSubmit }) => {
+const CompanyProfile = ({ prevStep, setState, state }) => {
+  CompanyProfile.propTypes = {
+    state: PropTypes.object,
+    prevStep: PropTypes.func,
+    setState: PropTypes.func
+  }
 
   const [formValues, setFormValues] = useState({
-    industry: "",
-    company_size: "",
-    company_phonenumber: ""
-  });
+    industry: '',
+    company_size: '',
+    company_phonenumber: ''
+  })
 
   useEffect(() => {
     setFormValues((prevState) => ({
@@ -23,7 +28,7 @@ const CompanyProfile = ({ prevStep, setState, state, handleSubmit }) => {
   }, [setFormValues, state])
 
   const handleChange = (event) => {
-    const { id, value } = event.target;
+    const { id, value } = event.target
     setState((prevState) => ({
       ...prevState,
       [id]: value
@@ -35,9 +40,9 @@ const CompanyProfile = ({ prevStep, setState, state, handleSubmit }) => {
   }
 
   const goBack = event => {
-    event.preventDefault();
+    event.preventDefault()
 
-    prevStep();
+    prevStep()
   }
 
   return (

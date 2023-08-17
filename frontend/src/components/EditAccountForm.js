@@ -2,79 +2,75 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext } from "react";
-import { Button, Form} from "react-bootstrap";
-import AuthContext from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import FormContainer from "../utils/FormContainer";
-
+import React, { useContext } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import AuthContext from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import FormContainer from '../utils/FormContainer'
 
 const EditAccountForm = () => {
   // authTokens are for sending request to the backend
   // updateUser for updating current user localStorage
   // user is needed to display local storage information
-  let { authTokens, updateUser, user } = useContext(AuthContext)
+  const { authTokens, updateUser, user } = useContext(AuthContext)
   // If successfully editted, go to home page to prevent multiple editting
-  let navigate = useNavigate()
+  const navigate = useNavigate()
 
   const submitHandler = async (event) => {
     event.preventDefault()
     event.persist()
 
-    let data = {}
+    const data = {}
 
     // set data value from the form
-    Object.keys(event.target).forEach(function(attr){
-      if (!isNaN(attr)){
-        if (event.target[attr].style){
-            // Clear bg color
-            event.target[attr].style = ""
+    Object.keys(event.target).forEach(function (attr) {
+      if (!isNaN(attr)) {
+        if (event.target[attr].style) {
+          // Clear bg color
+          event.target[attr].style = ''
         }
-        if (event.target[attr].value !== ""){
-            // Add key and value pair to data from form field
-            data[event.target[attr].id] = event.target[attr].value
+        if (event.target[attr].value !== '') {
+          // Add key and value pair to data from form field
+          data[event.target[attr].id] = event.target[attr].value
         }
       }
     })
 
     // Config for PATCH request
     const config = {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + authTokens.access
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
       },
       body: JSON.stringify(data)
     }
 
-    let response = ""
+    let response = ''
     try {
-      response = await fetch("/api/self/patch_delete_retrieve/", config)
-    }
-    catch (error) {
-      alert("Server is not responding")
+      response = await fetch('/api/self/patch_delete_retrieve/', config)
+    } catch (error) {
+      alert('Server is not responding')
       return
     }
 
     const result = await response.json()
 
     if (response.status === 200) {
-      alert("Successfully editted")
+      alert('Successfully editted')
       updateUser()
-      navigate("/account/info")
-    }
-    else if (response.status === 400) {
-      let message = "Invalid input data:"
-      for (const invalid_element in result){
-        event.target[invalid_element].style = "border-color: red"
+      navigate('/account/info')
+    } else if (response.status === 400) {
+      let message = 'Invalid input data:'
+      for (const invalidElement in result) {
+        event.target[invalidElement].style = 'border-color: red'
 
-        message += "\n" + invalid_element + ": " + result[invalid_element]
+        message += '\n' + invalidElement + ': ' + result[invalidElement]
       }
       alert(message)
-    }
-    else {
-      alert("Not authenticated or permission denied")
+    } else {
+      alert('Not authenticated or permission denied')
     }
   }
 

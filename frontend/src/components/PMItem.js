@@ -2,25 +2,28 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React from "react";
-import { Col, Row, Image } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Col, Row, Image } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 
-
-const PMItem = ({PM}) => {
+const PMItem = ({ PM }) => {
+  PMItem.propTypes = {
+    PM: PropTypes.object
+  }
   // Renders PM object as a column with 2 rows
   return (
     <Col
       xs={3}
       className="border m-3 p-4 rounded"
-      as={Link} to={"/account/pm/info/" + PM.email}
-      style={{ color: "inherit", textDecoration: "inherit"}}
+      as={Link} to={'/account/pm/info/' + PM.email}
+      style={{ color: 'inherit', textDecoration: 'inherit' }}
     >
       <Row>
         <Image src="/logo192.png"/>
       </Row>
       <Row>
-        {"Email: " + PM.email}
+        {'Email: ' + PM.email}
       </Row>
     </Col>
   )
