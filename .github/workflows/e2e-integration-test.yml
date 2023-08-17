@@ -23,6 +23,14 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
+    - name: "Setup .env for testing"
+      working-directory: ./backend
+      run: |
+        echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
+        echo 'FRONTEND_HOST="http://localhost"' >> .env
+        echo 'EMAIL_PASSWORD="TESTING_PASSWORD"' >> .env
+        echo 'EMAIL_USER="TESTING_USERNAME"' >> .env
+
     - uses: isbang/compose-action@v1.5.1
       with:
         compose-file: "./docker-compose.test.yaml"
