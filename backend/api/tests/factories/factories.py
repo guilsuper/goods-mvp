@@ -54,7 +54,13 @@ class AdministratorFactory(DjangoModelFactory):
     class Meta:
         """Defined model to use Administrator factory."""
         model = "api.Administrator"
-        # Factory package recommendation
+
+        # DjangoModelFactory in future will stop issuing
+        # a second call to save() on the created instance when
+        # Post-generation hooks return a value (method 'group')
+        # Appropriate warning is displayed if this setting is missing
+        # according to the official changeLog 3.3.0 (2023-07-19)
+        # https://factoryboy.readthedocs.io/en/stable/changelog.html
         skip_postgeneration_save = True
 
     password = factory.PostGenerationMethodCall("set_password", "admin")

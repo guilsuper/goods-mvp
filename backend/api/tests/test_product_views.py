@@ -122,7 +122,7 @@ def test_product_update_same_company(
     )
 
     assert response.status_code == status_code
-    # If data and user were specified
+    # Ensure data was changed
     if data and user:
         assert Product.objects.get(sku_id=product.sku_id).sctr_cogs == 30
 
@@ -135,12 +135,16 @@ def test_product_update_same_company(
         (None, dict(), 401),
         (None, {"sctr_cogs": "30"}, 401),
         # Try to update a product as an admin with no specified fields
+        # The user is not allowed to update it
         ("admin", dict(), 403),
         # Try to update a product as an admin with specified fields
+        # The user is not allowed to update it
         ("admin", {"sctr_cogs": "30"}, 403),
         # Try to update a product as a PM with no specified fields
+        # The user is not allowed to update it
         ("pm", dict(), 403),
         # Try to update a product as a PM with specified fields
+        # The user is not allowed to update it
         ("pm", {"sctr_cogs": "30"}, 403)
     ]
 )
@@ -170,5 +174,6 @@ def test_product_update_different_company(
 
     assert response.status_code == status_code
     # If data and user were specified
+    # Ensure data wasn't changed
     if data and user:
         assert Product.objects.get(sku_id=product.sku_id).sctr_cogs != data["sctr_cogs"]
