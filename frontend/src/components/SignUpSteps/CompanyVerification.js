@@ -2,53 +2,57 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState, useEffect } from "react";
-import FormContainer from "../../utils/FormContainer";
-import { Button, Form, Col, Row } from "react-bootstrap";
-
+import React, { useState, useEffect } from 'react'
+import FormContainer from '../../utils/FormContainer'
+import PropTypes from 'prop-types'
+import { Button, Form, Col, Row } from 'react-bootstrap'
 
 const CompanyVerification = ({ prevStep, nextStep, setState, state }) => {
-
+  CompanyVerification.propTypes = {
+    state: PropTypes.object,
+    nextStep: PropTypes.func,
+    prevStep: PropTypes.func,
+    setState: PropTypes.func
+  }
   const [formValues, setFormValues] = useState({
-    company_jurisdiction: "",
-    company_headquarters_physical_address: "",
-  });
+    company_jurisdiction: '',
+    company_headquarters_physical_address: ''
+  })
 
   useEffect(() => {
     setFormValues((prevState) => ({
       ...prevState,
       ...state
     }))
-
   }, [setFormValues, state])
 
   const handleChange = (event) => {
-    const { id, value } = event.target;
+    const { id, value } = event.target
     setState((prevState) => ({
       ...prevState,
       [id]: value
-    }));
+    }))
     setFormValues((prevState) => ({
       ...prevState,
       [id]: value
-    }));
+    }))
   }
 
   const goNext = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     setState((prevState) => ({
       ...prevState,
       ...formValues
-    }));
+    }))
 
-    nextStep();
+    nextStep()
   }
 
   const goBack = event => {
-    event.preventDefault();
+    event.preventDefault()
 
-    prevStep();
+    prevStep()
   }
 
   return (

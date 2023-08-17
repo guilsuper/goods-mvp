@@ -2,17 +2,15 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useState } from "react";
-import { Navbar, Nav, NavLink, Button, ButtonGroup, Dropdown, DropdownButton } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import AuthContext from "../context/AuthContext";
-
+import React, { useContext, useState } from 'react'
+import { Navbar, Nav, NavLink, Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import AuthContext from '../context/AuthContext'
 
 const Header = () => {
+  const { authTokens, logoutUser, user } = useContext(AuthContext)
 
-  let {authTokens, logoutUser, user} = useContext(AuthContext)
-
-  let [isToggle, setToggle] = useState(false)
+  const [isToggle, setToggle] = useState(false)
 
   const updateToggle = () => {
     // Tracks if burger menu is toggled
@@ -36,7 +34,7 @@ const Header = () => {
           as={ButtonGroup}
           variant="success"
           title={user.email}
-          align={isToggle ? "start" : "end"}
+          align={isToggle ? 'start' : 'end'}
           className="me-3"
         >
           <Dropdown.Item eventKey="1" href="/account/info">Profile settings</Dropdown.Item>
@@ -47,9 +45,7 @@ const Header = () => {
   }
 
   const isAdmin = () => {
-    let is_admin = false
-    user.groups.map(pair => (pair.name === "Administrator" ? is_admin = true : " "))
-    return is_admin
+    return user.groups.map(pair => (pair.name === 'Administrator'))
   }
 
   return (
@@ -74,10 +70,12 @@ const Header = () => {
           <NavLink eventKey="3" as={Link} to="#services">Services</NavLink>
           <NavLink eventKey="4" as={Link} to="#contact">Contact</NavLink>
           <NavLink eventKey="5" as={Link} to="#about">About</NavLink>
-          {user ? <NavLink eventKey="6" as={Link} to="/account/products">Our products</NavLink> : " "}
-          { user && isAdmin() ? <NavLink eventKey="7" as={Link} to="/account/pm">
+          {user ? <NavLink eventKey="6" as={Link} to="/account/products">Our products</NavLink> : ' '}
+          { user && isAdmin()
+            ? <NavLink eventKey="7" as={Link} to="/account/pm">
             Create PM
-          </NavLink> : " "}
+          </NavLink>
+            : ' '}
         </Nav>
       </Navbar.Collapse>
       {authButton()}

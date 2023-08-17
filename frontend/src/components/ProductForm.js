@@ -2,79 +2,74 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useMemo } from "react";
-import { Button, Form } from "react-bootstrap";
-import AuthContext from "../context/AuthContext";
-import { useNavigate } from "react-router";
-
-import countryList from 'react-select-country-list';
-
+import React, { useContext, useMemo } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import AuthContext from '../context/AuthContext'
+import { useNavigate } from 'react-router'
+import countryList from 'react-select-country-list'
 
 const ProductForm = () => {
   // authTokens are for sending request to the backend
-  let {authTokens} = useContext(AuthContext)
+  const { authTokens } = useContext(AuthContext)
   // all possible countries list
   const options = useMemo(() => countryList().getData(), [])
 
-  let navigate = useNavigate()
+  const navigate = useNavigate()
 
   const submitHandler = async (event) => {
     event.preventDefault()
     event.persist()
 
-    let data = {}
+    const data = {}
 
     // set data value from the form
-    Object.keys(event.target).forEach(function(attr){
-      if (!isNaN(attr)){
-        if (event.target[attr].style){
-            // Clear bg color
-            event.target[attr].style = ""
+    Object.keys(event.target).forEach(function (attr) {
+      if (!isNaN(attr)) {
+        if (event.target[attr].style) {
+          // Clear bg color
+          event.target[attr].style = ''
         }
-        if (event.target[attr].value !== ""){
-            // Add key and value pair to data from form field
-            data[event.target[attr].id] = event.target[attr].value
+        if (event.target[attr].value !== '') {
+          // Add key and value pair to data from form field
+          data[event.target[attr].id] = event.target[attr].value
         }
       }
     })
 
     // Config for POST request
     const config = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + authTokens.access
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
       },
       body: JSON.stringify(data)
     }
 
-    let response = ""
+    let response = ''
     try {
-        response = await fetch("/api/product/create/", config)
-    }
-    catch (error) {
-        alert("Server is not working")
-        return
+      response = await fetch('/api/product/create/', config)
+    } catch (error) {
+      alert('Server is not working')
+      return
     }
 
     const result = await response.json()
 
     if (response.status === 201) {
-      alert("Successfully created")
-      navigate("/account/products")
-    }
-    else if (response.status === 400) {
-      let message = "Invalid input data:"
-      for (const invalid_element in result){
-        event.target[invalid_element].style = "border-color: red"
+      alert('Successfully created')
+      navigate('/account/products')
+    } else if (response.status === 400) {
+      let message = 'Invalid input data:'
+      for (const invalidElement in result) {
+        event.target[invalidElement].style = 'border-color: red'
 
-        message += "\n" + invalid_element + ": " + result[invalid_element]
+        message += '\n' + invalidElement + ': ' + result[invalidElement]
       }
       alert(message)
-    }
-    else {
-      alert("Not authenticated or permission denied")
+    } else {
+      alert('Not authenticated or permission denied')
     }
   }
 
@@ -138,7 +133,7 @@ const ProductForm = () => {
         <Form.Select aria-label="Select country" id="cogs_coutry_recipients">
           <option>Select country</option>
           {options.map((option, i) => (
-            <option key={option["value"]} value={option["value"]}>{option["label"]}</option>
+            <option key={option.value} value={option.value}>{option.label}</option>
           ))}
         </Form.Select>
       </Form.Group>

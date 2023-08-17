@@ -2,31 +2,28 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, {useState, useEffect, useContext} from 'react';
-import ProductForm from "../components/ProductForm";
-import ListItem from "../components/ListItem";
-import { Col, Container, Row } from "react-bootstrap";
-import AuthContext from "../context/AuthContext";
-
+import React, { useState, useEffect, useContext } from 'react'
+import ProductForm from '../components/ProductForm'
+import ListItem from '../components/ListItem'
+import { Col, Container, Row } from 'react-bootstrap'
+import AuthContext from '../context/AuthContext'
 
 const CompanyProducts = () => {
-
-  let [products, setProducts] = useState([])
-  let {user} = useContext(AuthContext)
+  const [products, setProducts] = useState([])
+  const { user } = useContext(AuthContext)
 
   useEffect(() => {
-    async function getProducts() {
-      const company_name = user.company.company_name
+    async function getProducts () {
+      const companyName = user.company.company_name
 
-      let response = ""
+      let response = ''
       try {
-        response = await fetch("/api/product/get/?company__company_name=" + company_name)
-      }
-      catch (error) {
-        alert("Server is not responding")
+        response = await fetch('/api/product/get/?company__company_name=' + companyName)
+      } catch (error) {
+        alert('Server is not responding')
         return
       }
-      let data = await response.json()
+      const data = await response.json()
 
       setProducts(data)
     }

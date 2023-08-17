@@ -7,82 +7,76 @@ import { Row, Col, Container, Button } from 'react-bootstrap'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 
-
 const PMAccountInfo = () => {
-  let { user, authTokens } = useContext(AuthContext)
-  let { pm_email } = useParams()
-  let [pm, setPM] = useState([])
-  let navigate = useNavigate()
+  const { user, authTokens } = useContext(AuthContext)
+  const { pmEmail } = useParams()
+  const [pm, setPM] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
-    async function getPMInfo() {
+    async function getPMInfo () {
       const config = {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + authTokens.access
-        },
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authTokens.access
+        }
       }
 
-      let response = ""
+      let response = ''
       try {
-        response = await fetch("/api/pm/patch_delete_retrieve/" + pm_email + "/" , config)
-      }
-      catch (error) {
-        alert("Server is not working")
+        response = await fetch('/api/pm/patch_delete_retrieve/' + pmEmail + '/', config)
+      } catch (error) {
+        alert('Server is not working')
         return
       }
 
       let result = await response.json()
 
       if (response.status !== 200) {
-        alert("Action not allowed")
-        navigate("/")
-      }
-      else {
-        result = {...result, ...result.company}
+        alert('Action not allowed')
+        navigate('/')
+      } else {
+        result = { ...result, ...result.company }
         delete result.company
 
         setPM(result)
       }
     }
     getPMInfo()
-  }, [authTokens, navigate, pm_email])
+  }, [authTokens, navigate, pmEmail])
 
   const isAllowedToChange = (user) => {
     return (user.company.company_name === pm.company_name)
   }
 
   const deletePM = async (event) => {
-
-    if (!window.confirm("Are you sure you want to permanently delete this PM?")){
+    if (!window.confirm('Are you sure you want to permanently delete this PM?')) {
       return
     }
 
     const config = {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + authTokens.access
-      },
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
     }
 
-    let response = ""
+    let response = ''
     try {
-        response = await fetch("/api/pm/patch_delete_retrieve/" + pm_email + "/", config)
-    }
-    catch (error) {
-      alert("Server is not working")
+      response = await fetch('/api/pm/patch_delete_retrieve/' + pmEmail + '/', config)
+    } catch (error) {
+      alert('Server is not working')
       return
     }
 
-    if (response.status === 204){
-      alert("Successfully deleted")
-      navigate("/account/pm")
-    }
-    else {
+    if (response.status === 204) {
+      alert('Successfully deleted')
+      navigate('/account/pm')
+    } else {
       alert("Wasn't deleted or permission denied")
     }
   }
@@ -100,18 +94,19 @@ const PMAccountInfo = () => {
         <Row className="text-secondary"><p>Phone</p></Row>
         <Row><p>{pm.phonenumber}</p></Row>
         <Row className="text-secondary"><p>Is account activated</p></Row>
-        <Row><p>{pm.is_active ? "True" : "False"}</p></Row>
+        <Row><p>{pm.is_active ? 'True' : 'False'}</p></Row>
 
         {
-          isAllowedToChange(user) ?
-          <Row>
+          isAllowedToChange(user)
+            ? <Row>
             <Col md={4}>
-              <Button variant="primary" as={Link} to={"/account/pm/edit/" + pm.email}>Edit</Button>
+              <Button variant="primary" as={Link} to={'/account/pm/edit/' + pm.email}>Edit</Button>
             </Col>
             <Col md={{ span: 4, offset: 4 }}>
               <Button variant="danger" onClick={deletePM}>Delete PM</Button>
             </Col>
-          </Row> : " "
+          </Row>
+            : ' '
         }
 
       </Col>

@@ -2,44 +2,41 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, {useState, useEffect, useContext} from 'react';
-import { Col, Container, Row } from "react-bootstrap";
-import AuthContext from "../context/AuthContext";
-import PMItem from '../components/PMItem';
-import PMForm from '../components/PMForm';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useState, useEffect, useContext } from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
+import AuthContext from '../context/AuthContext'
+import PMItem from '../components/PMItem'
+import PMForm from '../components/PMForm'
+import { useNavigate } from 'react-router-dom'
 
 const CompanyPM = () => {
+  const [PMs, setPM] = useState([])
+  const { authTokens } = useContext(AuthContext)
 
-  let [PMs, setPM] = useState([])
-  let {authTokens} = useContext(AuthContext)
-
-  let navigate = useNavigate()
+  const navigate = useNavigate()
 
   useEffect(() => {
-    async function getPMs() {
+    async function getPMs () {
       const config = {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Authorization": "Bearer " + authTokens.access
-        },
+          Authorization: 'Bearer ' + authTokens.access
+        }
       }
 
-      let response = ""
+      let response = ''
       try {
-        response = await fetch("/api/pm/list/", config)
-      }
-      catch (error) {
-        alert("Server is not responding")
+        response = await fetch('/api/pm/list/', config)
+      } catch (error) {
+        alert('Server is not responding')
         return
       }
 
-      let data = await response.json()
+      const data = await response.json()
 
       if (response.status !== 200) {
-          alert("Permission denied")
-          navigate("/")
+        alert('Permission denied')
+        navigate('/')
       }
       setPM(data)
     }
