@@ -1,0 +1,16 @@
+# For more information please look here:
+# .github/workflows/readme.txt
+# and
+# https://docs.github.com/en/actions
+
+name: GitHub Action Placeholder
+
+on:
+  # allow workflow to be triggered manually
+  workflow_dispatch:
+
+jobs:
+  pre-commit:
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
