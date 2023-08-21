@@ -16,12 +16,8 @@ class CompanySerializer(ModelSerializer):
         model = Company
         fields = (
             "company_name",
-            "company_website",
-            "company_jurisdiction",
-            "company_headquarters_physical_address",
-            "industry",
-            "company_size",
-            "company_phonenumber"
+            "website",
+            "jurisdiction",
         )
 
     def create(self, validated_data):
@@ -56,12 +52,8 @@ class CompanyRetrieveSerializer(ModelSerializer):
         model = Company
         fields = (
             "company_name",
-            "company_website",
-            "company_jurisdiction",
-            "company_headquarters_physical_address",
-            "industry",
-            "company_size",
-            "company_phonenumber",
+            "website",
+            "jurisdiction",
             "slug"
         )
 
@@ -116,7 +108,7 @@ class AdministratorSerializer(ModelSerializer):
 
         # Serializer sets company field in create method
         fields = (
-            "password", "email", "phonenumber",
+            "password", "email",
             "first_name", "last_name"
         )
 
@@ -181,7 +173,7 @@ class PMSerializer(ModelSerializer):
 
         model = Administrator
         fields = (
-            "password", "email", "phonenumber",
+            "password", "email",
             "first_name", "last_name"
         )
 

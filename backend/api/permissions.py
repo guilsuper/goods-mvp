@@ -24,8 +24,9 @@ class IsCompanyAdministrator(permissions.BasePermission):
         if not request.user.groups.filter(name="Administrator").exists():
             return False
 
-        # If company is admin company
-        # Or if PM/Product company is admin company
+        # If obj is a company and administrator is in that company
+        # Or if obj is a PM/Product, then admin can access it
+        # if belongs to the same company
         return obj == request.user.company or obj.company == request.user.company
 
 
