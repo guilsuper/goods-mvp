@@ -10,4 +10,4 @@ RUN apt update
 RUN apt install -y python3-pip
 RUN pip install -r ./requirements.txt
 
-CMD ["pytest"]
+CMD ["pytest", "--junitxml=../test-results/pytest-e2e.xml"]
