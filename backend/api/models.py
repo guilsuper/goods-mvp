@@ -80,7 +80,6 @@ class Company(models.Model):
 
     def set_slug(self):
         """Sets slug from company_name."""
-        print("YEs")
         self.slug = slugify(self.company_name)
 
 
