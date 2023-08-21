@@ -24,6 +24,47 @@ class CompanySerializer(ModelSerializer):
             "company_phonenumber"
         )
 
+    def create(self, validated_data):
+        """Overwritten create method for setting up the slug."""
+
+        company = Company.objects.create(
+            **validated_data,
+        )
+        # Set company slug
+        company.set_slug()
+        company.save()
+
+        return company
+
+    def update(self, instance, validated_data):
+        """Overwritten update method for setting up the slug field."""
+        instance = super().update(instance, validated_data)
+
+        if "company_name" in validated_data.keys():
+            instance.set_slug()
+            instance.save()
+
+        return instance
+
+
+class CompanyRetrieveSerializer(ModelSerializer):
+    """Company retrieve serializer."""
+
+    class Meta:
+        """Meta class for company serializer."""
+
+        model = Company
+        fields = (
+            "company_name",
+            "company_website",
+            "company_jurisdiction",
+            "company_headquarters_physical_address",
+            "industry",
+            "company_size",
+            "company_phonenumber",
+            "slug"
+        )
+
 
 class GroupSerializer(ModelSerializer):
     """User groups serializer."""
@@ -106,7 +147,7 @@ class AdministratorRetrieveSerializer(ModelSerializer):
     """Administrator retrieve serilizer."""
 
     groups = GroupSerializer(many=True)
-    company = CompanySerializer()
+    company = CompanyRetrieveSerializer()
 
     class Meta:
         """Metaclass for the AdministratorRetrieveSerializer."""

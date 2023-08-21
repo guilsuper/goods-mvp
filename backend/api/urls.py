@@ -1,6 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """API urls module."""
 from api.views import ActivationView
+from api.views import CompanyUpdateRetrieveView
 from api.views import CreateAdministratorAndCompanyView
 from api.views import CreateAdministratorView
 from api.views import PMCreateView
@@ -60,6 +61,11 @@ urlpatterns = [
         PMRetrieveUpdateDestroyView.as_view(),
         name="pm-patch-delete-retrieve"
     ),
+
+    path(
+        "company/patch_retrieve/<slug:slug>/",
+        CompanyUpdateRetrieveView.as_view(),
+        name="company-patch-retrieve"),
 
     path("token/", TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),

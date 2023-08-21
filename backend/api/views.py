@@ -2,6 +2,7 @@
 """API views module."""
 from api.filter import ProductFilter
 from api.models import Administrator
+from api.models import Company
 from api.models import Product
 from api.permissions import IsAccountOwner
 from api.permissions import IsAdministrator
@@ -10,6 +11,7 @@ from api.permissions import IsProductOwner
 from api.permissions import ReadOnly
 from api.serializers import AdministratorRetrieveSerializer
 from api.serializers import AdministratorSerializer
+from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CompanySerializer
 from api.serializers import PMRetrieveSerializer
 from api.serializers import PMSerializer
@@ -24,6 +26,7 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser
 from rest_framework.parsers import MultiPartParser
@@ -286,3 +289,20 @@ class PMListView(ListAPIView):
             groups__name="PM",
             company=self.request.user.company
         )
+
+
+class CompanyUpdateRetrieveView(RetrieveUpdateAPIView):
+    """Updates or retrieves company information."""
+
+    permission_classes = [
+        IsAuthenticated | ReadOnly,
+        IsAdministrator | ReadOnly,
+        IsCompanyAdministrator | ReadOnly
+    ]
+    queryset = Company.objects.all()
+    lookup_field = "slug"
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return CompanyRetrieveSerializer
+        return CompanySerializer

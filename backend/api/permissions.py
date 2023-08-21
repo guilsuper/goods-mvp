@@ -23,7 +23,10 @@ class IsCompanyAdministrator(permissions.BasePermission):
         """If Administrator and PM in the same company."""
         if not request.user.groups.filter(name="Administrator").exists():
             return False
-        return obj.company == request.user.company
+
+        # If company is admin company
+        # Or if PM/Product company is admin company
+        return obj == request.user.company or obj.company == request.user.company
 
 
 class IsProductOwner(permissions.BasePermission):
