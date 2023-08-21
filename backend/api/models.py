@@ -9,7 +9,6 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.template.defaultfilters import slugify
 from django_countries.fields import CountryField
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 full_domain_validator = RegexValidator(
@@ -39,41 +38,23 @@ class Company(models.Model):
     """Company model."""
 
     # Required fields
-    company_website = models.CharField(
+    website = models.CharField(
         max_length=255,
         validators=[full_domain_validator],
         unique=True
     )
     company_name = models.CharField(max_length=200)
-    company_jurisdiction = models.CharField(
+    jurisdiction = models.CharField(
         max_length=400,
     )
 
     # Optional fields
-    company_headquarters_physical_address = models.CharField(
-        max_length=400,
-        null=True,
-        blank=True
-    )
     # This field is needed for future
     company_unique_identifier = models.FileField(
         upload_to="company_identifiers/%Y/%m",
         null=True,
         blank=True
     )
-    industry = models.CharField(
-        max_length=50,
-        null=True,
-        blank=True
-    )
-    company_size = models.IntegerField(
-        validators=[
-            MinValueValidator(1)
-        ],
-        null=True,
-        blank=True
-    )
-    company_phonenumber = PhoneNumberField(null=True)
 
     # Slug field to use in url
     slug = models.SlugField(null=True)
@@ -112,8 +93,6 @@ class Administrator(AbstractUser):
     email = models.EmailField(max_length=250, unique=True)
 
     # Optional fields
-    phonenumber = PhoneNumberField(null=True, blank=True)
-
     first_name = models.CharField(max_length=150, null=True, blank=True)
     last_name = models.CharField(max_length=150, null=True, blank=True)
 
