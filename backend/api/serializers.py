@@ -173,7 +173,7 @@ class PMSerializer(ModelSerializer):
 
         model = Administrator
         fields = (
-            "password", "email", "phonenumber",
+            "password", "email",
             "first_name", "last_name"
         )
 
