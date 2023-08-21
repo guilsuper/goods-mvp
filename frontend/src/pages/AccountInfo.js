@@ -54,8 +54,6 @@ const AccountInfo = () => {
         <Row><p>{user.last_name}</p></Row>
         <Row className='text-secondary'><p>Email</p></Row>
         <Row><p>{user.email}</p></Row>
-        <Row className='text-secondary'><p>Phone</p></Row>
-        <Row><p>{user.phonenumber}</p></Row>
         {
           isAdmin()
             ? <Row>

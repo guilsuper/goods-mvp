@@ -129,11 +129,6 @@ const EditPMForm = () => {
             <Form.Control type="text" placeholder={pm.last_name} />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="phonenumber">
-            <Form.Label>Phone</Form.Label>
-            <Form.Control type="text" placeholder={pm.phone} />
-        </Form.Group>
-
         <Button className="mb-3" variant="primary" type="submit">
             Edit
         </Button>

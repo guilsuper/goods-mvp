@@ -9,7 +9,7 @@ import { Col, Row, Button } from 'react-bootstrap'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 
 const CompanyInfo = () => {
-  const { user } = useContext(AuthContext)
+  const { user, authTokens } = useContext(AuthContext)
 
   const { companyName } = useParams()
   const [company, setCompany] = useState([])
@@ -22,7 +22,8 @@ const CompanyInfo = () => {
         method: 'GET',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authTokens.access
         }
       }
 
@@ -58,25 +59,13 @@ const CompanyInfo = () => {
       <h3 className='text-center'>Company information</h3>
       <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
         <Row className='text-secondary'><p>Company website</p></Row>
-        <Row><p>{company.company_website}</p></Row>
+        <Row><p>{company.website}</p></Row>
 
         <Row className='text-secondary'><p>Company name</p></Row>
         <Row><p>{company.company_name}</p></Row>
 
         <Row className='text-secondary'><p>Company jurisdiction</p></Row>
-        <Row><p>{company.company_jurisdiction}</p></Row>
-
-        <Row className='text-secondary'><p>Company headquarters physical address</p></Row>
-        <Row><p>{company.company_headquarters_physical_address}</p></Row>
-
-        <Row className='text-secondary'><p>Industry</p></Row>
-        <Row><p>{company.industry}</p></Row>
-
-        <Row className='text-secondary'><p>company_size</p></Row>
-        <Row><p>{company.company_size}</p></Row>
-
-        <Row className='text-secondary'><p>company_phonenumber</p></Row>
-        <Row><p>{company.company_phonenumber}</p></Row>
+        <Row><p>{company.jurisdiction}</p></Row>
 
         {
           isAdmin()

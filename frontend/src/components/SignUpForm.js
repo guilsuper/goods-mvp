@@ -12,10 +12,11 @@ const SignUpForm = () => {
   const navigate = useNavigate()
 
   const [formValues, setFormValues] = useState({
-    company_administrator_email: '',
+    email: '',
     password: '',
-    company_website: '',
-    company_name: ''
+    website: '',
+    company_name: '',
+    jurisdiction: ''
   })
 
   const handleChange = (event) => {
@@ -91,12 +92,12 @@ const SignUpForm = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="company_website">
+        <Form.Group className="mb-3" controlId="website">
           <Form.Label>Company domain</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter company domain, like example.com"
-            value={formValues.company_website}
+            value={formValues.website}
             onChange={handleChange}
           />
         </Form.Group>
@@ -111,12 +112,12 @@ const SignUpForm = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="company_jurisdiction">
+        <Form.Group className="mb-3" controlId="jurisdiction">
           <Form.Label>Company Jurisdiction of Incorporation</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter company Jurisdiction of Incorporation"
-            value={formValues.company_jurisdiction}
+            value={formValues.jurisdiction}
             onChange={handleChange}
           />
         </Form.Group>

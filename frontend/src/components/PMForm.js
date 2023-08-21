@@ -91,11 +91,6 @@ const PMForm = () => {
         <Form.Control type="text" placeholder="Enter last name" />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="phonenumber">
-        <Form.Label>Phone</Form.Label>
-        <Form.Control type="text" placeholder="Enter phone" />
-      </Form.Group>
-
       <Button className="mb-3" variant="primary" type="submit">
         Create PM
       </Button>

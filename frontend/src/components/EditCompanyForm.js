@@ -84,34 +84,14 @@ const EditCompanyForm = () => {
           <Form.Control type="text" placeholder={user.company.company_name} />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="company_website">
+        <Form.Group className="mb-3" controlId="website">
           <Form.Label>Company website</Form.Label>
-          <Form.Control type="text" placeholder={user.company.company_website} />
+          <Form.Control type="text" placeholder={user.company.website} />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="company_jurisdiction">
+        <Form.Group className="mb-3" controlId="jurisdiction">
           <Form.Label>Company jurisdiction</Form.Label>
-          <Form.Control type="text" placeholder={user.company.company_jurisdiction} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_headquarters_physical_address">
-          <Form.Label>Company headquarters physical address</Form.Label>
-          <Form.Control type="text" placeholder={user.company.company_headquarters_physical_address} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="industry">
-          <Form.Label>Industry</Form.Label>
-          <Form.Control type="text" placeholder={user.company.industry} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_size">
-          <Form.Label>Company size</Form.Label>
-          <Form.Control type="text" placeholder={user.company.company_size} />
-        </Form.Group>
-
-        <Form.Group className="mb-3" controlId="company_phonenumber">
-          <Form.Label>Company phonenumber</Form.Label>
-          <Form.Control type="text" placeholder={user.company.company_phonenumber} />
+          <Form.Control type="text" placeholder={user.company.jurisdiction} />
         </Form.Group>
 
         <Button className="mb-3" variant="primary" type="submit">
