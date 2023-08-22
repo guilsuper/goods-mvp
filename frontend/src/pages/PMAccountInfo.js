@@ -91,8 +91,6 @@ const PMAccountInfo = () => {
         <Row><p>{pm.last_name}</p></Row>
         <Row className="text-secondary"><p>Email</p></Row>
         <Row><p>{pm.email}</p></Row>
-        <Row className="text-secondary"><p>Phone</p></Row>
-        <Row><p>{pm.phonenumber}</p></Row>
         <Row className="text-secondary"><p>Is account activated</p></Row>
         <Row><p>{pm.is_active ? 'True' : 'False'}</p></Row>
 

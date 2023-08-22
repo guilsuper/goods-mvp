@@ -25,6 +25,8 @@ import PMAccountInfo from './pages/PMAccountInfo'
 import ProductInfo from './pages/ProductInfo'
 import EditPMForm from './components/EditPMForm'
 import EditProductForm from './components/EditProductForm'
+import CompanyInfo from './pages/CompanyInfo'
+import EditCompanyForm from './components/EditCompanyForm'
 
 function App () {
   return (
@@ -47,6 +49,8 @@ function App () {
               <Route exact path="/account/pm" element={<CompanyPM />}/>
               <Route exact path="/account/pm/edit/:pmEmail" element={<EditPMForm />}/>
               <Route exact path="/account/pm/info/:pmEmail" element={<PMAccountInfo />}/>
+              <Route exact path="/account/company/info/:companyName" element={<CompanyInfo />}/>
+              <Route exact path="/account/company/edit/:companyName" element={<EditCompanyForm />}/>
             </Route>
           </Routes>
           <Footer />

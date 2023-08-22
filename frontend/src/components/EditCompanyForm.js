@@ -5,20 +5,26 @@
 import React, { useContext } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import FormContainer from '../utils/FormContainer'
 
-const PMForm = () => {
+const EditCompanyForm = () => {
   // authTokens are for sending request to the backend
   // updateUser for updating current user localStorage
-  const { authTokens } = useContext(AuthContext)
-  // If successfully editted, go to account/pm to prevent multiple editting
+  // user is needed to display local storage information
+  const { authTokens, updateUser, user } = useContext(AuthContext)
+  // If successfully editted, go to home page to prevent multiple editting
   const navigate = useNavigate()
+
+  const { companyName } = useParams()
 
   const submitHandler = async (event) => {
     event.preventDefault()
     event.persist()
+
     const data = {}
 
+    // set data value from the form
     Object.keys(event.target).forEach(function (attr) {
       if (!isNaN(attr)) {
         if (event.target[attr].style) {
@@ -32,9 +38,9 @@ const PMForm = () => {
       }
     })
 
-    // Config for POST request
+    // Config for PATCH request
     const config = {
-      method: 'POST',
+      method: 'PATCH',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -45,17 +51,18 @@ const PMForm = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/pm/create/', config)
+      response = await fetch('/api/company/patch_retrieve/' + companyName + '/', config)
     } catch (error) {
-      alert('Server is not working')
+      alert('Server is not responding')
       return
     }
 
     const result = await response.json()
 
-    if (response.status === 201) {
-      alert('Successfully created')
-      navigate('/account/pm')
+    if (response.status === 200) {
+      alert('Successfully editted')
+      updateUser()
+      navigate('/account/info')
     } else if (response.status === 400) {
       let message = 'Invalid input data:'
       for (const invalidElement in result) {
@@ -70,32 +77,29 @@ const PMForm = () => {
   }
 
   return (
-    <Form onSubmit={submitHandler}>
-      <Form.Group className="mb-3" controlId="email">
-        <Form.Label>Email</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-      </Form.Group>
+    <FormContainer>
+      <Form onSubmit={submitHandler}>
+        <Form.Group className="mb-3" controlId="company_name">
+          <Form.Label>Company name</Form.Label>
+          <Form.Control type="text" placeholder={user.company.company_name} />
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="password">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Enter password" />
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="website">
+          <Form.Label>Company website</Form.Label>
+          <Form.Control type="text" placeholder={user.company.website} />
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="first_name">
-        <Form.Label>First name</Form.Label>
-        <Form.Control type="text" placeholder="Enter first name" />
-      </Form.Group>
+        <Form.Group className="mb-3" controlId="jurisdiction">
+          <Form.Label>Company jurisdiction</Form.Label>
+          <Form.Control type="text" placeholder={user.company.jurisdiction} />
+        </Form.Group>
 
-      <Form.Group className="mb-3" controlId="last_name">
-        <Form.Label>Last name</Form.Label>
-        <Form.Control type="text" placeholder="Enter last name" />
-      </Form.Group>
-
-      <Button className="mb-3" variant="primary" type="submit">
-        Create PM
-      </Button>
-    </Form>
+        <Button className="mb-3" variant="primary" type="submit">
+          Edit
+        </Button>
+      </Form>
+    </FormContainer>
   )
 }
 
-export default PMForm
+export default EditCompanyForm

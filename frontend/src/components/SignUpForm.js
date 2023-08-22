@@ -5,32 +5,28 @@
 import React, { useState } from 'react'
 import Form from 'react-bootstrap/Form'
 import { useNavigate } from 'react-router-dom'
-import SignUp from './SignUpSteps/SignUp'
-import CompanyVerification from './SignUpSteps/CompanyVerification'
-import CompanyProfile from './SignUpSteps/CompanyProfile'
+import FormContainer from '../utils/FormContainer'
+import { Button } from 'react-bootstrap'
 
 const SignUpForm = () => {
   const navigate = useNavigate()
 
-  const [state, setState] = useState({
-    step: 1,
-
-    // Company administrator email
+  const [formValues, setFormValues] = useState({
     email: '',
     password: '',
-    company_website: '',
+    website: '',
     company_name: '',
-
-    company_jurisdiction: '',
-    company_headquarters_physical_address: '',
-
-    industry: '',
-    company_size: '',
-    company_phonenumber: '',
-    first_name: '',
-    last_name: '',
-    phonenumber: ''
+    jurisdiction: ''
   })
+
+  const handleChange = (event) => {
+    const { id, value } = event.target
+
+    setFormValues((prevState) => ({
+      ...prevState,
+      [id]: value
+    }))
+  }
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -39,7 +35,7 @@ const SignUpForm = () => {
     const formData = new FormData()
 
     // Add the text data from the state to the FormData
-    for (const [key, value] of Object.entries(state)) {
+    for (const [key, value] of Object.entries(formValues)) {
       formData.append(key, value)
     }
 
@@ -72,56 +68,66 @@ const SignUpForm = () => {
     }
   }
 
-  const prevStep = () => {
-    setState(prevState => ({
-      ...prevState,
-      step: prevState.step - 1
-    }))
-  }
-
-  // proceed to the next step
-  const nextStep = () => {
-    setState(prevState => ({
-      ...prevState,
-      step: prevState.step + 1
-    }))
-  }
-
-  switch (state.step) {
-    case 1:
-      return (
-        <Form onSubmit={submitHandler}>
-          <SignUp
-            nextStep={ nextStep }
-            setState={ setState }
-            state={ state }
+  return (
+    <FormContainer>
+      <Form onSubmit={submitHandler}>
+        <h2 className="text-center">Sign Up</h2>
+        <Form.Group className="mb-3" controlId="email">
+          <Form.Label>Company Administrator Email Address</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter company administrator email"
+            value={formValues.email}
+            onChange={handleChange}
           />
-        </Form>
-      )
-    case 2:
-      return (
-        <Form onSubmit={submitHandler}>
-          <CompanyVerification
-            prevStep={ prevStep }
-            nextStep={ nextStep }
-            setState={ setState }
-            state={ state }
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter password"
+            value={formValues.password}
+            onChange={handleChange}
           />
-        </Form>
-      )
-    case 3:
-      return (
-          <Form onSubmit={submitHandler}>
-            <CompanyProfile
-              prevStep={ prevStep }
-              setState={ setState }
-              state={ state }
-            />
-          </Form>
-      )
-    default:
-        // do nothing
-  }
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="website">
+          <Form.Label>Company domain</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter company domain, like example.com"
+            value={formValues.website}
+            onChange={handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="company_name">
+          <Form.Label>Company legal name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter company legal name"
+            value={formValues.company_name}
+            onChange={handleChange}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="jurisdiction">
+          <Form.Label>Company Jurisdiction of Incorporation</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter company Jurisdiction of Incorporation"
+            value={formValues.jurisdiction}
+            onChange={handleChange}
+          />
+        </Form.Group>
+
+        <Button className="mb-3" variant="primary" type="submit">
+          Sign Up
+        </Button>
+      </Form>
+    </FormContainer>
+  )
 }
 
 export default SignUpForm
