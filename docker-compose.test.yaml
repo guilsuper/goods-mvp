@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./e2e-tests:/e2e-tests
+      - ./test-results:/test-results
     environment:
       - FRONTEND=http://frontend:3000
     depends_on:
