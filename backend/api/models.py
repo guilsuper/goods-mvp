@@ -7,8 +7,8 @@ from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.core.validators import RegexValidator
 from django.db import models
+from django.template.defaultfilters import slugify
 from django_countries.fields import CountryField
-from phonenumber_field.modelfields import PhoneNumberField
 
 
 full_domain_validator = RegexValidator(
@@ -37,34 +37,31 @@ class PRODUCT_TYPES(models.TextChoices):
 class Company(models.Model):
     """Company model."""
 
-    company_website = models.CharField(
+    # Required fields
+    website = models.CharField(
         max_length=255,
         validators=[full_domain_validator],
         unique=True
     )
-    company_name = models.CharField(max_length=200)
-
-    company_jurisdiction = models.CharField(
-        max_length=400,
-    )
-    company_headquarters_physical_address = models.CharField(
+    name = models.CharField(max_length=200)
+    jurisdiction = models.CharField(
         max_length=400,
     )
 
+    # Optional fields
     # This field is needed for future
     company_unique_identifier = models.FileField(
         upload_to="company_identifiers/%Y/%m",
-        null=True
+        null=True,
+        blank=True
     )
 
-    industry = models.CharField(max_length=50, null=True)
-    company_size = models.IntegerField(
-        validators=[
-            MinValueValidator(1)
-        ],
-        null=True
-    )
-    company_phonenumber = PhoneNumberField(null=True)
+    # Slug field to use in url
+    slug = models.SlugField(null=True)
+
+    def set_slug(self):
+        """Sets slug from company name."""
+        self.slug = slugify(self.name)
 
 
 class CustomUserManager(BaseUserManager):
@@ -90,9 +87,12 @@ class CustomUserManager(BaseUserManager):
 class Administrator(AbstractUser):
     """Main user class."""
 
+    # Required fields
+    # Password is implemented under the hood
+    # As a part of AbstractUser
     email = models.EmailField(max_length=250, unique=True)
-    phonenumber = PhoneNumberField(null=True, blank=True)
 
+    # Optional fields
     first_name = models.CharField(max_length=150, null=True, blank=True)
     last_name = models.CharField(max_length=150, null=True, blank=True)
 

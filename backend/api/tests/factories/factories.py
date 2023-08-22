@@ -36,16 +36,10 @@ class CompanyFactory(DjangoModelFactory):
         """Defined model to use Company factory."""
         model = "api.Company"
 
-    company_website = factory.Sequence(lambda n: f"Company{n}.com")
-    company_name = factory.Sequence(lambda n: f"St. Company, {n}")
+    website = factory.Sequence(lambda n: f"Company{n}.com")
+    name = factory.Sequence(lambda n: f"St. Company, {n}")
 
-    company_jurisdiction = factory.Sequence(lambda n: f"St. Admin, {n}")
-    company_headquarters_physical_address = factory.Sequence(
-        lambda n: f"St. Company, {n}"
-    )
-
-    industry = factory.Sequence(lambda n: f"St. Company, {n}")
-    company_size = 200
+    jurisdiction = factory.Sequence(lambda n: f"St. Admin, {n}")
 
 
 class AdministratorFactory(DjangoModelFactory):
@@ -68,7 +62,6 @@ class AdministratorFactory(DjangoModelFactory):
     first_name = factory.Sequence(lambda n: str(n) * 8)
     last_name = factory.Sequence(lambda n: str(n) * 8)
     email = factory.Sequence(lambda n: str(n) * 8 + "@gmail.com")
-    phonenumber = "+380999999999"
     is_active = True
 
     company = factory.SubFactory(CompanyFactory)

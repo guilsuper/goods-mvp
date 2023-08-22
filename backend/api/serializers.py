@@ -15,13 +15,46 @@ class CompanySerializer(ModelSerializer):
 
         model = Company
         fields = (
-            "company_name",
-            "company_website",
-            "company_jurisdiction",
-            "company_headquarters_physical_address",
-            "industry",
-            "company_size",
-            "company_phonenumber"
+            "name",
+            "website",
+            "jurisdiction",
+        )
+
+    def create(self, validated_data):
+        """Overwritten create method for setting up the slug."""
+
+        company = Company.objects.create(
+            **validated_data,
+        )
+        # Set company slug
+        company.set_slug()
+        company.save()
+
+        return company
+
+    def update(self, instance, validated_data):
+        """Overwritten update method for setting up the slug field."""
+        instance = super().update(instance, validated_data)
+
+        if "name" in validated_data.keys():
+            instance.set_slug()
+            instance.save()
+
+        return instance
+
+
+class CompanyRetrieveSerializer(ModelSerializer):
+    """Company retrieve serializer."""
+
+    class Meta:
+        """Meta class for company serializer."""
+
+        model = Company
+        fields = (
+            "name",
+            "website",
+            "jurisdiction",
+            "slug"
         )
 
 
@@ -75,7 +108,7 @@ class AdministratorSerializer(ModelSerializer):
 
         # Serializer sets company field in create method
         fields = (
-            "password", "email", "phonenumber",
+            "password", "email",
             "first_name", "last_name"
         )
 
@@ -106,7 +139,7 @@ class AdministratorRetrieveSerializer(ModelSerializer):
     """Administrator retrieve serilizer."""
 
     groups = GroupSerializer(many=True)
-    company = CompanySerializer()
+    company = CompanyRetrieveSerializer()
 
     class Meta:
         """Metaclass for the AdministratorRetrieveSerializer."""
@@ -140,7 +173,7 @@ class PMSerializer(ModelSerializer):
 
         model = Administrator
         fields = (
-            "password", "email", "phonenumber",
+            "password", "email",
             "first_name", "last_name"
         )
 
