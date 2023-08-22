@@ -43,7 +43,7 @@ class Company(models.Model):
         validators=[full_domain_validator],
         unique=True
     )
-    company_name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200)
     jurisdiction = models.CharField(
         max_length=400,
     )
@@ -60,8 +60,8 @@ class Company(models.Model):
     slug = models.SlugField(null=True)
 
     def set_slug(self):
-        """Sets slug from company_name."""
-        self.slug = slugify(self.company_name)
+        """Sets slug from company name."""
+        self.slug = slugify(self.name)
 
 
 class CustomUserManager(BaseUserManager):

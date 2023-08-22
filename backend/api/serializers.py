@@ -15,7 +15,7 @@ class CompanySerializer(ModelSerializer):
 
         model = Company
         fields = (
-            "company_name",
+            "name",
             "website",
             "jurisdiction",
         )
@@ -36,7 +36,7 @@ class CompanySerializer(ModelSerializer):
         """Overwritten update method for setting up the slug field."""
         instance = super().update(instance, validated_data)
 
-        if "company_name" in validated_data.keys():
+        if "name" in validated_data.keys():
             instance.set_slug()
             instance.save()
 
@@ -51,7 +51,7 @@ class CompanyRetrieveSerializer(ModelSerializer):
 
         model = Company
         fields = (
-            "company_name",
+            "name",
             "website",
             "jurisdiction",
             "slug"
