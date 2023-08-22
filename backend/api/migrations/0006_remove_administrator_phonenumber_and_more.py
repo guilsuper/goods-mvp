@@ -40,4 +40,9 @@ class Migration(migrations.Migration):
             old_name='company_jurisdiction',
             new_name='jurisdiction',
         ),
+        migrations.RenameField(
+            model_name='company',
+            old_name='company_name',
+            new_name='name',
+        ),
     ]

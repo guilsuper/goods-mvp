@@ -22,5 +22,5 @@ class ProductFilter(django_filters.FilterSet):
 
             "product_input_manufacturer": ["icontains"],
             "product_input_type": ["icontains"],
-            "company__company_name": ["exact"]
+            "company__name": ["exact"]
         }

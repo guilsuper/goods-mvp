@@ -37,7 +37,7 @@ class CompanyFactory(DjangoModelFactory):
         model = "api.Company"
 
     website = factory.Sequence(lambda n: f"Company{n}.com")
-    company_name = factory.Sequence(lambda n: f"St. Company, {n}")
+    name = factory.Sequence(lambda n: f"St. Company, {n}")
 
     jurisdiction = factory.Sequence(lambda n: f"St. Admin, {n}")
 
