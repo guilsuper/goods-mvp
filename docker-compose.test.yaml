@@ -21,8 +21,8 @@ services:
 
   db-test:
     image: postgres
-    volumes:
-      - ./data-test/db:/var/lib/postgresql/data/
+    tmpfs:
+      - /var/lib/postgresql/data
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
