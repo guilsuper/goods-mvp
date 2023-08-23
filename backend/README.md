@@ -38,7 +38,6 @@ The file must contain the following settings:
 - SECRET_KEY is a Django secret key for encrypting processes
 - DEBUG is a Django application setting for the development process
 - FRONTEND_HOST is a front-end host, so only this host has access to the backend
-- EMAIL_USER and EMAIL_PASSWORD are for sending emails from the Django application
 - POSTGRES_NAME, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_PORT keywords are related to Postgres Database
 
 The .env file example:
@@ -48,9 +47,6 @@ FRONTEND_HOST="http://localhost:3000"
 DJANGO_DATABASE=develop
 DEBUG=False
 ALLOWED_HOST=localhost
-
-EMAIL_USER = "dummy.stuff@gmail.com"
-EMAIL_PASSWORD = "rcxghoyeshsiyplk"
 
 POSTGRES_NAME=postgres
 POSTGRES_USER=postgres
