@@ -79,6 +79,8 @@ const PMAccountInfo = () => {
   }
 
   // If pm company wasn't loaded yet
+  // When page renders, pm.company is undefiend
+  // And it is imposible to get pm.company.name for example
   if (!pm.company) {
     return
   }
