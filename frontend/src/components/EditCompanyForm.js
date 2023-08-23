@@ -79,9 +79,9 @@ const EditCompanyForm = () => {
   return (
     <FormContainer>
       <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="company_name">
+        <Form.Group className="mb-3" controlId="name">
           <Form.Label>Company name</Form.Label>
-          <Form.Control type="text" placeholder={user.company.company_name} />
+          <Form.Control type="text" placeholder={user.company.name} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="website">

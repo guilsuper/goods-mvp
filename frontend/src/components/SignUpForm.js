@@ -15,7 +15,7 @@ const SignUpForm = () => {
     email: '',
     password: '',
     website: '',
-    company_name: '',
+    name: '',
     jurisdiction: ''
   })
 
@@ -102,12 +102,12 @@ const SignUpForm = () => {
           />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="company_name">
+        <Form.Group className="mb-3" controlId="name">
           <Form.Label>Company legal name</Form.Label>
           <Form.Control
             type="text"
             placeholder="Enter company legal name"
-            value={formValues.company_name}
+            value={formValues.name}
             onChange={handleChange}
           />
         </Form.Group>

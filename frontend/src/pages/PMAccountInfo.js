@@ -32,15 +32,12 @@ const PMAccountInfo = () => {
         return
       }
 
-      let result = await response.json()
+      const result = await response.json()
 
       if (response.status !== 200) {
         alert('Action not allowed')
         navigate('/')
       } else {
-        result = { ...result, ...result.company }
-        delete result.company
-
         setPM(result)
       }
     }
@@ -48,7 +45,7 @@ const PMAccountInfo = () => {
   }, [authTokens, navigate, pmEmail])
 
   const isAllowedToChange = (user) => {
-    return (user.company.company_name === pm.company_name)
+    return (user.company.name === pm.company.name)
   }
 
   const deletePM = async (event) => {
@@ -79,6 +76,11 @@ const PMAccountInfo = () => {
     } else {
       alert("Wasn't deleted or permission denied")
     }
+  }
+
+  // If pm company wasn't loaded yet
+  if (!pm.company) {
+    return
   }
 
   return (
