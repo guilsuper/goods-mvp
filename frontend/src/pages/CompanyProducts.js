@@ -14,11 +14,11 @@ const CompanyProducts = () => {
 
   useEffect(() => {
     async function getProducts () {
-      const companyName = user.company.company_name
+      const companyName = user.company.name
 
       let response = ''
       try {
-        response = await fetch('/api/product/get/?company__company_name=' + companyName)
+        response = await fetch('/api/product/get/?company__name=' + companyName)
       } catch (error) {
         alert('Server is not responding')
         return

@@ -62,7 +62,7 @@ const CompanyInfo = () => {
         <Row><p>{company.website}</p></Row>
 
         <Row className='text-secondary'><p>Company name</p></Row>
-        <Row><p>{company.company_name}</p></Row>
+        <Row><p>{company.name}</p></Row>
 
         <Row className='text-secondary'><p>Company jurisdiction</p></Row>
         <Row><p>{company.jurisdiction}</p></Row>

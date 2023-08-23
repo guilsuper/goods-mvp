@@ -32,14 +32,12 @@ const ProductInfo = () => {
         return
       }
 
-      let result = await response.json()
+      const result = await response.json()
 
       if (response.status !== 200) {
         alert('Action not allowed')
         navigate('/')
       } else {
-        result = { ...result, ...result.company }
-        delete result.company
         setProduct(result)
       }
     }
@@ -51,7 +49,7 @@ const ProductInfo = () => {
     if (!user) {
       return false
     }
-    return (user.company.company_name === product.company_name)
+    return (user.company.name === product.company.name)
   }
 
   const deleteProduct = async (event) => {
@@ -82,6 +80,13 @@ const ProductInfo = () => {
     } else {
       alert("Wasn't deleted or permission denied")
     }
+  }
+
+  // If product company wasn't loaded yet
+  // When page renders, product.company is undefiend
+  // And it is imposible to get product.company.name for example
+  if (!product.company) {
+    return
   }
 
   return (
@@ -115,8 +120,8 @@ const ProductInfo = () => {
         <Row className="text-secondary"><p>Product country</p></Row>
         <Row><p>{product.cogs_coutry_recipients}</p></Row>
 
-        <Row className="text-secondary"><p>Product owner</p></Row>
-        <Row><p>{product.company_name}</p></Row>
+        <Row className="text-secondary"><p>Product company</p></Row>
+        <Row><p>{product.company.name}</p></Row>
 
         {
           isAllowedToChange(user)
