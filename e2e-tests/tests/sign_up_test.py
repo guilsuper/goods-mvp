@@ -33,7 +33,7 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
         "email",
         "password",
         "website",
-        "company_name",
+        "name",
         "jurisdiction"
     ]
     field_elements = [driver.find_element(By.ID, id_) for id_ in sign_up_fields_ids]
@@ -52,7 +52,7 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
         "email": temp_email,
         "password": "1234",
         "website": "website.com",
-        "company_name": "company name inc",
+        "name": "company name inc",
         "jurisdiction": "Georgia, USA"
     }
 
@@ -97,10 +97,7 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
     button.click()
     assert driver.current_url == os.environ["FRONTEND"] + "/sign-in"
 
-    # Wait page to load
-    time.sleep(5)
-
-    # Check if all 5 fields exist
+    # Check if all 2 fields exist
     sign_in_fields_ids = [
         "email",
         "password",
@@ -109,10 +106,17 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
     assert all(field_elements)
 
     # Check if sign-in button exists
-    sign_in_buttons = driver.find_elements(By.TAG_NAME, "button")
-    for element in sign_in_buttons:
-        if element.text == "Sign In":
-            sign_in_button = element
+    # Selenium can't find this button without a wait time
+    # 5 retries for 1 second to wait
+    for _ in range(5):
+        sign_in_buttons = driver.find_elements(By.TAG_NAME, "button")
+        for element in sign_in_buttons:
+            if element.text == "Sign In":
+                sign_in_button = element
+
+        if sign_in_button:
+            break
+        time.sleep(1)
 
     assert sign_in_button
 
@@ -135,12 +139,14 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
     driver.switch_to.alert.accept()
 
     # Wait page to load
-    time.sleep(5)
+    # 5 retries for 1 second
+    # Until page url change
+    for _ in range(5):
+        if driver.current_url == os.environ["FRONTEND"] + "/account/info":
+            break
+        time.sleep(1)
 
     assert driver.current_url == os.environ["FRONTEND"] + "/account/info"
-
-    # Wait page to load
-    time.sleep(5)
 
     # Check if company button exists
     company_info_button = driver.find_element(By.LINK_TEXT, "Company info")
@@ -148,11 +154,17 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
 
     # Click on company edit button
     driver.execute_script("arguments[0].click();", company_info_button)
-    # Should be redirected to company info page
-    assert driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc"
 
     # Wait page to load
-    time.sleep(5)
+    # 5 retries for 1 second
+    # Until page url change
+    for _ in range(5):
+        if driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc":
+            break
+        time.sleep(1)
+
+    # Should be redirected to company info page
+    assert driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc"
 
     # Check if edit button exists
     edit_button = driver.find_element(By.LINK_TEXT, "Edit")
@@ -161,19 +173,23 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
 
     # Click on company edit button
     driver.execute_script("arguments[0].click();", edit_button)
+
+    # Wait page to load
+    # 5 retries for 1 second
+    # Until page url change
+    for _ in range(5):
+        if driver.current_url == os.environ["FRONTEND"] + "/account/company/edit/company-name-inc":
+            break
+        time.sleep(1)
+
     # Should be redirected to company edit page
     assert driver.current_url == os.environ["FRONTEND"] + "/account/company/edit/company-name-inc"
 
-    # Wait page to load
-    time.sleep(5)
-
     # Set up all fields and click edit
-    company_data = {
-        "website": "website.com",
-        "company_name": "company name inc",
-        "jurisdiction": "Georgia, USA"
+    company_update_data = {
+        "website": "website1.com",
     }
-    field_elements = [driver.find_element(By.ID, id_) for id_ in company_data]
+    field_elements = [driver.find_element(By.ID, id_) for id_ in company_update_data]
     assert all(field_elements)
 
     # Check if edit button exists
@@ -186,8 +202,8 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
 
     # Enter text to each field
     [
-        el.send_keys(company_data[key])
-        for el, key in zip(field_elements, company_data)
+        el.send_keys(company_update_data[key])
+        for el, key in zip(field_elements, company_update_data)
     ]
 
     # Click on company edit button
@@ -195,5 +211,41 @@ def test_sign_up_correct(driver: webdriver.Chrome, temp_email):
     # Wait for an alert
     WebDriverWait(driver, 10).until(EC.alert_is_present())
     driver.switch_to.alert.accept()
+
+    # Wait page to load
+    # 5 retries for 1 second
+    # Until page url change
+    for _ in range(5):
+        if driver.current_url == os.environ["FRONTEND"] + "/account/info":
+            break
+        time.sleep(1)
     # If editting was successful, then redirect
     assert driver.current_url == os.environ["FRONTEND"] + "/account/info"
+
+    # Go back to company info and check the changes
+    # Wait to load this element
+    # Check if element with new company wesite exists
+    for _ in range(5):
+        company_info_button = driver.find_element(By.LINK_TEXT, "Company info")
+        if company_info_button:
+            break
+        time.sleep(1)
+    driver.execute_script("arguments[0].click();", company_info_button)
+
+    # Wait page to load
+    # 5 retries for 1 second
+    # Until page url change
+    for _ in range(5):
+        if driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc":
+            break
+        time.sleep(1)
+
+    # Wait to load this element
+    # Check if element with new company wesite exists
+    for _ in range(5):
+        website_field = driver.find_element(By.LINK_TEXT, company_update_data["website"])
+        if website_field:
+            break
+        time.sleep(1)
+
+    assert website_field
