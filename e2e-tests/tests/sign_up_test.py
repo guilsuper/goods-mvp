@@ -242,12 +242,14 @@ def test_sign_up_correct(driver: webdriver.Chrome):
             break
         time.sleep(1)
 
-    # # Wait to load this element
-    # # Check if element with new company website exists
-    # for _ in range(5):
-    #     website_field = driver.find_element(By.LINK_TEXT, company_update_data["website"])
-    #     if website_field:
-    #         break
-    #     time.sleep(1)
-
-    # assert website_field
+    # Wait to load this element
+    # Check if element with new company website exists
+    for _ in range(5):
+        text = driver.find_element(By.XPATH, "/html/body").text
+        if text.find(company_update_data["website"]) != -1:
+            # item found
+            break
+        time.sleep(1)
+    else:
+        # item not found
+        assert False
