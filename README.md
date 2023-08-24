@@ -22,8 +22,9 @@ git clone https://github.com/freeworldcertified/fwc.git
 ### How to run locally
 
 - Start the terminal.
-- Go to the directory "Your way to the project"
 - Run the following command
+- Open your browser to http://localhost:3000/ for the fwc website
+- Open your browser to http://localhost:3001/ for access to the mock email server to setup accounts
 ```
 docker-compose up --build
 ```

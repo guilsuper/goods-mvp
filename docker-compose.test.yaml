@@ -10,9 +10,11 @@ services:
       - FRONTEND=http://frontend:3000
     depends_on:
       backend:
-          condition: service_started
+        condition: service_started
       frontend:
-          condition: service_healthy
+        condition: service_healthy
+      sendgrid-mock:
+        condition: service_healthy
     networks:
       - prod-net
 
@@ -31,6 +33,22 @@ services:
       retries: 10
     networks:
       - prod-net
+
+  sendgrid-mock:
+    build:
+      context: ./e2e-tests/sendgrid-mock/
+      dockerfile: Dockerfile
+    environment:
+      - API_KEY=SENDGRID_MOCK_KEY
+    ports:
+      - "3001:3000"
+    networks:
+      - prod-net
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
 
   backend:
     build:
@@ -55,10 +73,12 @@ services:
       - SECRET_KEY='8_*lw4(^907@enln%2r(av@__8_$w46n-h+s7s_7lm%ar5c_e6'
       - FRONTEND_HOST=http://localhost:3000
 
-      - EMAIL_PASSWORD=ywlpkjngyzemrcrj
-      - EMAIL_USER=dummy@gmail.com
+      - SENDGRID_HOST=http://sendgrid-mock:3000
+      - SENDGRID_API_KEY=SENDGRID_MOCK_KEY
     depends_on:
       db-test:
+        condition: service_healthy
+      sendgrid-mock:
         condition: service_healthy
     networks:
       - prod-net
