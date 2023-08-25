@@ -80,6 +80,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
             break
 
     # ensure everything is in the first email that we expect
+    assert len(emails) > 0
     assert 'content' in emails[0]
     assert len(emails[0]['content']) > 0
     assert 'value' in emails[0]['content'][0]
@@ -138,7 +139,9 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     driver.execute_script("arguments[0].click();", sign_in_button)
     # Wait for an alert
     WebDriverWait(driver, 10).until(EC.alert_is_present())
-    driver.switch_to.alert.accept()
+    alert = driver.switch_to.alert
+    assert alert.text == "Successfully logged"
+    alert.accept()
 
     # Wait page to load
     # 5 retries for 1 second
@@ -212,7 +215,9 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     driver.execute_script("arguments[0].click();", edit_button)
     # Wait for an alert
     WebDriverWait(driver, 10).until(EC.alert_is_present())
-    driver.switch_to.alert.accept()
+    alert = driver.switch_to.alert
+    assert alert.text == "Successfully editted"
+    alert.accept()
 
     # Wait page to load
     # 5 retries for 1 second
