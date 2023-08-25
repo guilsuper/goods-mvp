@@ -3,18 +3,49 @@
 
 '''
 import csv
+from enum import Enum
 from pkg_resources import resource_filename
-from collections import namedtuple
+from typing import NamedTuple
 
-FreedomHouseRecord = namedtuple(
-    'FreedomHouseRecord',
-    'name,region,country_or_territory,status,score')
 
+class FreedomStatus(Enum):
+    Free = 1
+    PartiallyFree = 2
+    NotFree = 3
+
+class FreedomHouseRecord(NamedTuple):
+    name: str
+    region: str
+    is_country: bool
+    is_territory: bool
+    status: FreedomStatus
+    score: int
+
+    
 places = {}
 
 with open(resource_filename(__name__, 'freedomhouse.csv'), 'r') as filehandle:
-    for fhr in map(FreedomHouseRecord._make, csv.reader(filehandle)):
-        fhr.score = int(fhr.score)
+    for name, region, country_or_territory, status_str, score_str in csv.reader(filehandle):
+        if country_or_territory == 't':
+            is_country = False
+            is_territory = True
+        elif country_or_territory == 'c':
+            is_country = True
+            is_territory = False
+        else:
+            raise Exception(f'freedomhouse.csv contains unexpected data: '
+                            f'country_or_territory={country_or_territory}')
+        if status_str == 'F':
+            freedom_status = FreedomStatus.Free
+        elif status_str == 'PF':
+            freedom_status = FreedomStatus.PartiallyFree
+        elif status_str == 'NF':
+            freedom_status = FreedomStatus.NotFree
+        else:
+            raise Exception(f'freedomhouse.csv contains unexpected data: '
+                            f'status_str={status_str}')
+
+        fhr = FreedomHouseRecord(name, region, is_country, is_territory, freedom_status, int(score_str))
         places[fhr.name] = fhr
 
 
@@ -32,14 +63,7 @@ if __name__ == '__main__':
 
     else:
         fhr = places[args.place_name]
-        c_or_t = (fhr.country_or_territory == "c" and "Country" or "Territory")
-        if fhr.status == 'NF':
-            freedom_status = 'not free.'
-        elif fhr.status == 'PF':
-            freedom_status = 'partially free.'
-        else:
-            freedom_status = 'FREE!'
 
-        print(f'{fhr.name} is a {c_or_t} in {fhr.region} that '
+        print(f'{fhr.name} is country={fhr.is_country} and territory={fhr.is_territory} in {fhr.region} that '
               f'scored {fhr.score} out of 100 for data from 2022, '
-              f'which makes it {freedom_status}')
+              f'which makes it {fhr.status}')
