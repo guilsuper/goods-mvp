@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Copyright 2023 Free World Certified -- all rights reserved.
+
 set +x
 
 export SECRET_KEY="+6vtkpuu+#39e@sfy00(-10+6bagg6q_x3ci-v-8f8%%d#9t&u"
