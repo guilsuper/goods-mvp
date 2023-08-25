@@ -3,6 +3,7 @@
 
 '''
 import csv
+from pkg_resources import resource_filename
 from collections import namedtuple
 
 FreedomHouseRecord = namedtuple(
@@ -11,8 +12,9 @@ FreedomHouseRecord = namedtuple(
 
 places = {}
 
-with open('freedomhouse.csv', 'r') as filehandle:
+with open(resource_filename(__name__, 'freedomhouse.csv'), 'r') as filehandle:
     for fhr in map(FreedomHouseRecord._make, csv.reader(filehandle)):
+        fhr.score = int(fhr.score)
         places[fhr.name] = fhr
 
 
