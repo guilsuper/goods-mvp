@@ -68,4 +68,10 @@ deleting the columns we don't plan to use and renaming the two
 headers.  Then download as .csv
 
 The __init__.py in this directory reads the CSV and offers
-`namedtuple` objects for each.
+`typing.NameTuple` objects for each.
+
+freedomhouse.places, which is a dictionary keyed on the name of the
+country and the values are the typing.NamedTuple objects created from
+the rows of the CSV.
+
+Also, the package offers freedomhouse.FreedomStatus, which is an enum.

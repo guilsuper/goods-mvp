@@ -1,12 +1,14 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 '''Interface to key info from freedomhouse.org see README.md
 
+freedomhouse.FreedomHouse and freedomhouse.places are primary public
+interface of the package.
+
 '''
 import csv
 from enum import Enum
 from pkg_resources import resource_filename
 from typing import NamedTuple
-
 
 class FreedomStatus(Enum):
     Free = 1
@@ -21,7 +23,6 @@ class FreedomHouseRecord(NamedTuple):
     status: FreedomStatus
     score: int
 
-    
 places = {}
 
 with open(resource_filename(__name__, 'freedomhouse.csv'), 'r') as filehandle:
