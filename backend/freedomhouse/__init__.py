@@ -11,10 +11,12 @@ from typing import NamedTuple
 
 from pkg_resources import resource_filename
 
+
 class FreedomStatus(Enum):
     Free = 1
     PartiallyFree = 2
     NotFree = 3
+
 
 class FreedomHouseRecord(NamedTuple):
     name: str
@@ -24,7 +26,9 @@ class FreedomHouseRecord(NamedTuple):
     status: FreedomStatus
     score: int
 
+
 places = {}
+
 
 with open(resource_filename(__name__, 'freedomhouse.csv'), 'r') as filehandle:
     for name, region, country_or_territory, status_str, score_str in csv.reader(filehandle):
@@ -47,7 +51,8 @@ with open(resource_filename(__name__, 'freedomhouse.csv'), 'r') as filehandle:
             raise Exception(f'freedomhouse.csv contains unexpected data: '
                             f'status_str={status_str}')
 
-        fhr = FreedomHouseRecord(name, region, is_country, is_territory, freedom_status, int(score_str))
+        fhr = FreedomHouseRecord(name, region, is_country, is_territory,
+                                 freedom_status, int(score_str))
         places[fhr.name] = fhr
 
 
@@ -66,6 +71,7 @@ if __name__ == '__main__':
     else:
         fhr = places[args.place_name]
 
-        print(f'{fhr.name} is country={fhr.is_country} and territory={fhr.is_territory} in {fhr.region} that '
+        print(f'{fhr.name} is country={fhr.is_country} and territory={fhr.is_territory} '
+              f'in {fhr.region} that '
               f'scored {fhr.score} out of 100 for data from 2022, '
               f'which makes it {fhr.status}')
