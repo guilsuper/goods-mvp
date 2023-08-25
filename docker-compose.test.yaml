@@ -8,9 +8,10 @@ services:
       - ./test-results:/test-results
     environment:
       - FRONTEND=http://frontend:3000
+      - SENDGRID_HOST=http://sendgrid-mock:3000
     depends_on:
       backend:
-        condition: service_started
+        condition: service_healthy
       frontend:
         condition: service_healthy
       sendgrid-mock:
@@ -20,8 +21,8 @@ services:
 
   db-test:
     image: postgres
-    volumes:
-      - ./e2e-tests/data/db-test:/var/lib/postgresql/data-test
+    tmpfs:
+      - /var/lib/postgresql/data
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
@@ -80,6 +81,11 @@ services:
         condition: service_healthy
       sendgrid-mock:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://backend:8000/api/"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     networks:
       - prod-net
 
@@ -101,12 +107,13 @@ services:
       # This feature is acceptable for testing and development
       - DANGEROUSLY_DISABLE_HOST_CHECK=true
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 5s
       timeout: 10s
-      retries: 10
+      retries: 5
     networks:
       - prod-net
 
