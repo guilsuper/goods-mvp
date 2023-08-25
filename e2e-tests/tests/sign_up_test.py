@@ -242,14 +242,21 @@ def test_sign_up_correct(driver: webdriver.Chrome):
             break
         time.sleep(1)
 
+    assert driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc"
+
     # Wait to load this element
     # Check if element with new company website exists
     for _ in range(5):
-        text = driver.find_element(By.XPATH, "/html/body").text
-        if text.find(company_update_data["website"]) != -1:
-            # item found
+        new_website = None
+        # Selenium can't find it by LINK_TEXT or by XPATH
+        all_company_fields = driver.find_elements(By.TAG_NAME, "p")
+        # One of these tags, should contain updated data
+        for field in all_company_fields:
+            if field.text == company_update_data["website"]:
+                new_website = field
+                break
+        if new_website:
             break
         time.sleep(1)
-    else:
-        # item not found
-        assert False
+
+    assert new_website.text == company_update_data["website"]
