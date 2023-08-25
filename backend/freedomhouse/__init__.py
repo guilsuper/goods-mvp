@@ -7,8 +7,9 @@ interface of the package.
 '''
 import csv
 from enum import Enum
-from pkg_resources import resource_filename
 from typing import NamedTuple
+
+from pkg_resources import resource_filename
 
 class FreedomStatus(Enum):
     Free = 1
