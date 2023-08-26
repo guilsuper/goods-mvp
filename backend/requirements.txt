@@ -48,7 +48,7 @@ pyasn1-modules==0.3.0
 pycodestyle==2.10.0
 pydocstyle==6.3.0
 pyflakes==3.0.1
-PyJWT==2.7.0
+PyJWT==2.8.0
 pytest==7.4.0
 pytest-django==4.5.2
 python-dateutil==2.8.2
