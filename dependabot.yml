@@ -1,0 +1,67 @@
+version: 2
+updates:
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "npm"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
+
+  # Maintain dependencies for pip
+  - package-ecosystem: "pip"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "pip"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
+
+  # # Maintain dependencies for GitHub Actions
+  # - package-ecosystem: "github-actions"
+  #   directory: "/"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "github-actions"
+  #     include: "scope"
+  #   assignees:
+  #     - "bakerkj"
+  #   reviewers:
+  #     - "bakerkj"
+
+  # # Maintain dependencies for docker
+  # - package-ecosystem: "docker"
+  #   directory: "/backend"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "docker"
+  #     include: "scope"
+  #   assignees:
+  #     - "bakerkj"
+  #   reviewers:
+  #     - "bakerkj"
+
+  # # Maintain dependencies for terraform
+  # - package-ecosystem: "terraform"
+  #   directory: "/backend"
+  #   schedule:
+  #     interval: "weekly"
+  #   commit-message:
+  #     prefix: "terraform"
+  #     include: "scope"
+  #   assignees:
+  #     - "bakerkj"
+  #   reviewers:
+  #     - "bakerkj"
