@@ -37,7 +37,7 @@ mccabe==0.7.0
 nodeenv==1.8.0
 packaging==23.1
 phonenumbers==8.13.16
-platformdirs==3.8.1
+platformdirs==3.10.0
 pluggy==1.2.0
 pre-commit==3.3.3
 proto-plus==1.22.3
