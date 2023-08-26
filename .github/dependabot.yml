@@ -27,31 +27,31 @@ updates:
     reviewers:
       - "bakerkj"
 
-  # # Maintain dependencies for GitHub Actions
-  # - package-ecosystem: "github-actions"
-  #   directory: "/"
-  #   schedule:
-  #     interval: "weekly"
-  #   commit-message:
-  #     prefix: "github-actions"
-  #     include: "scope"
-  #   assignees:
-  #     - "bakerkj"
-  #   reviewers:
-  #     - "bakerkj"
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "github-actions"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
 
-  # # Maintain dependencies for docker
-  # - package-ecosystem: "docker"
-  #   directory: "/backend"
-  #   schedule:
-  #     interval: "weekly"
-  #   commit-message:
-  #     prefix: "docker"
-  #     include: "scope"
-  #   assignees:
-  #     - "bakerkj"
-  #   reviewers:
-  #     - "bakerkj"
+  # Maintain dependencies for docker
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
 
   # # Maintain dependencies for terraform
   # - package-ecosystem: "terraform"
