@@ -56,7 +56,7 @@ const Header = () => {
       data-bs-theme="dark"
       className="ps-3 mb-3"
     >
-      <Navbar.Brand href="/">FreeWorldCertified.org</Navbar.Brand>
+      <Navbar.Brand href="/"><img src="/FreeWorldCertified-logo.png"/>&nbsp;&nbsp;Free World Certified</Navbar.Brand>
       <Navbar.Toggle
         aria-controls="navbarScroll"
         data-bs-target="#navbarScroll"
