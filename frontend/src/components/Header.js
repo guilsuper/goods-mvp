@@ -67,9 +67,7 @@ const Header = () => {
         <Nav>
           <NavLink eventKey="1" as={Link} to="/">Home</NavLink>
           <NavLink eventKey="2" as={Link} to="/products">Products</NavLink>
-          <NavLink eventKey="3" as={Link} to="#services">Services</NavLink>
-          <NavLink eventKey="4" as={Link} to="#contact">Contact</NavLink>
-          <NavLink eventKey="5" as={Link} to="#about">About</NavLink>
+          <NavLink eventKey="5" as={Link} to="/about">About</NavLink>
           {user ? <NavLink eventKey="6" as={Link} to="/account/products">Our products</NavLink> : ' '}
           { user && isAdmin()
             ? <NavLink eventKey="7" as={Link} to="/account/pm">
