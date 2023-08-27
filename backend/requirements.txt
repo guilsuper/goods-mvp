@@ -5,7 +5,7 @@ cfgv==3.3.1
 charset-normalizer==3.2.0
 colorama==0.4.6
 coverage==7.2.7
-distlib==0.3.6
+distlib==0.3.7
 Django==4.2.3
 django-cors==0.1
 django-cors-headers==4.2.0
@@ -67,4 +67,4 @@ tomli==2.0.1
 typing_extensions==4.7.1
 tzdata==2023.3
 urllib3==1.26.16
-virtualenv==20.23.1
+virtualenv==20.24.3
