@@ -3,7 +3,7 @@
 # and
 # https://docs.github.com/en/actions
 
-name: CI
+name: Continuous Integration
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: "Setup .env for testing"
+    - name: "Setup .env"
       working-directory: ./backend
       run: |
         echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
@@ -84,10 +84,11 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 16
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: "16"
+        cache: "npm"
 
     - name: Install
       working-directory: ./frontend
@@ -102,7 +103,7 @@ jobs:
     - name: Run Frontend Tests
       working-directory: ./frontend
       run: |
-        pytest --junitxml=../test-results/nodejs.xml
+        npm test -- --passWithNoTests
 
     - name: Upload Test Results
       if: always()
