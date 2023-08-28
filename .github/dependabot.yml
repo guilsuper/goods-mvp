@@ -12,7 +12,7 @@ updates:
     assignees:
       - "bakerkj"
     reviewers:
-      - "bakerkj"
+      - "guilsuper"
 
   # Maintain dependencies for pip
   - package-ecosystem: "pip"
