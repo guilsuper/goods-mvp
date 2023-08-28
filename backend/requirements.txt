@@ -38,7 +38,7 @@ nodeenv==1.8.0
 packaging==23.1
 phonenumbers==8.13.19
 platformdirs==3.10.0
-pluggy==1.2.0
+pluggy==1.3.0
 pre-commit==3.3.3
 proto-plus==1.22.3
 protobuf==4.24.0
