@@ -122,6 +122,17 @@ repos:
       args: [ --py39-plus, ]
       exclude: "(backend/api/migrations/)"
 
+  - repo: https://github.com/sirwart/ripsecrets
+    rev: v0.1.6
+    hooks:
+    - id: ripsecrets
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+    -   id: detect-secrets
+        exclude: frontend/package.lock.json
+
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
