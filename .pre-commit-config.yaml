@@ -97,6 +97,8 @@ repos:
       language: python
       types: [text]
 
+    - id: check-added-large-files
+
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.5.3
     hooks:
@@ -114,6 +116,11 @@ repos:
       args:
         - --use-current-year
         - --no-extra-eol
+    - name: Insert license in comments (.sh)
+      id: insert-license
+      files: \.(sh)$
+      args:
+        - --use-current-year
 
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.10.0
@@ -121,6 +128,23 @@ repos:
     - id: reorder-python-imports
       args: [ --py39-plus, ]
       exclude: "(backend/api/migrations/)"
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.35.0
+    hooks:
+    - id: markdownlint
+      args: [ --fix ]
+
+  - repo: https://github.com/sirwart/ripsecrets
+    rev: v0.1.6
+    hooks:
+    - id: ripsecrets
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+    -   id: detect-secrets
+        exclude: frontend/package.lock.json
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
