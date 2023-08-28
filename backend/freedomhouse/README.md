@@ -1,6 +1,6 @@
 # Data from FreedomHouse.org
 
-Publications are listed here: https://freedomhouse.org/reports/publication-archives
+Publications are listed here: <https://freedomhouse.org/reports/publication-archives>
 
 "Country and Territory Ratings and Statuses, 1973-2023 (Excel
 Download)" is the second download link, and is saved in this directory
