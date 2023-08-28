@@ -135,7 +135,7 @@ jobs:
 
   #########################################################################
   publish-tests:
-    name: Publish Test Results
+    name: publish-test-results
     runs-on: ubuntu-22.04
     needs: [backend-build-and-tests, frontend-build-and-tests, e2e-tests]
 
@@ -162,7 +162,3 @@ jobs:
           test-results/**/*.xml
           test-results/**/*.trx
           test-results/**/*.json
-
-    - name: Detailed Output
-      run: |-
-        echo "${{ steps.test-results.outputs.json }}"
