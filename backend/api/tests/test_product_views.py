@@ -5,7 +5,7 @@ product-create, product-get
 product-patch-delete-retrieve
 """
 import pytest
-from api.models import Product
+from api.models import SCTR
 from django.urls import reverse
 
 
@@ -57,20 +57,22 @@ def test_product_create(
 
     # If parameter is not empty, replace it with actual data
     if product_info:
+        # If product_info is not None, it contains string "product_dict"
         product_info = request.getfixturevalue(product_info)
 
     response = client.post(
         reverse("product-create"),
         data=product_info,
+        content_type="application/json",
         **credentials
     )
 
     assert response.status_code == status_code
-    assert len(Product.objects.all()) == count
+    assert len(SCTR.objects.all()) == count
 
     if count == 2:
-        current_product = Product.objects.filter(
-            sku_id=product_info["sku_id"]
+        current_product = SCTR.objects.filter(
+            unique_identifier=product_info["unique_identifier"]
         ).first()
 
         assert current_product.company == user.company
@@ -82,19 +84,19 @@ def test_product_create(
         # Try to update as unauthorized user
         # The user is not allowed to update it
         (None, dict(), 401),
-        (None, {"sctr_cogs": "30"}, 401),
+        (None, {"marketing_name": "aaaaa"}, 401),
         # Try to update a product as an admin with no specified fields
         # The request will be successful, but without any changes
         ("admin", dict(), 200),
         # Try to update a product as an admin with specified fields
         # Changes will be applied
-        ("admin", {"sctr_cogs": "30"}, 200),
+        ("admin", {"marketing_name": "aaaaa"}, 200),
         # Try to update a product as a PM with no specified fields
         # The request will be successful, but without any changes
         ("pm", dict(), 200),
         # Try to update a product as a PM with specified fields
         # Changes will be applied
-        ("pm", {"sctr_cogs": "30"}, 200)
+        ("pm", {"marketing_name": "aaaaa"}, 200)
     ]
 )
 def test_product_update_same_company(
@@ -111,10 +113,17 @@ def test_product_update_same_company(
         user = user(company=product.company)
         credentials = auth_header(user)
 
+    data["components"] = [{
+        "fraction_cogs": 100,
+        "marketing_name": "why",
+        "component_type": "Externally Sourced",
+        "external_sku": "aaaaa"
+    }]
+
     response = client.patch(
         reverse(
             "product-patch-delete-retrieve",
-            kwargs={"sku_id": product.sku_id}
+            kwargs={"unique_identifier": product.unique_identifier}
         ),
         data=data,
         content_type="application/json",
@@ -123,8 +132,10 @@ def test_product_update_same_company(
 
     assert response.status_code == status_code
     # Ensure data was changed
-    if data and user:
-        assert Product.objects.get(sku_id=product.sku_id).sctr_cogs == 30
+    if "marketing_name" in data and user:
+        assert SCTR.objects.get(
+            unique_identifier=product.unique_identifier
+        ).marketing_name == data["marketing_name"]
 
 
 @pytest.mark.django_db()
@@ -133,19 +144,19 @@ def test_product_update_same_company(
         # Try to update as unauthorized user
         # The user is not allowed to update it
         (None, dict(), 401),
-        (None, {"sctr_cogs": "30"}, 401),
+        (None, {"marketing_name": "aaaaa"}, 401),
         # Try to update a product as an admin with no specified fields
         # The user is not allowed to update it
         ("admin", dict(), 403),
         # Try to update a product as an admin with specified fields
         # The user is not allowed to update it
-        ("admin", {"sctr_cogs": "30"}, 403),
+        ("admin", {"marketing_name": "aaaaa"}, 403),
         # Try to update a product as a PM with no specified fields
         # The user is not allowed to update it
         ("pm", dict(), 403),
         # Try to update a product as a PM with specified fields
         # The user is not allowed to update it
-        ("pm", {"sctr_cogs": "30"}, 403)
+        ("pm", {"marketing_name": "aaaaa"}, 403)
     ]
 )
 def test_product_update_different_company(
@@ -162,10 +173,17 @@ def test_product_update_different_company(
         user = user()
         credentials = auth_header(user)
 
+    data["components"] = [{
+        "fraction_cogs": 100,
+        "marketing_name": "why",
+        "component_type": "Externally Sourced",
+        "external_sku": "aaaaa"
+    }]
+
     response = client.patch(
         reverse(
             "product-patch-delete-retrieve",
-            kwargs={"sku_id": product.sku_id}
+            kwargs={"unique_identifier": product.unique_identifier}
         ),
         data=data,
         content_type="application/json",
@@ -175,5 +193,7 @@ def test_product_update_different_company(
     assert response.status_code == status_code
     # If data and user were specified
     # Ensure data wasn't changed
-    if data and user:
-        assert Product.objects.get(sku_id=product.sku_id).sctr_cogs != data["sctr_cogs"]
+    if "marketing_name" in data and user:
+        assert SCTR.objects.get(
+            unique_identifier=product.unique_identifier
+        ).marketing_name != data["marketing_name"]

@@ -2,14 +2,14 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, Fragment } from 'react'
 import { Col, Row, Container, Button } from 'react-bootstrap'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 
 const ProductInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
-  const { productSku } = useParams()
+  const { productIdentifier } = useParams()
   const [product, setProduct] = useState([])
 
   const navigate = useNavigate()
@@ -26,7 +26,7 @@ const ProductInfo = () => {
 
       let response = ''
       try {
-        response = await fetch('/api/product/patch_delete_retrieve/' + productSku + '/', config)
+        response = await fetch('/api/product/patch_delete_retrieve/' + productIdentifier + '/', config)
       } catch (error) {
         alert('Server is not working')
         return
@@ -42,7 +42,7 @@ const ProductInfo = () => {
       }
     }
     getProductInfo()
-  }, [navigate, productSku])
+  }, [navigate, productIdentifier])
 
   const isAllowedToChange = (user) => {
     // If not authorized
@@ -68,7 +68,7 @@ const ProductInfo = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/product/patch_delete_retrieve/' + productSku + '/', config)
+      response = await fetch('/api/product/patch_delete_retrieve/' + productIdentifier + '/', config)
     } catch (error) {
       alert('Server is not working')
       return
@@ -91,46 +91,52 @@ const ProductInfo = () => {
 
   return (
     <Container>
-      <h3 className="text-center">Product information</h3>
-      <Col className="p-5 mb-5 mx-auto w-75 rounded shadow">
-        <Row className="text-secondary"><p>SKU</p></Row>
-        <Row><p>{product.sku_id}</p></Row>
+      <h3 className='text-center'>Product information</h3>
+      <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
+        <Row className='text-secondary'><p>Unique identifier</p></Row>
+        <Row><p>{product.unique_identifier}</p></Row>
 
-        <Row className="text-secondary"><p>Public facing id</p></Row>
-        <Row><p>{product.public_facing_id}</p></Row>
+        <Row className='text-secondary'><p>Unique dentifier type</p></Row>
+        <Row><p>{product.unique_identifier_type}</p></Row>
 
-        <Row className="text-secondary"><p>Public facing name</p></Row>
-        <Row><p>{product.public_facing_name}</p></Row>
+        <Row className='text-secondary'><p>Marketing name</p></Row>
+        <Row><p>{product.marketing_name}</p></Row>
 
-        <Row className="text-secondary"><p>Description</p></Row>
-        <Row><p>{product.description}</p></Row>
+        {product.components.map((component, index) => (
+        <Fragment key={`${component}~${index}`}>
+          <Container className='my-4 p-3 border rounded'>
+            <Row className='text-secondary'><p>Marketing name</p></Row>
+            <Row><p>{component.marketing_name}</p></Row>
 
-        <Row className="text-secondary"><p>SCTR date</p></Row>
-        <Row><p>{product.sctr_date}</p></Row>
+            <Row className='text-secondary'><p>Fraction COGS</p></Row>
+            <Row><p>{component.fraction_cogs}</p></Row>
 
-        <Row className="text-secondary"><p>SCTR COGS</p></Row>
-        <Row><p>{product.sctr_cogs}</p></Row>
+            <Row className='text-secondary'><p>Component type</p></Row>
+            <Row><p>{component.component_type}</p></Row>
 
-        <Row className="text-secondary"><p>Product input manufacturer</p></Row>
-        <Row><p>{product.product_input_manufacturer}</p></Row>
-
-        <Row className="text-secondary"><p>Product type</p></Row>
-        <Row><p>{product.product_input_type}</p></Row>
-
-        <Row className="text-secondary"><p>Product country</p></Row>
-        <Row><p>{product.cogs_coutry_recipients}</p></Row>
-
-        <Row className="text-secondary"><p>Product company</p></Row>
-        <Row><p>{product.company.name}</p></Row>
+            {
+              (component.component_type === 'Made In-House')
+                ? <>
+                  <Row className='text-secondary'><p>Country of origin</p></Row>
+                  <Row><p>{component.country_of_origin}</p></Row>
+                </>
+                : <>
+                  <Row className='text-secondary'><p>External SKU</p></Row>
+                  <Row><p>{component.external_sku}</p></Row>
+                </>
+            }
+          </Container>
+        </Fragment>
+        ))}
 
         {
           isAllowedToChange(user)
             ? <Row>
             <Col md={4}>
-              <Button variant="primary" as={Link} to={'/account/products/edit/' + product.sku_id}>Edit</Button>
+              <Button variant='primary' as={Link} to={'/account/products/edit/' + product.unique_identifier}>Edit</Button>
             </Col>
             <Col md={{ span: 4, offset: 4 }}>
-              <Button variant="danger" onClick={deleteProduct}>Delete product</Button>
+              <Button variant='danger' onClick={deleteProduct}>Delete product</Button>
             </Col>
           </Row>
             : ' '

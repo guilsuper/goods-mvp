@@ -2,8 +2,8 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useMemo } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import React, { Fragment, useContext, useState, useMemo } from 'react'
+import { Button, Form, Container } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router'
 import countryList from 'react-select-country-list'
@@ -13,6 +13,11 @@ const ProductForm = () => {
   const { authTokens } = useContext(AuthContext)
   // all possible countries list
   const options = useMemo(() => countryList().getData(), [])
+  const [inputFields, setInputFields] = useState([{
+    fraction_cogs: '',
+    marketing_name: '',
+    component_type: ''
+  }])
 
   const navigate = useNavigate()
 
@@ -35,6 +40,8 @@ const ProductForm = () => {
         }
       }
     })
+
+    data.components = inputFields
 
     // Config for POST request
     const config = {
@@ -63,9 +70,28 @@ const ProductForm = () => {
     } else if (response.status === 400) {
       let message = 'Invalid input data:'
       for (const invalidElement in result) {
-        event.target[invalidElement].style = 'border-color: red'
+        // Server response may send a key with error, that doesn't match the id of the element
+        if (typeof event.target[invalidElement] !== 'undefined') {
+          event.target[invalidElement].style = 'border-color: red'
+        }
+        // special case for the marketing_name
+        if (invalidElement === 'marketing_name') {
+          event.target[invalidElement][0].style = 'border-color: red'
+        }
 
-        message += '\n' + invalidElement + ': ' + result[invalidElement]
+        if (invalidElement === 'components') {
+          if (Array.isArray(result.components)) {
+            for (const index in result.components) {
+              for (const field in result.components[index]) {
+                message += '\n' + invalidElement + ': ' + field + ' ' + result.components[index][field]
+              }
+            }
+          } else {
+            message += '\n' + invalidElement + ': ' + result[invalidElement]
+          }
+        } else {
+          message += '\n' + invalidElement + ': ' + result[invalidElement]
+        }
       }
       alert(message)
     } else {
@@ -73,70 +99,138 @@ const ProductForm = () => {
     }
   }
 
+  const handleAddFields = () => {
+    const values = [...inputFields]
+    values.push({
+      fraction_cogs: '',
+      marketing_name: '',
+      component_type: ''
+    })
+    setInputFields(values)
+  }
+
+  const handleRemoveFields = index => {
+    const values = [...inputFields]
+    values.splice(index, 1)
+    setInputFields(values)
+  }
+
+  const handleInputChange = (index, event) => {
+    const values = [...inputFields]
+    values[index][event.target.id] = event.target.value
+
+    // If component type was changed
+    if (event.target.id === 'component_type') {
+      if (values[index].component_type === 'Made In-House') {
+        if (typeof values[index].external_sku !== 'undefined') {
+          delete values[index].external_sku
+        }
+        values[index].country_of_origin = ''
+      } else {
+        if (typeof values[index].country_of_origin !== 'undefined') {
+          delete values[index].country_of_origin
+        }
+        values[index].external_sku = ''
+      }
+    }
+
+    setInputFields(values)
+  }
+
   return (
     <Form onSubmit={submitHandler}>
-      <Form.Group className="mb-3" controlId="sku_id">
-        <Form.Label>Sku id</Form.Label>
-        <Form.Control type="text" placeholder="Enter SKU id" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="public_facing_id">
-        <Form.Label>Public facing id</Form.Label>
-        <Form.Control type="text" placeholder="Enter Public facing id" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="public_facing_name">
-        <Form.Label>Public facing name</Form.Label>
-        <Form.Control type="text" placeholder="Enter Public name id" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="description">
-        <Form.Label>Description</Form.Label>
-        <Form.Control type="text" placeholder="Enter description" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="sctr_date">
-        <Form.Label>SCTR date</Form.Label>
-        <Form.Control type="text" placeholder="Enter SCTR date like YYYY-MM-DD" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="sctr_cogs">
-        <Form.Label>SCTR COGS</Form.Label>
-        <Form.Control type="text" placeholder="Enter SCTR COGS" />
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="product_input_manufacturer">
-        <Form.Label>Product input manufacturer</Form.Label>
-        <Form.Control type="text" placeholder="Enter product input manufacturer" />
+      <Form.Group className="mb-3" controlId="unique_identifier">
+        <Form.Label>Unique identifier</Form.Label>
+        <Form.Control type="text" placeholder="Enter unique identifier" />
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Product type</Form.Label>
-        <Form.Select aria-label="Select type" id="product_input_type">
-          <option>Select type</option>
-          <option value="Convenience Goods">Convenience Goods</option>
-          <option value="Raw Materials">Raw Materials</option>
-          <option value="Software">Software</option>
-          <option value="Hardware">Hardware</option>
-          <option value="Consumer Electronics">Consumer Electronics</option>
-          <option value="Cookware">Cookware</option>
-          <option value="Appliances">Appliances</option>
-          <option value="Homegoods">Homegoods</option>
-          <option value="Clothing">Clothing</option>
-          <option value="Jewelry">Jewelry</option>
-          <option value="Art">Art</option>
+        <Form.Label>Unique dentifier type</Form.Label>
+        <Form.Select aria-label="Select type" id="unique_identifier_type">
+          <option>Enter id type</option>
+          <option value="SKU">SKU</option>
+          <option value="GNIT">GNIT</option>
         </Form.Select>
       </Form.Group>
 
-      <Form.Group className="mb-3">
-        <Form.Label>Product country</Form.Label>
-        <Form.Select aria-label="Select country" id="cogs_coutry_recipients">
-          <option>Select country</option>
-          {options.map((option, i) => (
-            <option key={option.value} value={option.value}>{option.label}</option>
-          ))}
-        </Form.Select>
+      <Form.Group className="mb-3" controlId="marketing_name">
+        <Form.Label>Marketing name</Form.Label>
+        <Form.Control type="text" placeholder="Enter marketing name" />
       </Form.Group>
+
+      {inputFields.map((inputField, index) => (
+        <Fragment key={`${inputField}~${index}`}>
+          <Container className='my-4 p-3 border rounded'>
+            <Form.Group className="mb-3" controlId="fraction_cogs">
+              <Form.Label>Fraction COGS</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter fraction COGS"
+                value={inputField.fraction_cogs}
+                onChange={event => handleInputChange(index, event)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="marketing_name">
+              <Form.Label>Marketing name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter marketing name"
+                value={inputField.marketing_name}
+                onChange={event => handleInputChange(index, event)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Component type</Form.Label>
+              <Form.Select
+                aria-label="Select type"
+                id="component_type"
+                value={inputField.component_type}
+                onChange={event => handleInputChange(index, event)}
+              >
+                <option>Enter component type</option>
+                <option value="Made In-House">Made In-House</option>
+                <option value="Externally Sourced">Externally Sourced</option>
+              </Form.Select>
+            </Form.Group>
+            {
+              inputField.component_type
+                ? inputField.component_type === 'Externally Sourced'
+                  ? <Form.Group className="mb-3" controlId="external_sku">
+                    <Form.Label>External SKU</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={inputField.external_sku}
+                      placeholder="Enter external sku"
+                      onChange={event => handleInputChange(index, event)}
+                    />
+                  </Form.Group>
+                  : <Form.Group className="mb-3">
+                      <Form.Label>Product country</Form.Label>
+                      <Form.Select
+                        aria-label="Select country"
+                        id="country_of_origin"
+                        value={inputField.country_of_origin}
+                        placeholder="Enter country of origin"
+                        onChange={event => handleInputChange(index, event)}
+                      >
+                        <option>Select country</option>
+                        {options.map((option, i) => (
+                          <option key={option.value} value={option.value}>{option.label}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                : ' '
+            }
+
+            <Button onClick={() => handleAddFields()}>
+              Add component
+            </Button>
+            <Button disabled={index === 0} onClick={() => handleRemoveFields(index)}>
+              Remove component
+            </Button>
+          </Container>
+        </Fragment>
+      ))}
 
       <Button className="my-3" variant="primary" type="submit">
         Create product

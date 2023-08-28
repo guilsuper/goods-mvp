@@ -3,7 +3,8 @@
 from api.filter import ProductFilter
 from api.models import Administrator
 from api.models import Company
-from api.models import Product
+from api.models import SCTR
+from api.models import SCTR_STATES
 from api.permissions import IsAccountOwner
 from api.permissions import IsAdministrator
 from api.permissions import IsCompanyAdministrator
@@ -15,8 +16,8 @@ from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CompanySerializer
 from api.serializers import PMRetrieveSerializer
 from api.serializers import PMSerializer
-from api.serializers import ProductCreateSerializer
-from api.serializers import ProductGetSerializer
+from api.serializers import SCTRGetSerializer
+from api.serializers import SCTRSerializer
 from api.tokens import account_activation_token
 from api.utils import send_activation_email
 from django.contrib.auth import get_user_model
@@ -47,16 +48,15 @@ class Smoke(ListAPIView):
 class ProductCreateView(CreateAPIView):
     """Product creation."""
 
-    serializer_class = ProductCreateSerializer
-    queryset = Product.objects.all()
+    serializer_class = SCTRSerializer
     permission_classes = [IsAuthenticated, ]
 
 
 class ProductListView(ListAPIView):
     """Product retrieving all and filtering."""
 
-    serializer_class = ProductGetSerializer
-    queryset = Product.objects.all()
+    serializer_class = SCTRGetSerializer
+    queryset = SCTR.objects.filter(state=SCTR_STATES.published)
     filterset_class = ProductFilter
 
 
@@ -64,15 +64,22 @@ class ProductRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """View has patch, get and delete methods for product model."""
 
     permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsProductOwner]
-    queryset = Product.objects.all()
-    lookup_field = "sku_id"
+    lookup_field = "unique_identifier"
+
+    def get_queryset(self):
+        """Queryset based on user's authentication."""
+        # Not authenticated users can access only published produts
+        if self.request.user:
+            return SCTR.objects.all()
+        else:
+            return SCTR.objects.filter(state=SCTR_STATES.published)
 
     def get_serializer_class(self):
         """Set initial serializer based on a request method."""
         if self.request.method == "GET":
-            return ProductGetSerializer
+            return SCTRGetSerializer
         else:
-            return ProductCreateSerializer
+            return SCTRSerializer
 
 
 class CreateAdministratorAndCompanyView(APIView):

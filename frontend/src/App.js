@@ -27,6 +27,7 @@ import EditPMForm from './components/EditPMForm'
 import EditProductForm from './components/EditProductForm'
 import CompanyInfo from './pages/CompanyInfo'
 import EditCompanyForm from './components/EditCompanyForm'
+import ProductCreate from './pages/ProductCreate'
 
 function App () {
   return (
@@ -37,14 +38,15 @@ function App () {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductList />} />
-            <Route path="/products/:productSku" element={<ProductInfo />} />
+            <Route path="/products/:productIdentifier" element={<ProductInfo />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/activated/:uidb64/:token" element={<ActivatePage />} />
             <Route exact path="/account" element={<PrivateRoute/>}>
               <Route exact path="/account/info" element={<AccountInfo />}/>
               <Route exact path="/account/products" element={<CompanyProducts />}/>
-              <Route exact path="/account/products/edit/:productSku" element={<EditProductForm />}/>
+              <Route exact path="/account/products/create" element={<ProductCreate />}/>
+              <Route exact path="/account/products/edit/:productIdentifier" element={<EditProductForm />}/>
               <Route exact path="/account/edit" element={<EditAccountForm />}/>
               <Route exact path="/account/pm" element={<CompanyPM />}/>
               <Route exact path="/account/pm/edit/:pmEmail" element={<EditPMForm />}/>

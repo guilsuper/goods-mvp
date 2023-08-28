@@ -73,7 +73,23 @@ def auth_header():
 @pytest.fixture
 def product_dict():
     """Builds product object and returns dict with product attributes."""
-    obj = ProductFactory.build().__dict__
-    obj.pop("id")
-    obj.pop("company_id")
+    obj = {
+        "unique_identifier_type": "SKU",
+        "unique_identifier": "1aa24a211232aa",
+        "marketing_name": "aaaa",
+        "components": [
+            {
+                "fraction_cogs": 99,
+                "marketing_name": "why",
+                "component_type": "Externally Sourced",
+                "external_sku": "aaaaa"
+            },
+            {
+                "fraction_cogs": 1,
+                "marketing_name": "why1",
+                "component_type": "Externally Sourced",
+                "external_sku": "aaaaa1"
+            }
+        ]
+    }
     return obj

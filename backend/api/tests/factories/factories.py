@@ -1,8 +1,9 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains Product and Administrator factories."""
-from datetime import date
-
 import factory
+from api.models import SCTR_ID_TYPES
+from api.models import SCTR_STATES
+from api.models import SOURCE_COMPONENT_TYPE
 from django.contrib.auth.models import Group
 from factory.django import DjangoModelFactory
 
@@ -78,23 +79,34 @@ class AdministratorFactory(DjangoModelFactory):
 
 
 class ProductFactory(DjangoModelFactory):
-    """Product factory."""
+    """SCTR factory."""
 
     class Meta:
-        """Product factory model and fields."""
+        """SCTR factory model and fields."""
 
-        model = "api.Product"
+        model = "api.SCTR"
 
-    sku_id = factory.Sequence(lambda n: int(str(n) * 8))
-    public_facing_id = factory.Sequence(lambda n: int(str(n) * 8))
-    public_facing_name = factory.Sequence(lambda n: int(str(n) * 8))
-    description = "why"
-
-    sctr_date = date(2019, 1, 1)
-    sctr_cogs = 50.0
-    cogs_coutry_recipients = "BH"
-
-    product_input_manufacturer = "AAAA"
-    product_input_type = "Art"
+    unique_identifier = factory.Sequence(lambda n: int(str(n) * 8))
+    unique_identifier_type = SCTR_ID_TYPES.SKU
+    marketing_name = factory.Sequence(lambda n: int(str(n) * 8))
+    version = 1
+    state = SCTR_STATES.published
+    sctr_cogs = 100
 
     company = factory.SubFactory(CompanyFactory)
+
+
+class ComponentFactory(DjangoModelFactory):
+    """SourceComponent factory."""
+
+    class Meta:
+        """Component factory model and fields."""
+
+        model = "api.SourceComponent"
+
+    fraction_cogs = 100
+    marketing_name = factory.Sequence(lambda n: int(str(n) * 8))
+    component_type = SOURCE_COMPONENT_TYPE.externally_sourced
+    country_of_origin = None
+    external_sku = factory.Sequence(lambda n: int(str(n) * 8))
+    parent_sctr = factory.SubFactory(ProductFactory)

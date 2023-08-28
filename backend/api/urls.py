@@ -28,7 +28,7 @@ urlpatterns = [
     ),
     path("product/get/", ProductListView.as_view(), name="product-get"),
     path(
-        "product/patch_delete_retrieve/<int:sku_id>/",
+        "product/patch_delete_retrieve/<str:unique_identifier>/",
         ProductRetrieveUpdateDestroyView.as_view(),
         name="product-patch-delete-retrieve"
     ),

@@ -16,17 +16,17 @@ const ListItem = ({ product }) => {
     <Col
       xs={3}
       className="border m-3 p-4 rounded"
-      as={Link} to={'/products/' + product.sku_id}
+      as={Link} to={'/products/' + product.unique_identifier}
       style={{ color: 'inherit', textDecoration: 'inherit' }}
     >
       <Row>
         <Image src="/logo192.png"/>
       </Row>
       <Row>
-        {'Product SKU id: ' + product.sku_id}
+        {'Product SKU id: ' + product.unique_identifier}
       </Row>
       <Row>
-        {'Product facing name: ' + product.public_facing_name}
+        {'Product facing name: ' + product.marketing_name}
       </Row>
     </Col>
   )

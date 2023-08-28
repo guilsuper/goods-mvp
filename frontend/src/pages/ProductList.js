@@ -66,42 +66,20 @@ const ProductList = () => {
     <Container>
       <Row>
         <Col xs={3} className="my-4 px-4 py-2 rounded shadow">
-          <Row className="align-items-center mb-1">
-            <Container>
-              Filters
-            </Container>
+          <Row className='mt-2'>
+              <p className='text-center'>Filters</p>
           </Row>
-          <Container className="align-items-center py-4">
+          <Container className="align-items-center py-2">
             <Fragment>
               <Form onSubmit={submitHandler}>
-                <Form.Group className="mb-3" controlId="sku_id__icontains">
-                  <Form.Label>Sku id contains...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter SKU id" />
+                <Form.Group className="mb-3" controlId="unique_identifier__icontains">
+                  <Form.Label>Unique id contains...</Form.Label>
+                  <Form.Control type="text" placeholder="Enter id" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="public_facing_id__icontains">
+                <Form.Group className="mb-3" controlId="marketing_name__icontains">
                   <Form.Label>Public facing id contains...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Public facing id" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="public_facing_name__icontains">
-                  <Form.Label>Public facing name contains...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Public name id" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="description__icontains">
-                  <Form.Label>Description contains...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter description" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="sctr_date__gt">
-                  <Form.Label>SCTR date after...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter SCTR date like YYYY-MM-DD" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="sctr_date__lt">
-                  <Form.Label>SCTR date before...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter SCTR date like YYYY-MM-DD" />
+                  <Form.Control type="text" placeholder="Enter marketing name" />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="sctr_cogs__lte">
@@ -114,14 +92,9 @@ const ProductList = () => {
                   <Form.Control type="text" placeholder="Enter SCTR COGS" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="product_input_manufacturer__icontains">
-                  <Form.Label>Product input manufacturer contains...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter product input manufacturer" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="product_input_type__icontains">
-                  <Form.Label>Product input type contains...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter product input type" />
+                <Form.Group className="mb-3" controlId="company__name__icontains">
+                  <Form.Label>Company name contains...</Form.Label>
+                  <Form.Control type="text" placeholder="Enter company name" />
                 </Form.Group>
 
                 <Button variant="primary" type="submit">

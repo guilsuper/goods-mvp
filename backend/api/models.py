@@ -34,6 +34,28 @@ class PRODUCT_TYPES(models.TextChoices):
     art = "Art"
 
 
+class SCTR_ID_TYPES(models.TextChoices):
+    """Allowed coices for SCTR unique id types."""
+
+    SKU = "SKU"
+    GNIT = "GNIT"
+
+
+class SCTR_STATES(models.TextChoices):
+    """Allowed coices for SCTR states."""
+
+    draft = "Draft"
+    published = "Pubished"
+    hidden = "Hidden"
+
+
+class SOURCE_COMPONENT_TYPE(models.TextChoices):
+    """Allowed choices for source component type."""
+
+    externally_sourced = "Externally Sourced"
+    made_in_house = "Made In-House"
+
+
 class Company(models.Model):
     """Company model."""
 
@@ -124,42 +146,58 @@ class Administrator(AbstractUser):
         group.user_set.add(self)
 
 
-class Product(models.Model):
-    """Product model."""
+class SCTR(models.Model):
+    """SCTR model."""
 
-    sku_id = models.IntegerField(unique=True)
-    public_facing_id = models.IntegerField()
-    public_facing_name = models.CharField(max_length=500)
-    description = models.TextField(max_length=2000)
+    # According to the public information
+    # SKU length is usually not more then 25 characters
+    # GNIT length is 13
+    unique_identifier = models.CharField(max_length=25, unique=True)
+    unique_identifier_type = models.CharField(
+        max_length=4,
+        choices=SCTR_ID_TYPES.choices
+    )
+    marketing_name = models.CharField(max_length=500)
 
-    sctr_date = models.DateField()
+    version = models.IntegerField(
+        default=1,
+        validators=[
+            MinValueValidator(1)
+        ]
+    )
+    state = models.CharField(
+        max_length=8,
+        choices=SCTR_STATES.choices
+    )
+
     sctr_cogs = models.FloatField(
         validators=[
             MaxValueValidator(100),
             MinValueValidator(0)
         ]
     )
-    cogs_coutry_recipients = CountryField()
-
-    product_input_manufacturer = models.CharField(max_length=200)
-    product_input_type = models.CharField(
-        max_length=20,
-        choices=PRODUCT_TYPES.choices
-    )
 
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
-class SubComponent(models.Model):
-    """Product model."""
+class SourceComponent(models.Model):
+    """SCTR source components model."""
 
-    sub_sku_id = models.IntegerField()
-    sub_public_facing_name = models.CharField(max_length=500, null=True)
-    sub_cogs_coutry_recipients = CountryField(null=True)
-    sub_product_input_type = models.CharField(
-        max_length=20,
-        choices=PRODUCT_TYPES.choices,
-        null=True
+    fraction_cogs = models.FloatField(
+        validators=[
+            MaxValueValidator(100),
+            MinValueValidator(0)
+        ]
+    )
+    marketing_name = models.CharField(max_length=500)
+    component_type = models.CharField(
+        max_length=18,
+        choices=SOURCE_COMPONENT_TYPE.choices
     )
 
-    main_sku_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # On of this fields will be set according to the type
+    # This check is applied in the serializer
+    country_of_origin = CountryField(null=True)
+    external_sku = models.CharField(max_length=25, null=True)
+
+    parent_sctr = models.ForeignKey(SCTR, related_name="components", on_delete=models.CASCADE)
