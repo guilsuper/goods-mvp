@@ -27,6 +27,19 @@ updates:
     reviewers:
       - "bakerkj"
 
+  # Maintain dependencies for e2e-tests pip
+  - package-ecosystem: "pip"
+    directory: "/e2e-tests"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "e2e-tests pip"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
+
   # # Maintain dependencies for GitHub Actions
   # - package-ecosystem: "github-actions"
   #   directory: "/"
