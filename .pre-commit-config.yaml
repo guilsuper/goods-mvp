@@ -114,6 +114,11 @@ repos:
       args:
         - --use-current-year
         - --no-extra-eol
+    - name: Insert license in comments (.sh)
+      id: insert-license
+      files: \.(sh)$
+      args:
+        - --use-current-year
 
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.10.0
