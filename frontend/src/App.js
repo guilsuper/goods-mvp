@@ -11,6 +11,8 @@ import './App.css'
 import Header from './components/Header'
 import ProductList from './pages/ProductList'
 import Home from './pages/Home'
+import About from './pages/About'
+import Terms from './pages/Terms'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import Footer from './components/Footer'
@@ -38,6 +40,8 @@ function App () {
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/:productSku" element={<ProductInfo />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/activated/:uidb64/:token" element={<ActivatePage />} />
