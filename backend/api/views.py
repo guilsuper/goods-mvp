@@ -9,11 +9,9 @@ from api.permissions import IsAdministrator
 from api.permissions import IsCompanyAdministrator
 from api.permissions import IsProductOwner
 from api.permissions import ReadOnly
-from api.serializers import AdministratorRetrieveSerializer
 from api.serializers import AdministratorSerializer
 from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CompanySerializer
-from api.serializers import PMRetrieveSerializer
 from api.serializers import PMSerializer
 from api.serializers import ProductCreateSerializer
 from api.serializers import ProductGetSerializer
@@ -109,6 +107,11 @@ class CreateAdministratorAndCompanyView(APIView):
                 )
             else:
                 admin.delete()
+        else:
+            return Response(
+                {"message": "Email wasn't sent"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         # You need to call is_valid before accessing the errors attribute
         # admin.is_valid() is called every time
@@ -225,9 +228,9 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         if self.request.user.groups.filter(
             name="Administrator"
         ).exists():
-            return AdministratorRetrieveSerializer
+            return AdministratorSerializer
         else:
-            return PMRetrieveSerializer
+            return PMSerializer
 
 
 class PMCreateView(CreateAPIView):
@@ -260,7 +263,7 @@ class PMCreateView(CreateAPIView):
 class PMRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """PM get, patch and delete methods."""
 
-    serializer_class = PMRetrieveSerializer
+    serializer_class = PMSerializer
     permission_classes = [
         IsAuthenticated,
         IsAdministrator,
@@ -269,18 +272,11 @@ class PMRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Administrator.objects.filter(groups__name="PM")
     lookup_field = "email"
 
-    def get_serializer_class(self):
-        """Get serializer depending on the request method."""
-        if self.request.method == "PATCH":
-            return PMSerializer
-        else:
-            return PMRetrieveSerializer
-
 
 class PMListView(ListAPIView):
     """Retrieves the PMs."""
 
-    serializer_class = PMRetrieveSerializer
+    serializer_class = PMSerializer
     permission_classes = (IsAuthenticated, IsAdministrator, )
 
     def get_queryset(self):
