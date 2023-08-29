@@ -20,7 +20,7 @@ const ListItem = ({ product }) => {
       style={{ color: 'inherit', textDecoration: 'inherit' }}
     >
       <Row>
-        <Image src="/logo192.png"/>
+        <Image src="/FreeWorldCertified-logo-192.png"/>
       </Row>
       <Row>
         {'Product SKU id: ' + product.unique_identifier}
