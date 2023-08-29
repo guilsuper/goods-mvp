@@ -26,7 +26,7 @@ const ProductInfo = () => {
 
       let response = ''
       try {
-        response = await fetch('/api/product/patch_delete_retrieve/' + productIdentifier + '/', config)
+        response = await fetch('/api/product/delete_retrieve/' + productIdentifier + '/', config)
       } catch (error) {
         alert('Server is not working')
         return
@@ -44,7 +44,7 @@ const ProductInfo = () => {
     getProductInfo()
   }, [navigate, productIdentifier])
 
-  const isAllowedToChange = (user) => {
+  const isOwner = (user) => {
     // If not authorized
     if (!user) {
       return false
@@ -68,7 +68,7 @@ const ProductInfo = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/product/patch_delete_retrieve/' + productIdentifier + '/', config)
+      response = await fetch('/api/product/delete_retrieve/' + productIdentifier + '/', config)
     } catch (error) {
       alert('Server is not working')
       return
@@ -82,11 +82,48 @@ const ProductInfo = () => {
     }
   }
 
+  const moveToDraft = async (event) => {
+    const config = {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
+    }
+
+    let response = ''
+    try {
+      response = await fetch('/api/product/to_draft/' + productIdentifier + '/', config)
+    } catch (error) {
+      alert('Server is not working')
+      return
+    }
+
+    if (response.status === 200) {
+      alert('Successfully moved')
+      window.location.reload()
+    } else {
+      alert("Wasn't moved or permission denied")
+    }
+  }
+
   // If product company wasn't loaded yet
   // When page renders, product.company is undefiend
   // And it is imposible to get product.company.name for example
   if (!product.company) {
     return
+  }
+
+  const calculateCOGS = () => {
+    const sum = product.components.reduce(function (prev, current) {
+      return prev + +current.fraction_cogs
+    }, 0)
+    // If NaN
+    if (!sum) {
+      return 0
+    }
+    return sum
   }
 
   return (
@@ -102,43 +139,75 @@ const ProductInfo = () => {
         <Row className='text-secondary'><p>Marketing name</p></Row>
         <Row><p>{product.marketing_name}</p></Row>
 
+        {
+            isOwner(user)
+              ? <>
+              <Row className='text-secondary'><p>State</p></Row>
+              <Row><p>{product.state}</p></Row>
+            </>
+              : ' '
+        }
+
+        <p className='text-secondary'>COGS: {calculateCOGS()}%</p>
+
+        <Row className='mt-4'>
+          <Col className='ps-4'>
+            <p>Fraction COGS</p>
+          </Col>
+          <Col className='ps-4'>
+            <p>Marketing name</p>
+          </Col>
+          <Col className='ps-4'>
+            <p>Component type</p>
+          </Col>
+          <Col className='ps-4'>
+            <p>External SKU or country of origin</p>
+          </Col>
+        </Row>
+
         {product.components.map((component, index) => (
-        <Fragment key={`${component}~${index}`}>
-          <Container className='my-4 p-3 border rounded'>
-            <Row className='text-secondary'><p>Marketing name</p></Row>
-            <Row><p>{component.marketing_name}</p></Row>
+        <Row key={`${component}~${index}`} className='mb-3 pt-2 ps-4 border rounded'>
+          <Col><p>{component.fraction_cogs}</p></Col>
 
-            <Row className='text-secondary'><p>Fraction COGS</p></Row>
-            <Row><p>{component.fraction_cogs}</p></Row>
+          <Col><p>{component.marketing_name}</p></Col>
 
-            <Row className='text-secondary'><p>Component type</p></Row>
-            <Row><p>{component.component_type}</p></Row>
+          <Col><p>{component.component_type}</p></Col>
 
-            {
-              (component.component_type === 'Made In-House')
-                ? <>
-                  <Row className='text-secondary'><p>Country of origin</p></Row>
-                  <Row><p>{component.country_of_origin}</p></Row>
-                </>
-                : <>
-                  <Row className='text-secondary'><p>External SKU</p></Row>
-                  <Row><p>{component.external_sku}</p></Row>
-                </>
-            }
-          </Container>
-        </Fragment>
+          {
+            (component.component_type === 'Made In-House')
+              ? <>
+                <Col><p>{component.country_of_origin}</p></Col>
+              </>
+              : <>
+                <Col><p>{component.external_sku}</p></Col>
+              </>
+          }
+        </Row>
         ))}
 
         {
-          isAllowedToChange(user)
-            ? <Row>
-            <Col md={4}>
-              <Button variant='primary' as={Link} to={'/account/products/edit/' + product.unique_identifier}>Edit</Button>
-            </Col>
-            <Col md={{ span: 4, offset: 4 }}>
+          isOwner(user)
+            ? <Col className='w-25 mt-4'>
+            <Row className='mb-3'>
+              {
+                product.state === 'Draft'
+                  ? <>
+                    <Button
+                      variant='primary'
+                      as={Link}
+                      to={'/account/products/edit/' + product.unique_identifier}
+                    >Edit</Button>
+                  </>
+                  : <>
+                    <Button variant='primary' onClick={moveToDraft}>Move to draft</Button>
+                  </>
+              }
+            </Row>
+
+            <Row>
               <Button variant='danger' onClick={deleteProduct}>Delete product</Button>
-            </Col>
-          </Row>
+            </Row>
+          </Col>
             : ' '
         }
 

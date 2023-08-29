@@ -60,3 +60,11 @@ class IsPM(permissions.BasePermission):
     def has_permission(self, request, view):
         """If PM."""
         return request.user.groups.filter(name="PM").exists()
+
+
+class IsComponentOwner(permissions.BasePermission):
+    """Object permissions to update component."""
+
+    def has_object_permission(self, request, view, obj):
+        """Allow self edit for account owner."""
+        return request.user.company == obj.parent_sctr.company

@@ -6,26 +6,39 @@ import React, { useState, useEffect, useContext } from 'react'
 import ListItem from '../components/ListItem'
 import { Col, Container, Form, Row, Button } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const CompanyProducts = () => {
   const [products, setProducts] = useState([])
-  const { user } = useContext(AuthContext)
+  const { user, authTokens } = useContext(AuthContext)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function getProducts () {
-      const companyName = user.company.name
-
+      const config = {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authTokens.access
+        }
+      }
       let response = ''
       try {
-        response = await fetch('/api/product/get/?company__name=' + companyName)
+        response = await fetch('/api/product/get_by_company/', config)
       } catch (error) {
         alert('Server is not responding')
         return
       }
       const data = await response.json()
 
-      setProducts(data)
+      if (response.status === 200) {
+        setProducts(data)
+      } else {
+        alert('Not authenticated or permission denied')
+        navigate('/')
+      }
     }
     getProducts()
   }, [user])
@@ -41,13 +54,6 @@ const CompanyProducts = () => {
         params[event.target[attr].id] = event.target[attr].value
       }
     })
-    const config = {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }
 
     let query = '?'
     Object.keys(params).forEach(function (param) {
@@ -55,7 +61,14 @@ const CompanyProducts = () => {
         query += param + '=' + params[param] + '&'
       }
     })
-
+    const config = {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
+    }
     let response = ''
     try {
       response = await fetch('/api/product/get/' + query, config)

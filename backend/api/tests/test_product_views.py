@@ -6,6 +6,7 @@ product-patch-delete-retrieve
 """
 import pytest
 from api.models import SCTR
+from api.models import SCTR_STATES
 from django.urls import reverse
 
 
@@ -113,16 +114,13 @@ def test_product_update_same_company(
         user = user(company=product.company)
         credentials = auth_header(user)
 
-    data["components"] = [{
-        "fraction_cogs": 100,
-        "marketing_name": "why",
-        "component_type": "Externally Sourced",
-        "external_sku": "aaaaa"
-    }]
+    # Move product to draft, so it is editable
+    product.state = SCTR_STATES.draft
+    product.save()
 
     response = client.patch(
         reverse(
-            "product-patch-delete-retrieve",
+            "product-patch",
             kwargs={"unique_identifier": product.unique_identifier}
         ),
         data=data,
@@ -173,16 +171,13 @@ def test_product_update_different_company(
         user = user()
         credentials = auth_header(user)
 
-    data["components"] = [{
-        "fraction_cogs": 100,
-        "marketing_name": "why",
-        "component_type": "Externally Sourced",
-        "external_sku": "aaaaa"
-    }]
+    # Move product to draft, so it is editable
+    product.state = SCTR_STATES.draft
+    product.save()
 
     response = client.patch(
         reverse(
-            "product-patch-delete-retrieve",
+            "product-patch",
             kwargs={"unique_identifier": product.unique_identifier}
         ),
         data=data,

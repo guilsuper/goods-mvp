@@ -2,8 +2,8 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { Fragment, useContext, useState, useMemo } from 'react'
-import { Button, Form, Container } from 'react-bootstrap'
+import React, { useContext, useState, useMemo } from 'react'
+import { Button, Form, Container, Row, Col } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router'
 import countryList from 'react-select-country-list'
@@ -14,9 +14,12 @@ const ProductForm = () => {
   // all possible countries list
   const options = useMemo(() => countryList().getData(), [])
   const [inputFields, setInputFields] = useState([{
-    fraction_cogs: '',
+    fraction_cogs: 0,
     marketing_name: '',
-    component_type: ''
+    component_type: 'Made In-House'
+  }])
+  const [submitButton, setSubmitButton] = useState([{
+    button: ''
   }])
 
   const navigate = useNavigate()
@@ -56,7 +59,11 @@ const ProductForm = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/product/create/', config)
+      if (submitButton === 'draft') {
+        response = await fetch('/api/product/create_draft/', config)
+      } else {
+        response = await fetch('/api/product/create/', config)
+      }
     } catch (error) {
       alert('Server is not working')
       return
@@ -83,7 +90,7 @@ const ProductForm = () => {
           if (Array.isArray(result.components)) {
             for (const index in result.components) {
               for (const field in result.components[index]) {
-                message += '\n' + invalidElement + ': ' + field + ' ' + result.components[index][field]
+                message += '\n' + invalidElement + ' ' + index + ': ' + field + ' ' + result.components[index][field]
               }
             }
           } else {
@@ -102,9 +109,9 @@ const ProductForm = () => {
   const handleAddFields = () => {
     const values = [...inputFields]
     values.push({
-      fraction_cogs: '',
+      fraction_cogs: 0,
       marketing_name: '',
-      component_type: ''
+      component_type: 'Made In-House'
     })
     setInputFields(values)
   }
@@ -137,6 +144,17 @@ const ProductForm = () => {
     setInputFields(values)
   }
 
+  const calculateCOGS = () => {
+    const sum = inputFields.reduce(function (prev, current) {
+      return prev + +current.fraction_cogs
+    }, 0)
+    // If NaN
+    if (!sum) {
+      return 0
+    }
+    return sum
+  }
+
   return (
     <Form onSubmit={submitHandler}>
       <Form.Group className="mb-3" controlId="unique_identifier">
@@ -147,7 +165,6 @@ const ProductForm = () => {
       <Form.Group className="mb-3">
         <Form.Label>Unique dentifier type</Form.Label>
         <Form.Select aria-label="Select type" id="unique_identifier_type">
-          <option>Enter id type</option>
           <option value="SKU">SKU</option>
           <option value="GNIT">GNIT</option>
         </Form.Select>
@@ -158,11 +175,27 @@ const ProductForm = () => {
         <Form.Control type="text" placeholder="Enter marketing name" />
       </Form.Group>
 
+      <p>COGS: {calculateCOGS()}%</p>
+
+      <Row>
+        <Col className='ps-4'>
+          <p>Fraction COGS</p>
+        </Col>
+        <Col className='ps-4'>
+          <p>Marketing name</p>
+        </Col>
+        <Col className='ps-4'>
+          <p>Component type</p>
+        </Col>
+        <Col className='ps-4'>
+          <p>External SKU or country of origin</p>
+        </Col>
+      </Row>
+
       {inputFields.map((inputField, index) => (
-        <Fragment key={`${inputField}~${index}`}>
-          <Container className='my-4 p-3 border rounded'>
+        <Row key={`${inputField}~${index}`} className='mb-3 p-3 border rounded'>
+          <Col>
             <Form.Group className="mb-3" controlId="fraction_cogs">
-              <Form.Label>Fraction COGS</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter fraction COGS"
@@ -170,8 +203,9 @@ const ProductForm = () => {
                 onChange={event => handleInputChange(index, event)}
               />
             </Form.Group>
+          </Col>
+          <Col>
             <Form.Group className="mb-3" controlId="marketing_name">
-              <Form.Label>Marketing name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter marketing name"
@@ -179,24 +213,25 @@ const ProductForm = () => {
                 onChange={event => handleInputChange(index, event)}
               />
             </Form.Group>
+          </Col>
+          <Col>
             <Form.Group className="mb-3">
-              <Form.Label>Component type</Form.Label>
               <Form.Select
                 aria-label="Select type"
                 id="component_type"
                 value={inputField.component_type}
                 onChange={event => handleInputChange(index, event)}
               >
-                <option>Enter component type</option>
                 <option value="Made In-House">Made In-House</option>
                 <option value="Externally Sourced">Externally Sourced</option>
               </Form.Select>
             </Form.Group>
+          </Col>
+          <Col>
             {
               inputField.component_type
                 ? inputField.component_type === 'Externally Sourced'
                   ? <Form.Group className="mb-3" controlId="external_sku">
-                    <Form.Label>External SKU</Form.Label>
                     <Form.Control
                       type="text"
                       value={inputField.external_sku}
@@ -205,7 +240,6 @@ const ProductForm = () => {
                     />
                   </Form.Group>
                   : <Form.Group className="mb-3">
-                      <Form.Label>Product country</Form.Label>
                       <Form.Select
                         aria-label="Select country"
                         id="country_of_origin"
@@ -221,19 +255,23 @@ const ProductForm = () => {
                     </Form.Group>
                 : ' '
             }
-
-            <Button onClick={() => handleAddFields()}>
+          </Col>
+          <Container>
+            <Button onClick={() => handleAddFields()} className='me-2'>
               Add component
             </Button>
             <Button disabled={index === 0} onClick={() => handleRemoveFields(index)}>
               Remove component
             </Button>
           </Container>
-        </Fragment>
+        </Row>
       ))}
 
-      <Button className="my-3" variant="primary" type="submit">
-        Create product
+      <Button onClick={() => (setSubmitButton('publish'))} className="my-3 me-2" variant="primary" type="submit">
+        Publish
+      </Button>
+      <Button onClick={() => (setSubmitButton('draft'))} className="my-3" variant="primary" type="submit">
+        Create Draft
       </Button>
     </Form>
   )

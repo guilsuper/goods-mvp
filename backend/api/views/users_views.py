@@ -1,23 +1,14 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""API views module."""
-from api.filter import ProductFilter
+"""API user-related views module."""
 from api.models import Administrator
-from api.models import Company
-from api.models import SCTR
-from api.models import SCTR_STATES
 from api.permissions import IsAccountOwner
 from api.permissions import IsAdministrator
 from api.permissions import IsCompanyAdministrator
-from api.permissions import IsProductOwner
 from api.permissions import ReadOnly
-from api.serializers import AdministratorRetrieveSerializer
 from api.serializers import AdministratorSerializer
-from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CompanySerializer
 from api.serializers import PMRetrieveSerializer
 from api.serializers import PMSerializer
-from api.serializers import SCTRGetSerializer
-from api.serializers import SCTRSerializer
 from api.tokens import account_activation_token
 from api.utils import send_activation_email
 from django.contrib.auth import get_user_model
@@ -27,7 +18,6 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveAPIView
-from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser
 from rest_framework.parsers import MultiPartParser
@@ -35,51 +25,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-
-class Smoke(ListAPIView):
-    """Backend healthcheck."""
-
-    def get(self, request):
-        """Retrieving basic response."""
-        return Response("Working as intended.")
-
-
-class ProductCreateView(CreateAPIView):
-    """Product creation."""
-
-    serializer_class = SCTRSerializer
-    permission_classes = [IsAuthenticated, ]
-
-
-class ProductListView(ListAPIView):
-    """Product retrieving all and filtering."""
-
-    serializer_class = SCTRGetSerializer
-    queryset = SCTR.objects.filter(state=SCTR_STATES.published)
-    filterset_class = ProductFilter
-
-
-class ProductRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """View has patch, get and delete methods for product model."""
-
-    permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsProductOwner]
-    lookup_field = "unique_identifier"
-
-    def get_queryset(self):
-        """Queryset based on user's authentication."""
-        # Not authenticated users can access only published produts
-        if self.request.user:
-            return SCTR.objects.all()
-        else:
-            return SCTR.objects.filter(state=SCTR_STATES.published)
-
-    def get_serializer_class(self):
-        """Set initial serializer based on a request method."""
-        if self.request.method == "GET":
-            return SCTRGetSerializer
-        else:
-            return SCTRSerializer
 
 
 class CreateAdministratorAndCompanyView(APIView):
@@ -185,58 +130,6 @@ class ActivationView(RetrieveAPIView):
         )
 
 
-class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """Administrator patch, get and delete view."""
-
-    serializer_class = AdministratorSerializer
-    permission_classes = [
-        IsAuthenticatedOrReadOnly,
-        IsAdministrator | ReadOnly,
-        IsAccountOwner
-    ]
-    queryset = Administrator.objects.all()
-
-    def patch(self, request):
-        """Overwritten patch method for using patch without pk."""
-        instance = request.user
-        serializer = self.get_serializer(
-            instance,
-            data=request.data,
-            partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response(serializer.data)
-
-    def get(self, request):
-        """Returns serialized request.user."""
-        self.serializer_class = self.get_serializer_class()
-        return Response(
-            {
-                **self.serializer_class(request.user).data,
-            }
-        )
-
-    def delete(self, request):
-        """Overwritten delete method for Administrators."""
-        request.user.delete()
-
-        return Response(
-            status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
-            data={"message": "Successfully deleted"}
-        )
-
-    def get_serializer_class(self):
-        """Get serializer based on the user group."""
-        if self.request.user.groups.filter(
-            name="Administrator"
-        ).exists():
-            return AdministratorRetrieveSerializer
-        else:
-            return PMRetrieveSerializer
-
-
 class PMCreateView(CreateAPIView):
     """PM creation."""
 
@@ -298,18 +191,53 @@ class PMListView(ListAPIView):
         )
 
 
-class CompanyUpdateRetrieveView(RetrieveUpdateAPIView):
-    """Updates or retrieves company information."""
+class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    """Administrator patch, get and delete view."""
 
+    serializer_class = AdministratorSerializer
     permission_classes = [
-        IsAuthenticated,
-        IsAdministrator,
-        IsCompanyAdministrator
+        IsAuthenticatedOrReadOnly,
+        IsAdministrator | ReadOnly,
+        IsAccountOwner
     ]
-    queryset = Company.objects.all()
-    lookup_field = "slug"
+    queryset = Administrator.objects.all()
+
+    def patch(self, request):
+        """Overwritten patch method for using patch without pk."""
+        instance = request.user
+        serializer = self.get_serializer(
+            instance,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+    def get(self, request):
+        """Returns serialized request.user."""
+        self.serializer_class = self.get_serializer_class()
+        return Response(
+            {
+                **self.serializer_class(request.user).data,
+            }
+        )
+
+    def delete(self, request):
+        """Overwritten delete method for Administrators."""
+        request.user.delete()
+
+        return Response(
+            status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
+            data={"message": "Successfully deleted"}
+        )
 
     def get_serializer_class(self):
-        if self.request.method == "GET":
-            return CompanyRetrieveSerializer
-        return CompanySerializer
+        """Get serializer based on the user group."""
+        if self.request.user.groups.filter(
+            name="Administrator"
+        ).exists():
+            return AdministratorSerializer
+        else:
+            return PMSerializer

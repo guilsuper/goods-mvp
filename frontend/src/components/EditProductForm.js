@@ -2,8 +2,8 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useEffect, useState, Fragment, useMemo } from 'react'
-import { Button, Form, Container } from 'react-bootstrap'
+import React, { useContext, useEffect, useState, useMemo } from 'react'
+import { Button, Form, Container, Col, Row } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
@@ -16,13 +16,17 @@ const EditProductForm = () => {
   const { authTokens } = useContext(AuthContext)
   const { productIdentifier } = useParams()
   const [product, setProduct] = useState([])
+  const [buttonType, setButtonType] = useState('')
   // If successfully editted, go to home page to prevent multiple editting
   const navigate = useNavigate()
 
   const [inputFields, setInputFields] = useState([{
+    id: '',
     fraction_cogs: '',
     marketing_name: '',
-    component_type: ''
+    component_type: '',
+    external_sku: '',
+    country_of_origin: ''
   }])
 
   const options = useMemo(() => countryList().getData(), [])
@@ -40,7 +44,7 @@ const EditProductForm = () => {
 
       let response = ''
       try {
-        response = await fetch('/api/product/patch_delete_retrieve/' + productIdentifier + '/', config)
+        response = await fetch('/api/product/delete_retrieve/' + productIdentifier + '/', config)
       } catch (error) {
         alert('Server is not working')
         return
@@ -53,45 +57,33 @@ const EditProductForm = () => {
         navigate('/')
       } else {
         setProduct(result)
-
-        // parse components
-        for (const component in result.components) {
-          for (const field in result.components[component]) {
-            if (!result.components[component][field]) {
-              delete result.components[component][field]
-            }
-          }
-        }
-
         setInputFields(result.components)
       }
     }
     getProductInfo()
   }, [authTokens, navigate, productIdentifier])
+
+  // Handle submit
   const submitHandler = async (event) => {
     event.preventDefault()
     event.persist()
 
-    const data = {}
-
-    // set data value from the form
-    Object.keys(event.target).forEach(function (attr) {
-      if (!isNaN(attr)) {
-        if (event.target[attr].style) {
-          // Clear bg color
-          event.target[attr].style = ''
-        }
-        if (event.target[attr].value !== '') {
-          // Add key and value pair to data from form field
-          data[event.target[attr].id] = event.target[attr].value
-        }
-      }
-    })
-
-    data.components = inputFields
+    const data = {
+      unique_identifier: event.target.unique_identifier.value ? event.target.unique_identifier.value : product.unique_identifier,
+      unique_identifier_type: event.target.unique_identifier_type.value ? event.target.unique_identifier_type.value : product.unique_identifier_type,
+      marketing_name: event.target.marketing_name[0].value ? event.target.marketing_name[0].value : product.marketing_name
+    }
 
     // Config for PATCH request
     const config = {
+      method: 'PATCH',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
+    }
+    const configProduct = {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -102,44 +94,56 @@ const EditProductForm = () => {
     }
 
     let response = ''
+    let responseProduct = ''
+    let responsesComponent = []
+
+    let result = ''
+
     try {
-      response = await fetch('/api/product/patch_delete_retrieve/' + productIdentifier + '/', config)
+      responseProduct = await fetch('/api/product/patch/' + productIdentifier + '/', configProduct)
+      for (const index in inputFields) {
+        const configComponent = {
+          method: 'PATCH',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + authTokens.access
+          },
+          body: JSON.stringify(inputFields[index])
+        }
+        const resonseComponent = await fetch('/api/component/patch_delete_retrieve/' + inputFields[index].id + '/', configComponent)
+        responsesComponent = [...responsesComponent, resonseComponent]
+      }
+
+      if (buttonType !== 'draft') {
+        response = await fetch('/api/product/to_published/' + productIdentifier + '/', config)
+        const resultPublish = await response.json()
+
+        if (response.status === 200) {
+          alert('Successfully published')
+          navigate('/products/' + productIdentifier)
+        } else if (response.status === 400) {
+          let message = 'Invalid input data:'
+          message += JSON.stringify(resultPublish)
+          alert(message)
+        } else {
+          alert('Not authenticated or permission denied')
+          navigate('/')
+        }
+      }
     } catch (error) {
       alert('Server is not responding')
       return
     }
 
-    const result = await response.json()
+    result = await responseProduct.json()
 
-    if (response.status === 200) {
+    if (responseProduct.status === 200) {
       alert('Successfully editted')
       navigate('/products/' + productIdentifier)
-    } else if (response.status === 400) {
+    } else if (responseProduct.status === 400) {
       let message = 'Invalid input data:'
-      for (const invalidElement in result) {
-        // Server response may send a key with error, that doesn't match the id of the element
-        if (typeof event.target[invalidElement] !== 'undefined') {
-          event.target[invalidElement].style = 'border-color: red'
-        }
-        // special case for the marketing_name
-        if (invalidElement === 'marketing_name') {
-          event.target[invalidElement][0].style = 'border-color: red'
-        }
-
-        if (invalidElement === 'components') {
-          if (Array.isArray(result.components)) {
-            for (const index in result.components) {
-              for (const field in result.components[index]) {
-                message += '\n' + invalidElement + ' ' + (Number(index) + 1) + ': ' + field + ' ' + result.components[index][field]
-              }
-            }
-          } else {
-            message += '\n' + invalidElement + ': ' + result[invalidElement]
-          }
-        } else {
-          message += '\n' + invalidElement + ': ' + result[invalidElement]
-        }
-      }
+      message += JSON.stringify(result)
       alert(message)
     } else {
       alert('Not authenticated or permission denied')
@@ -147,17 +151,68 @@ const EditProductForm = () => {
     }
   }
 
-  const handleAddFields = () => {
+  // Handle adding a field
+  const handleAddFields = async () => {
+    const config = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
+    }
+
+    let response = ''
+    try {
+      response = await fetch('/api/component/create/' + productIdentifier + '/', config)
+    } catch (error) {
+      alert('Server is not responding')
+      return
+    }
+
+    const result = await response.json()
+
+    if (response.status !== 200) {
+      alert('Server is not responding')
+    }
     const values = [...inputFields]
     values.push({
-      fraction_cogs: '',
+      id: result.id,
+      fraction_cogs: 0,
       marketing_name: '',
-      component_type: ''
+      component_type: 'Made In-House',
+      external_sku: '',
+      country_of_origin: ''
     })
+
     setInputFields(values)
   }
 
-  const handleRemoveFields = index => {
+  // Handle removing a field
+  const handleRemoveFields = async (index) => {
+    const componentId = inputFields[index].id
+
+    const config = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
+    }
+
+    let response = ''
+    try {
+      response = await fetch('/api/component/patch_delete_retrieve/' + componentId + '/', config)
+    } catch (error) {
+      alert('Server is not responding')
+      return
+    }
+
+    if (response.status !== 204) {
+      alert('Server is not responding')
+    }
+
     const values = [...inputFields]
     values.splice(index, 1)
     setInputFields(values)
@@ -169,20 +224,22 @@ const EditProductForm = () => {
 
     // If component type was changed
     if (event.target.id === 'component_type') {
-      if (values[index].component_type === 'Made In-House') {
-        if (typeof values[index].external_sku !== 'undefined') {
-          delete values[index].external_sku
-        }
-        values[index].country_of_origin = ''
-      } else {
-        if (typeof values[index].country_of_origin !== 'undefined') {
-          delete values[index].country_of_origin
-        }
-        values[index].external_sku = ''
-      }
+      values[index].external_sku = ''
+      values[index].country_of_origin = ''
     }
 
     setInputFields(values)
+  }
+
+  const calculateCOGS = () => {
+    const sum = inputFields.reduce(function (prev, current) {
+      return prev + +current.fraction_cogs
+    }, 0)
+    // If NaN
+    if (!sum) {
+      return 0
+    }
+    return sum
   }
 
   return (
@@ -207,20 +264,37 @@ const EditProductForm = () => {
           <Form.Control type="text" placeholder={product.marketing_name} />
         </Form.Group>
 
+        <p>COGS: {calculateCOGS()}%</p>
+
+        <Row>
+          <Col className='ps-4'>
+            <p>Fraction COGS</p>
+          </Col>
+          <Col className='ps-4'>
+            <p>Marketing name</p>
+          </Col>
+          <Col className='ps-4'>
+            <p>Component type</p>
+          </Col>
+          <Col className='ps-4'>
+            <p>External SKU or country of origin</p>
+          </Col>
+        </Row>
+
         {inputFields.map((inputField, index) => (
-        <Fragment key={`${inputField}~${index}`}>
-          <Container className='my-4 p-3 border rounded'>
-            <Form.Group className="mb-3" controlId="fraction_cogs">
-              <Form.Label>Fraction COGS</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter fraction COGS"
-                value={inputField.fraction_cogs}
-                onChange={event => handleInputChange(index, event)}
-              />
+          <Row key={`${inputField}~${index}`} className='mb-3 p-3 border rounded'>
+            <Col>
+              <Form.Group className="mb-3" controlId="fraction_cogs">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter fraction COGS"
+                  value={inputField.fraction_cogs}
+                  onChange={event => handleInputChange(index, event)}
+                />
               </Form.Group>
+            </Col>
+            <Col>
               <Form.Group className="mb-3" controlId="marketing_name">
-                <Form.Label>Marketing name</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Enter marketing name"
@@ -228,24 +302,25 @@ const EditProductForm = () => {
                   onChange={event => handleInputChange(index, event)}
                 />
               </Form.Group>
+            </Col>
+            <Col>
               <Form.Group className="mb-3">
-                <Form.Label>Component type</Form.Label>
                 <Form.Select
                   aria-label="Select type"
                   id="component_type"
                   value={inputField.component_type}
                   onChange={event => handleInputChange(index, event)}
                 >
-                  <option>Enter component type</option>
                   <option value="Made In-House">Made In-House</option>
                   <option value="Externally Sourced">Externally Sourced</option>
                 </Form.Select>
               </Form.Group>
+            </Col>
+            <Col>
               {
-              inputField.component_type
-                ? inputField.component_type === 'Externally Sourced'
-                  ? <Form.Group className="mb-3" controlId="external_sku">
-                      <Form.Label>External SKU</Form.Label>
+                inputField.component_type
+                  ? inputField.component_type === 'Externally Sourced'
+                    ? <Form.Group className="mb-3" controlId="external_sku">
                       <Form.Control
                         type="text"
                         value={inputField.external_sku}
@@ -253,35 +328,39 @@ const EditProductForm = () => {
                         onChange={event => handleInputChange(index, event)}
                       />
                     </Form.Group>
-                  : <Form.Group className="mb-3">
-                      <Form.Label>Product country</Form.Label>
-                      <Form.Select
-                        aria-label="Select country"
-                        id="country_of_origin"
-                        value={inputField.country_of_origin}
-                        onChange={event => handleInputChange(index, event)}
-                      >
-                        <option>Select country</option>
-                        {options.map((option, i) => (
-                          <option key={option.value} value={option.value}>{option.label}</option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                : ' '
+                    : <Form.Group className="mb-3">
+                        <Form.Select
+                          aria-label="Select country"
+                          id="country_of_origin"
+                          value={inputField.country_of_origin}
+                          placeholder="Enter country of origin"
+                          onChange={event => handleInputChange(index, event)}
+                        >
+                          <option>Select country</option>
+                          {options.map((option, i) => (
+                            <option key={option.value} value={option.value}>{option.label}</option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+                  : ' '
               }
-
-              <Button onClick={() => handleAddFields()}>
+            </Col>
+            <Container>
+              <Button onClick={() => handleAddFields()} className='me-2'>
                 Add component
               </Button>
               <Button disabled={index === 0} onClick={() => handleRemoveFields(index)}>
                 Remove component
               </Button>
             </Container>
-          </Fragment>
+          </Row>
         ))}
 
-        <Button className="my-3" variant="primary" type="submit">
-          Edit
+        <Button onClick={() => (setButtonType('publish'))} className="my-3 me-2" variant="primary" type="submit">
+          Publish
+        </Button>
+        <Button onClick={() => (setButtonType('draft'))} className="my-3" variant="primary" type="submit">
+          Save draft
         </Button>
       </Form>
     </FormContainer>

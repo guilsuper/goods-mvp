@@ -3,7 +3,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
-from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.core.validators import RegexValidator
 from django.db import models
@@ -155,9 +154,10 @@ class SCTR(models.Model):
     unique_identifier = models.CharField(max_length=25, unique=True)
     unique_identifier_type = models.CharField(
         max_length=4,
-        choices=SCTR_ID_TYPES.choices
+        choices=SCTR_ID_TYPES.choices,
+        null=True
     )
-    marketing_name = models.CharField(max_length=500)
+    marketing_name = models.CharField(max_length=500, null=True)
 
     version = models.IntegerField(
         default=1,
@@ -166,13 +166,14 @@ class SCTR(models.Model):
         ]
     )
     state = models.CharField(
+        default=SCTR_STATES.draft,
         max_length=8,
         choices=SCTR_STATES.choices
     )
 
     sctr_cogs = models.FloatField(
+        default=0,
         validators=[
-            MaxValueValidator(100),
             MinValueValidator(0)
         ]
     )
@@ -184,15 +185,14 @@ class SourceComponent(models.Model):
     """SCTR source components model."""
 
     fraction_cogs = models.FloatField(
-        validators=[
-            MaxValueValidator(100),
-            MinValueValidator(0)
-        ]
+        blank=True,
+        null=True
     )
-    marketing_name = models.CharField(max_length=500)
+    marketing_name = models.CharField(max_length=500, null=True, blank=True)
     component_type = models.CharField(
         max_length=18,
-        choices=SOURCE_COMPONENT_TYPE.choices
+        choices=SOURCE_COMPONENT_TYPE.choices,
+        null=True
     )
 
     # On of this fields will be set according to the type
