@@ -32,6 +32,7 @@ def admin():
             email=email,
             password=password,
             company=company,
+            groups=[GroupFactory(name="Administrator")]
         )
 
     return _method

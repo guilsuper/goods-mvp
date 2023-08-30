@@ -101,6 +101,9 @@ class ProductGetSerializer(ModelSerializer):
 class AdministratorSerializer(ModelSerializer):
     """Administrator base serilizer."""
 
+    groups = GroupSerializer(many=True, read_only=True)
+    company = CompanyRetrieveSerializer(read_only=True)
+
     class Meta:
         """Metaclass for the AdministratorSerializer."""
 
@@ -109,7 +112,8 @@ class AdministratorSerializer(ModelSerializer):
         # Serializer sets company field in create method
         fields = (
             "password", "email",
-            "first_name", "last_name"
+            "first_name", "last_name",
+            "groups", "company"
         )
 
     def create(self, validated_data):
@@ -135,38 +139,11 @@ class AdministratorSerializer(ModelSerializer):
         return instance
 
 
-class AdministratorRetrieveSerializer(ModelSerializer):
-    """Administrator retrieve serilizer."""
-
-    groups = GroupSerializer(many=True)
-    company = CompanyRetrieveSerializer()
-
-    class Meta:
-        """Metaclass for the AdministratorRetrieveSerializer."""
-
-        model = Administrator
-        exclude = (
-            "id", "is_superuser", "is_staff", "user_permissions"
-        )
-
-
-class PMRetrieveSerializer(ModelSerializer):
-    """PM retrieve serilizer."""
-
-    groups = GroupSerializer(many=True)
-    company = CompanySerializer()
-
-    class Meta:
-        """Metaclass for the PMRetrieveSerializer."""
-
-        model = Administrator
-        exclude = (
-            "id", "is_superuser", "is_staff", "user_permissions"
-        )
-
-
 class PMSerializer(ModelSerializer):
     """PM base serilizer."""
+
+    groups = GroupSerializer(many=True, read_only=True)
+    company = CompanyRetrieveSerializer(read_only=True)
 
     class Meta:
         """Metaclass for the PMSerializer."""
@@ -174,7 +151,8 @@ class PMSerializer(ModelSerializer):
         model = Administrator
         fields = (
             "password", "email",
-            "first_name", "last_name"
+            "first_name", "last_name",
+            "groups", "company"
         )
 
     def create(self, validated_data):
