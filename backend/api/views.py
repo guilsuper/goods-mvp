@@ -107,12 +107,10 @@ class CreateAdministratorAndCompanyView(APIView):
                 )
             else:
                 admin.delete()
-        else:
-            return Response(
-                {"message": "Email wasn't sent"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
+                return Response(
+                    {"message": "Email wasn't sent"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         # You need to call is_valid before accessing the errors attribute
         # admin.is_valid() is called every time
         # but if admin.is_valid() is false, company.is_valid() wasn't called
