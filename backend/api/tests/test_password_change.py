@@ -11,7 +11,7 @@ from django.urls import reverse
         # Admins can modify their password
         ("admin", 200),
         # PMs have no permission to perform this action
-        ("pm", 403),
+        ("pm", 200),
         # User can't access it
         (None, 401)
     ]

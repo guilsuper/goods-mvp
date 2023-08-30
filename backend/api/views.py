@@ -182,10 +182,8 @@ class ActivationView(RetrieveAPIView):
 class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """Administrator patch, get and delete view."""
 
-    serializer_class = AdministratorSerializer
     permission_classes = [
-        IsAuthenticatedOrReadOnly,
-        IsAdministrator | ReadOnly,
+        IsAuthenticated,
         IsAccountOwner
     ]
     queryset = Administrator.objects.all()
