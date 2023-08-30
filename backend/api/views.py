@@ -180,7 +180,7 @@ class ActivationView(RetrieveAPIView):
 
 
 class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """Administrator patch, get and delete view."""
+    """Administrator and PM patch, get and delete view."""
 
     permission_classes = [
         IsAuthenticated,
@@ -212,11 +212,17 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, request):
         """Overwritten delete method for Administrators."""
-        request.user.delete()
+        # Only administrators can delete accounts.
+        if request.user.groups.filter(name="Administrator").exists():
+            request.user.delete()
 
+            return Response(
+                status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
+                data={"message": "Successfully deleted"}
+            )
         return Response(
-            status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
-            data={"message": "Successfully deleted"}
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "Permission denied"}
         )
 
     def get_serializer_class(self):
