@@ -167,3 +167,8 @@ repos:
       - eslint-plugin-n@^16.0.1
       - eslint-plugin-promise@^6.1.1
       args: [ --fix, --ignore-pattern node_modules]
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.82.0
+    hooks:
+    - id: terraform_fmt
