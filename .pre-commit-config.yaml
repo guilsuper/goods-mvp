@@ -143,8 +143,8 @@ repos:
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
     hooks:
-    -   id: detect-secrets
-        exclude: frontend/package.lock.json
+    - id: detect-secrets
+      exclude: frontend/package.lock.json
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
