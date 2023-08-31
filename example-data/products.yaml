@@ -3,31 +3,31 @@
 FWC Data Schema Version: 0.1
 
 Companies:
-  - LegalName: Acme Manufacturer
-    PrimaryDomain: acme-manufacturer.com
-    PrimaryDomainVerified: true
-    HeadquartersCountry: USA
-    JurisdictionOfIncorporation: Delaware, USA
+  - Legal Name: Acme Manufacturer
+    Primary Domain: acme-manufacturer.com
+    Primary Domain Verified: true
+    Headquarters Country: USA
+    Jurisdiction Of Incorporation: Delaware, USA
     Products:
-      - ProductName: Waffle Iron #8
+      - Product Name: Waffle Iron #8
         SKU: TheWaffler8
-        OriginReports:
+        Origin Reports:
           Versions:
           - Version: 1
-            PublicationDate: 2023-08-21T01:23:45Z
+            Publication Date: 2023-08-21T01:23:45Z
             Inputs:
-            - FractionCOGS: 0.2
+            - Fraction COGS: 0.2
               Type: In-House
               Description: Iron Bar Stock
               Origin: USA
-            - FractionCOGS: 0.8
+            - Fraction COGS: 0.8
               Type: In-House
               Description: Forging of iron
               Origin: USA
           - Version: 2
-            PublicationDate: 2023-08-31T01:23:45Z
+            Publication Date: 2023-08-31T01:23:45Z
             Inputs:
-            - FractionCOGS: 0.3
+            - Fraction COGS: 0.3
               Type: In-House
               Description: Iron Bar Stock
               Origin: USA
@@ -36,86 +36,86 @@ Companies:
               Description: Forging of iron
               Origin: Canada
 
-      - ProductName: Frying Pan #12
+      - Product Name: Frying Pan #12
         SKU: TheFryer12
-        OriginReports:
+        Origin Reports:
           Versions:
           - Version: 1
-            PublicationDate: 2023-08-29T01:23:45Z
+            Publication Date: 2023-08-29T01:23:45Z
             Inputs:
-            - FractionCOGS: 0.7
+            - Fraction COGS: 0.7
               Type: In-House
               Description: Forging of iron
               Origin: USA
-              PublicationDate: 2023-08-31T01:23:45Z
+              Publication Date: 2023-08-31T01:23:45Z
           - Version: 2
-            PublicationDate: 2023-08-31T23:23:45Z
+            Publication Date: 2023-08-31T23:23:45Z
             Inputs:
-            - FractionCOGS: 0.3
+            - Fraction COGS: 0.3
               Type: External
               Description: Fancy iron bar stock
               Supplier:
                 Status: Guess
                 Origin: Zimbabwe
                 SKU: ultra-manganese-707
-                LegalName: Excellent Zimbabwe, Ltd
-                PrimaryDomain: fancy-iron.ze
-                HeadquartersCountry: Zimbabwe
-                JurisdictionOfIncorporation: Harare, Zimbabwe
+                Legal Name: Excellent Zimbabwe, Ltd
+                Primary Domain: fancy-iron.ze
+                Headquarters Country: Zimbabwe
+                Jurisdiction Of Incorporation: Harare, Zimbabwe
 
 
-  - LegalName: Essentia Mattresses
-    PrimaryDomain: myessentia.ca
-    PrimaryDomainVerified: true
-    HeadquartersCountry: Canada
-    JurisdictionOfIncorporation: Canada
+  - Legal Name: Essentia Mattresses
+    Primary Domain: myessentia.ca
+    Primary Domain Verified: true
+    Headquarters Country: Canada
+    Jurisdiction Of Incorporation: Canada
     Products:
-      - ProductName: Opus Energie, Queen
+      - Product Name: Opus Energie, Queen
         SKU: 12348u9128u4
         Origin Reports:
           Versions:
           - Version: 1
             Publication Date: 2023-08-22T01:01:01Z
             Inputs:
-            - FractionCOGS: 70%
+            - Fraction COGS: 0.7
               Type: In-House
               Description: Labor for Assembly
               Origin: Malaysia
-            - FractionCOGS: 30%
+            - Fraction COGS: 0.3
               Type: External
               Description: Raw Latex
               Supplier:
                 Status: Certified
-                PrimaryDomain: best-latex.br
+                Primary Domain: best-latex.br
                 SKU: latex-100-pure
 
 
 
-  - LegalName: Best Latex, Inc.
-    PrimaryDomain: best-latex.br
-    PrimaryDomainVerified: true
+  - Legal Name: Best Latex, Inc.
+    Primary Domain: best-latex.br
+    Primary Domain Verified: true
     Headquarters Country: Brazil            # key into the list of countries
     Jurisdiction of Incorporation: Brazil   # key into the list of countries
     Products:
-      - ProductName: Wonderful Latex
+      - Product Name: Wonderful Latex
         SKU: latex-100-pure
-        OriginReprots:
+        Origin Reports:
           Versions:
           - Version: 1
-            PublicationDate: 2023-08-22T01:01:01Z
+            Publication Date: 2023-08-22T01:01:01Z
             Inputs:
-            - FractionCOGS: 80%
+            - Fraction COGS: 0.8
               Type: In-House
               Description: Latex
               Origin: Brazil
-            - FractionCOGS: 20%
+            - Fraction COGS: 0.2
               Type: External
               Description: Solvents
               Supplier:
                 Status: Guess
                 Origin: USA
                 SKU: toluene
-                LegalName: DuPont, Inc
-                PrimaryDomain: DuPont.com
-                HeadquartersCountry: USA
-                JurisdictionOfIncorporation: USA
+                Legal Name: DuPont, Inc
+                Primary Domain: DuPont.com
+                Headquarters Country: USA
+                Jurisdiction Of Incorporation: USA
