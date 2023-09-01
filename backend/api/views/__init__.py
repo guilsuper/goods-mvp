@@ -1,16 +1,17 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Contains all the views."""
 from api.views.company_views import CompanyUpdateRetrieveView
-from api.views.product_views import ComponentCreateView
-from api.views.product_views import ComponentPatchRetrieveDeleteView
-from api.views.product_views import ProductCompanyListView
-from api.views.product_views import ProductCreateDraftView
-from api.views.product_views import ProductCreateView
-from api.views.product_views import ProductMoveToDraftView
-from api.views.product_views import ProductMoveToPublishedView
-from api.views.product_views import ProductPublishedListView
-from api.views.product_views import ProductRetrieveDestroyView
-from api.views.product_views import ProductUpdateView
+from api.views.sctr_views import ComponentCreateView
+from api.views.sctr_views import ComponentPatchRetrieveDeleteView
+from api.views.sctr_views import SCTRCompanyListView
+from api.views.sctr_views import SCTRCreateDraftView
+from api.views.sctr_views import SCTRCreateView
+from api.views.sctr_views import SCTRMoveToDraftView
+from api.views.sctr_views import SCTRMoveToPublishedView
+from api.views.sctr_views import SCTRPublishedListView
+from api.views.sctr_views import SCTRRetrieveDestroyView
+from api.views.sctr_views import SCTRSwitchVisibilityView
+from api.views.sctr_views import SCTRUpdateView
 from api.views.smoke_views import Smoke
 from api.views.users_views import ActivationView
 from api.views.users_views import CreateAdministratorAndCompanyView
@@ -25,14 +26,15 @@ __all__ = [
     "CompanyUpdateRetrieveView",
     "ComponentCreateView",
     "ComponentPatchRetrieveDeleteView",
-    "ProductCreateDraftView",
-    "ProductCreateView",
-    "ProductPublishedListView",
-    "ProductRetrieveDestroyView",
-    "ProductUpdateView",
-    "ProductCompanyListView",
-    "ProductMoveToDraftView",
-    "ProductMoveToPublishedView",
+    "SCTRCreateDraftView",
+    "SCTRCreateView",
+    "SCTRPublishedListView",
+    "SCTRRetrieveDestroyView",
+    "SCTRSwitchVisibilityView",
+    "SCTRUpdateView",
+    "SCTRCompanyListView",
+    "SCTRMoveToDraftView",
+    "SCTRMoveToPublishedView",
     "Smoke",
     "ActivationView",
     "CreateAdministratorAndCompanyView",

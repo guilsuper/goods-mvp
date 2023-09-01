@@ -7,15 +7,15 @@ import { Col, Row, Container, Button } from 'react-bootstrap'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 
-const ProductInfo = () => {
+const SCTRInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
-  const { productIdentifier } = useParams()
-  const [product, setProduct] = useState([])
+  const { sctrIdentifier } = useParams()
+  const [sctr, setSCTR] = useState([])
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function getProductInfo () {
+    async function getSCTRInfo () {
       const config = {
         method: 'GET',
         headers: {
@@ -26,7 +26,7 @@ const ProductInfo = () => {
 
       let response = ''
       try {
-        response = await fetch('/api/product/delete_retrieve/' + productIdentifier + '/', config)
+        response = await fetch('/api/sctr/delete_retrieve/' + sctrIdentifier + '/', config)
       } catch (error) {
         alert('Server is not working')
         return
@@ -38,22 +38,22 @@ const ProductInfo = () => {
         alert('Action not allowed')
         navigate('/')
       } else {
-        setProduct(result)
+        setSCTR(result)
       }
     }
-    getProductInfo()
-  }, [navigate, productIdentifier])
+    getSCTRInfo()
+  }, [navigate, sctrIdentifier])
 
   const isOwner = (user) => {
     // If not authorized
     if (!user) {
       return false
     }
-    return (user.company.name === product.company.name)
+    return (user.company.name === sctr.company.name)
   }
 
-  const deleteProduct = async (event) => {
-    if (!window.confirm('Are you sure you want to permanently delete this product?')) {
+  const deleteSCTR = async (event) => {
+    if (!window.confirm('Are you sure you want to permanently delete this SCTR?')) {
       return
     }
 
@@ -68,7 +68,7 @@ const ProductInfo = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/product/delete_retrieve/' + productIdentifier + '/', config)
+      response = await fetch('/api/sctr/delete_retrieve/' + sctrIdentifier + '/', config)
     } catch (error) {
       alert('Server is not working')
       return
@@ -76,7 +76,7 @@ const ProductInfo = () => {
 
     if (response.status === 204) {
       alert('Successfully deleted')
-      navigate('/account/products')
+      navigate('/account/sctr')
     } else {
       alert("Wasn't deleted or permission denied")
     }
@@ -94,7 +94,7 @@ const ProductInfo = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/product/to_draft/' + productIdentifier + '/', config)
+      response = await fetch('/api/sctr/to_draft/' + sctrIdentifier + '/', config)
     } catch (error) {
       alert('Server is not working')
       return
@@ -108,15 +108,15 @@ const ProductInfo = () => {
     }
   }
 
-  // If product company wasn't loaded yet
-  // When page renders, product.company is undefiend
-  // And it is imposible to get product.company.name for example
-  if (!product.company) {
+  // If SCTR company wasn't loaded yet
+  // When page renders, sctr.company is undefiend
+  // And it is imposible to get sctr.company.name for example
+  if (!sctr.company) {
     return
   }
 
   const calculateCOGS = () => {
-    const sum = product.components.reduce(function (prev, current) {
+    const sum = sctr.components.reduce(function (prev, current) {
       return prev + +current.fraction_cogs
     }, 0)
     // If NaN
@@ -126,24 +126,50 @@ const ProductInfo = () => {
     return sum
   }
 
+  const switchVisibility = async () => {
+    const config = {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + authTokens.access
+      }
+    }
+
+    let response = ''
+    try {
+      response = await fetch('/api/sctr/switch_visibility/' + sctrIdentifier + '/', config)
+    } catch (error) {
+      alert('Server is not working')
+      return
+    }
+
+    if (response.status === 200) {
+      alert('Successfully switched visibility')
+      window.location.reload()
+    } else {
+      alert("Visibility wasn't switched")
+    }
+  }
+
   return (
     <Container>
-      <h3 className='text-center'>Product information</h3>
+      <h3 className='text-center'>SCTR information</h3>
       <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
         <Row className='text-secondary'><p>Unique identifier</p></Row>
-        <Row><p>{product.unique_identifier}</p></Row>
+        <Row><p>{sctr.unique_identifier}</p></Row>
 
         <Row className='text-secondary'><p>Unique dentifier type</p></Row>
-        <Row><p>{product.unique_identifier_type}</p></Row>
+        <Row><p>{sctr.unique_identifier_type}</p></Row>
 
         <Row className='text-secondary'><p>Marketing name</p></Row>
-        <Row><p>{product.marketing_name}</p></Row>
+        <Row><p>{sctr.marketing_name}</p></Row>
 
         {
             isOwner(user)
               ? <>
               <Row className='text-secondary'><p>State</p></Row>
-              <Row><p>{product.state}</p></Row>
+              <Row><p>{sctr.state}</p></Row>
             </>
               : ' '
         }
@@ -165,7 +191,7 @@ const ProductInfo = () => {
           </Col>
         </Row>
 
-        {product.components.map((component, index) => (
+        {sctr.components.map((component, index) => (
         <Row key={`${component}~${index}`} className='mb-3 pt-2 ps-4 border rounded'>
           <Col><p>{component.fraction_cogs}</p></Col>
 
@@ -174,7 +200,7 @@ const ProductInfo = () => {
           <Col><p>{component.component_type}</p></Col>
 
           {
-            (component.component_type === 'Made In-House')
+            (component.component_type === 2)
               ? <>
                 <Col><p>{component.country_of_origin}</p></Col>
               </>
@@ -190,12 +216,12 @@ const ProductInfo = () => {
             ? <Col className='w-25 mt-4'>
             <Row className='mb-3'>
               {
-                product.state === 'Draft'
+                sctr.state === 1
                   ? <>
                     <Button
                       variant='primary'
                       as={Link}
-                      to={'/account/products/edit/' + product.unique_identifier}
+                      to={'/account/sctr/edit/' + sctr.unique_identifier}
                     >Edit</Button>
                   </>
                   : <>
@@ -205,8 +231,25 @@ const ProductInfo = () => {
             </Row>
 
             <Row>
-              <Button variant='danger' onClick={deleteProduct}>Delete product</Button>
+              <Button variant='danger' onClick={deleteSCTR}>Delete SCTR</Button>
             </Row>
+
+            {
+              sctr.state !== 1
+                ? <Row className='mt-3'>
+                {
+                  sctr.state === 3
+                    ? <>
+                      <Button variant='secondary' onClick={switchVisibility}>Unhide</Button>
+                    </>
+                    : <>
+                      <Button variant='secondary' onClick={switchVisibility}>Hide</Button>
+                    </>
+                }
+                </Row>
+                : ' '
+            }
+
           </Col>
             : ' '
         }
@@ -216,4 +259,4 @@ const ProductInfo = () => {
   )
 }
 
-export default ProductInfo
+export default SCTRInfo

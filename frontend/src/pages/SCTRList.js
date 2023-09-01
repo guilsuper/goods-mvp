@@ -6,23 +6,23 @@ import React, { useState, useEffect, Fragment } from 'react'
 import ListItem from '../components/ListItem'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 
-const ProductList = () => {
-  const [products, setProducts] = useState([])
+const SCTRList = () => {
+  const [sctrs, setSCTRs] = useState([])
 
   useEffect(() => {
-    getProducts()
+    getSCTRs()
   }, [])
 
-  const getProducts = async () => {
+  const getSCTRs = async () => {
     let response = ''
     try {
-      response = await fetch('/api/product/get/')
+      response = await fetch('/api/sctr/get/')
     } catch (error) {
       alert('Server is not responding')
       return
     }
     const data = await response.json()
-    setProducts(data)
+    setSCTRs(data)
   }
 
   const submitHandler = async (event) => {
@@ -53,13 +53,13 @@ const ProductList = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/product/get/' + query, config)
+      response = await fetch('/api/sctr/get/' + query, config)
     } catch (error) {
       alert('Server is not responding')
       return
     }
     const result = await response.json()
-    setProducts(result)
+    setSCTRs(result)
   }
 
   return (
@@ -73,7 +73,7 @@ const ProductList = () => {
             <Fragment>
               <Form onSubmit={submitHandler}>
                 <Form.Group className="mb-3" controlId="unique_identifier__icontains">
-                  <Form.Label>Unique id contains...</Form.Label>
+                  <Form.Label>Unique identifier contains...</Form.Label>
                   <Form.Control type="text" placeholder="Enter id" />
                 </Form.Group>
 
@@ -82,12 +82,12 @@ const ProductList = () => {
                   <Form.Control type="text" placeholder="Enter marketing name" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="sctr_cogs__lte">
+                <Form.Group className="mb-3" controlId="cogs__lte">
                   <Form.Label>SCTR COGS less than...</Form.Label>
                   <Form.Control type="text" placeholder="Enter SCTR COGS" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="sctr_cogs__gte">
+                <Form.Group className="mb-3" controlId="cogs__gte">
                   <Form.Label>SCTR COGS greater than...</Form.Label>
                   <Form.Control type="text" placeholder="Enter SCTR COGS" />
                 </Form.Group>
@@ -106,8 +106,8 @@ const ProductList = () => {
         </Col>
         <Col>
           <Row className="justify-content-md-center">
-            {products.map((product, index) => (
-              <ListItem key={index} product={product}/>
+            {sctrs.map((sctr, index) => (
+              <ListItem key={index} sctr={sctr}/>
             ))}
           </Row>
         </Col>
@@ -116,4 +116,4 @@ const ProductList = () => {
   )
 }
 
-export default ProductList
+export default SCTRList

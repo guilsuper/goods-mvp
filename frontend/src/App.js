@@ -9,7 +9,7 @@ import React from 'react'
 
 import './App.css'
 import Header from './components/Header'
-import ProductList from './pages/ProductList'
+import SCTRList from './pages/SCTRList'
 import Home from './pages/Home'
 import About from './pages/About'
 import Terms from './pages/Terms'
@@ -21,15 +21,15 @@ import AccountInfo from './pages/AccountInfo'
 import { AuthProvider } from './context/AuthContext'
 import EditAccountForm from './components/EditAccountForm'
 import ActivatePage from './pages/ActivatePage'
-import CompanyProducts from './pages/CompanyProducts'
+import CompanySCTR from './pages/CompanySCTR'
 import CompanyPM from './pages/CompanyPM'
 import PMAccountInfo from './pages/PMAccountInfo'
-import ProductInfo from './pages/ProductInfo'
+import SCTRInfo from './pages/SCTRInfo'
 import EditPMForm from './components/EditPMForm'
-import EditProductForm from './components/EditProductForm'
+import EditSCTRForm from './components/EditSCTRForm'
 import CompanyInfo from './pages/CompanyInfo'
 import EditCompanyForm from './components/EditCompanyForm'
-import ProductCreate from './pages/ProductCreate'
+import SCTRCreate from './pages/SCTRCreate'
 
 function App () {
   return (
@@ -39,8 +39,8 @@ function App () {
           <Header/>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/products" element={<ProductList />} />
-            <Route path="/products/:productIdentifier" element={<ProductInfo />} />
+            <Route path="/sctr" element={<SCTRList />} />
+            <Route path="/sctr/:sctrIdentifier" element={<SCTRInfo />} />
             <Route path="/about" element={<About />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/sign-up" element={<SignUp />} />
@@ -48,9 +48,9 @@ function App () {
             <Route path="/activated/:uidb64/:token" element={<ActivatePage />} />
             <Route exact path="/account" element={<PrivateRoute/>}>
               <Route exact path="/account/info" element={<AccountInfo />}/>
-              <Route exact path="/account/products" element={<CompanyProducts />}/>
-              <Route exact path="/account/products/create" element={<ProductCreate />}/>
-              <Route exact path="/account/products/edit/:productIdentifier" element={<EditProductForm />}/>
+              <Route exact path="/account/sctr" element={<CompanySCTR />}/>
+              <Route exact path="/account/sctr/create" element={<SCTRCreate />}/>
+              <Route exact path="/account/sctr/edit/:sctrIdentifier" element={<EditSCTRForm />}/>
               <Route exact path="/account/edit" element={<EditAccountForm />}/>
               <Route exact path="/account/pm" element={<CompanyPM />}/>
               <Route exact path="/account/pm/edit/:pmEmail" element={<EditPMForm />}/>

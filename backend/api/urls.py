@@ -9,14 +9,15 @@ from api.views import CreateAdministratorView
 from api.views import PMCreateView
 from api.views import PMListView
 from api.views import PMRetrieveUpdateDestroyView
-from api.views import ProductCompanyListView
-from api.views import ProductCreateDraftView
-from api.views import ProductCreateView
-from api.views import ProductMoveToDraftView
-from api.views import ProductMoveToPublishedView
-from api.views import ProductPublishedListView
-from api.views import ProductRetrieveDestroyView
-from api.views import ProductUpdateView
+from api.views import SCTRCompanyListView
+from api.views import SCTRCreateDraftView
+from api.views import SCTRCreateView
+from api.views import SCTRMoveToDraftView
+from api.views import SCTRMoveToPublishedView
+from api.views import SCTRPublishedListView
+from api.views import SCTRRetrieveDestroyView
+from api.views import SCTRSwitchVisibilityView
+from api.views import SCTRUpdateView
 from api.views import SelfRetrieveUpdateDestroyView
 from api.views import Smoke
 from django.urls import path
@@ -29,37 +30,43 @@ urlpatterns = [
     path("", Smoke.as_view(), name="smoke"),
 
     path(
-        "product/create/",
-        ProductCreateView.as_view(),
-        name="product-create"
+        "sctr/create/",
+        SCTRCreateView.as_view(),
+        name="sctr-create"
     ),
     path(
-        "product/create_draft/",
-        ProductCreateDraftView.as_view(),
-        name="product-create-draft"
+        "sctr/create_draft/",
+        SCTRCreateDraftView.as_view(),
+        name="sctr-create-draft"
     ),
-    path("product/get/", ProductPublishedListView.as_view(), name="product-get"),
-    path("product/get_by_company/", ProductCompanyListView.as_view(), name="product-get-company"),
+    path("sctr/get/", SCTRPublishedListView.as_view(), name="sctr-get"),
+    path("sctr/get_by_company/", SCTRCompanyListView.as_view(), name="sctr-get-company"),
     path(
-        "product/delete_retrieve/<str:unique_identifier>/",
-        ProductRetrieveDestroyView.as_view(),
-        name="product-delete-retrieve"
-    ),
-    path(
-        "product/patch/<str:unique_identifier>/",
-        ProductUpdateView.as_view(),
-        name="product-patch"
+        "sctr/delete_retrieve/<str:unique_identifier>/",
+        SCTRRetrieveDestroyView.as_view(),
+        name="sctr-delete-retrieve"
     ),
     path(
-        "product/to_draft/<str:unique_identifier>/",
-        ProductMoveToDraftView.as_view(),
-        name="product-to-draft"
+        "sctr/patch/<str:unique_identifier>/",
+        SCTRUpdateView.as_view(),
+        name="sctr-patch"
     ),
     path(
-        "product/to_published/<str:unique_identifier>/",
-        ProductMoveToPublishedView.as_view(),
-        name="product-to-published"
+        "sctr/to_draft/<str:unique_identifier>/",
+        SCTRMoveToDraftView.as_view(),
+        name="sctr-to-draft"
     ),
+    path(
+        "sctr/to_published/<str:unique_identifier>/",
+        SCTRMoveToPublishedView.as_view(),
+        name="sctr-to-published"
+    ),
+    path(
+        "sctr/switch_visibility/<str:unique_identifier>/",
+        SCTRSwitchVisibilityView.as_view(),
+        name="sctr-switch-visibility"
+    ),
+
     path(
         "component/create/<str:unique_identifier>/",
         ComponentCreateView.as_view(),
@@ -103,7 +110,8 @@ urlpatterns = [
     path(
         "company/patch_retrieve/<slug:slug>/",
         CompanyUpdateRetrieveView.as_view(),
-        name="company-patch-retrieve"),
+        name="company-patch-retrieve"
+    ),
 
     path("token/", TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),

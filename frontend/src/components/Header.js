@@ -66,9 +66,9 @@ const Header = () => {
       <Navbar.Collapse id="navbarScroll">
         <Nav>
           <NavLink eventKey="1" as={Link} to="/">Home</NavLink>
-          <NavLink eventKey="2" as={Link} to="/products">Products</NavLink>
+          <NavLink eventKey="2" as={Link} to="/sctr">SCTR</NavLink>
           <NavLink eventKey="5" as={Link} to="/about">About</NavLink>
-          {user ? <NavLink eventKey="6" as={Link} to="/account/products">Our products</NavLink> : ' '}
+          {user ? <NavLink eventKey="6" as={Link} to="/account/sctr">Our SCTR</NavLink> : ' '}
           { user && isAdmin()
             ? <NavLink eventKey="7" as={Link} to="/account/pm">
             Create PM

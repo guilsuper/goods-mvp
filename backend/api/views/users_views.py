@@ -7,7 +7,6 @@ from api.permissions import IsCompanyAdministrator
 from api.permissions import ReadOnly
 from api.serializers import AdministratorSerializer
 from api.serializers import CompanySerializer
-from api.serializers import PMRetrieveSerializer
 from api.serializers import PMSerializer
 from api.tokens import account_activation_token
 from api.utils import send_activation_email
@@ -61,7 +60,10 @@ class CreateAdministratorAndCompanyView(APIView):
                 )
             else:
                 admin.delete()
-
+                return Response(
+                    {"message": "Email wasn't sent"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         # You need to call is_valid before accessing the errors attribute
         # admin.is_valid() is called every time
         # but if admin.is_valid() is false, company.is_valid() wasn't called
@@ -160,7 +162,7 @@ class PMCreateView(CreateAPIView):
 class PMRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     """PM get, patch and delete methods."""
 
-    serializer_class = PMRetrieveSerializer
+    serializer_class = PMSerializer
     permission_classes = [
         IsAuthenticated,
         IsAdministrator,
@@ -169,18 +171,11 @@ class PMRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Administrator.objects.filter(groups__name="PM")
     lookup_field = "email"
 
-    def get_serializer_class(self):
-        """Get serializer depending on the request method."""
-        if self.request.method == "PATCH":
-            return PMSerializer
-        else:
-            return PMRetrieveSerializer
-
 
 class PMListView(ListAPIView):
     """Retrieves the PMs."""
 
-    serializer_class = PMRetrieveSerializer
+    serializer_class = PMSerializer
     permission_classes = (IsAuthenticated, IsAdministrator, )
 
     def get_queryset(self):

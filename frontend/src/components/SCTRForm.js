@@ -8,7 +8,7 @@ import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router'
 import countryList from 'react-select-country-list'
 
-const ProductForm = () => {
+const SCTRForm = () => {
   // authTokens are for sending request to the backend
   const { authTokens } = useContext(AuthContext)
   // all possible countries list
@@ -16,7 +16,7 @@ const ProductForm = () => {
   const [inputFields, setInputFields] = useState([{
     fraction_cogs: 0,
     marketing_name: '',
-    component_type: 'Made In-House'
+    component_type: '1'
   }])
   const [submitButton, setSubmitButton] = useState([{
     button: ''
@@ -60,9 +60,9 @@ const ProductForm = () => {
     let response = ''
     try {
       if (submitButton === 'draft') {
-        response = await fetch('/api/product/create_draft/', config)
+        response = await fetch('/api/sctr/create_draft/', config)
       } else {
-        response = await fetch('/api/product/create/', config)
+        response = await fetch('/api/sctr/create/', config)
       }
     } catch (error) {
       alert('Server is not working')
@@ -73,7 +73,7 @@ const ProductForm = () => {
 
     if (response.status === 201) {
       alert('Successfully created')
-      navigate('/account/products')
+      navigate('/account/sctr')
     } else if (response.status === 400) {
       let message = 'Invalid input data:'
       for (const invalidElement in result) {
@@ -111,7 +111,7 @@ const ProductForm = () => {
     values.push({
       fraction_cogs: 0,
       marketing_name: '',
-      component_type: 'Made In-House'
+      component_type: '1'
     })
     setInputFields(values)
   }
@@ -128,7 +128,7 @@ const ProductForm = () => {
 
     // If component type was changed
     if (event.target.id === 'component_type') {
-      if (values[index].component_type === 'Made In-House') {
+      if (values[index].component_type === '2') {
         if (typeof values[index].external_sku !== 'undefined') {
           delete values[index].external_sku
         }
@@ -165,8 +165,8 @@ const ProductForm = () => {
       <Form.Group className="mb-3">
         <Form.Label>Unique dentifier type</Form.Label>
         <Form.Select aria-label="Select type" id="unique_identifier_type">
-          <option value="SKU">SKU</option>
-          <option value="GNIT">GNIT</option>
+          <option value="1">SKU</option>
+          <option value="2">GNIT</option>
         </Form.Select>
       </Form.Group>
 
@@ -222,15 +222,15 @@ const ProductForm = () => {
                 value={inputField.component_type}
                 onChange={event => handleInputChange(index, event)}
               >
-                <option value="Made In-House">Made In-House</option>
-                <option value="Externally Sourced">Externally Sourced</option>
+                <option value="1">Externally Sourced</option>
+                <option value="2">Made In-House</option>
               </Form.Select>
             </Form.Group>
           </Col>
           <Col>
             {
               inputField.component_type
-                ? inputField.component_type === 'Externally Sourced'
+                ? inputField.component_type === '1'
                   ? <Form.Group className="mb-3" controlId="external_sku">
                     <Form.Control
                       type="text"
@@ -277,4 +277,4 @@ const ProductForm = () => {
   )
 }
 
-export default ProductForm
+export default SCTRForm

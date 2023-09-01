@@ -1,5 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains database tables as models."""
+from enum import IntEnum
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
@@ -16,43 +18,37 @@ full_domain_validator = RegexValidator(
 )
 
 
-class PRODUCT_TYPES(models.TextChoices):
-    """Allowed coices for product types."""
+class SCTR_ID_TYPES(IntEnum):
+    """Allowed coices for SCTR unique identifier types."""
+    SKU = 1
+    GNIT = 2
 
-    convenience_goods = "Convenience Goods"
-    raw_materials = "Raw Materials"
-    component_parts = "Component Parts"
-    software = "Software"
-    hardware = "Hardware"
-    consumer_electronics = "Consumer Electronics"
-    cookware = "Cookware"
-    appliances = "Appliances"
-    homegoods = "Homegoods"
-    clothing = "Clothing"
-    jewelry = "Jewelry"
-    art = "Art"
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.name) for key in cls]
 
 
-class SCTR_ID_TYPES(models.TextChoices):
-    """Allowed coices for SCTR unique id types."""
-
-    SKU = "SKU"
-    GNIT = "GNIT"
-
-
-class SCTR_STATES(models.TextChoices):
+class SCTR_STATES(IntEnum):
     """Allowed coices for SCTR states."""
 
-    draft = "Draft"
-    published = "Pubished"
-    hidden = "Hidden"
+    DRAFT = 1
+    PUBLISHED = 2
+    HIDDEN = 3
+
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.name) for key in cls]
 
 
-class SOURCE_COMPONENT_TYPE(models.TextChoices):
+class SOURCE_COMPONENT_TYPE(IntEnum):
     """Allowed choices for source component type."""
 
-    externally_sourced = "Externally Sourced"
-    made_in_house = "Made In-House"
+    EXTERNALLY_SOURCED = 1
+    MADE_IN_HOUSE = 2
+
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.name) for key in cls]
 
 
 class Company(models.Model):
@@ -152,12 +148,13 @@ class SCTR(models.Model):
     # SKU length is usually not more then 25 characters
     # GNIT length is 13
     unique_identifier = models.CharField(max_length=25, unique=True)
-    unique_identifier_type = models.CharField(
-        max_length=4,
-        choices=SCTR_ID_TYPES.choices,
+    unique_identifier_type = models.IntegerField(
+        choices=SCTR_ID_TYPES.choices(),
         null=True
     )
-    marketing_name = models.CharField(max_length=500, null=True)
+    marketing_name = models.CharField(
+        max_length=500,
+        null=True)
 
     version = models.IntegerField(
         default=1,
@@ -165,13 +162,12 @@ class SCTR(models.Model):
             MinValueValidator(1)
         ]
     )
-    state = models.CharField(
-        default=SCTR_STATES.draft,
-        max_length=8,
-        choices=SCTR_STATES.choices
+    state = models.IntegerField(
+        default=SCTR_STATES.DRAFT,
+        choices=SCTR_STATES.choices()
     )
 
-    sctr_cogs = models.FloatField(
+    cogs = models.FloatField(
         default=0,
         validators=[
             MinValueValidator(0)
@@ -189,9 +185,8 @@ class SourceComponent(models.Model):
         null=True
     )
     marketing_name = models.CharField(max_length=500, null=True, blank=True)
-    component_type = models.CharField(
-        max_length=18,
-        choices=SOURCE_COMPONENT_TYPE.choices,
+    component_type = models.IntegerField(
+        choices=SOURCE_COMPONENT_TYPE.choices(),
         null=True
     )
 

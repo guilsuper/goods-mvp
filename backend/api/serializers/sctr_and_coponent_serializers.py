@@ -29,16 +29,19 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
 
     def validate(self, attrs):
         """Validate component type and data."""
-        if attrs["component_type"] == SOURCE_COMPONENT_TYPE.externally_sourced:
+        if "component_type" not in attrs:
+            raise ValidationError("component_type is required.")
+
+        if attrs["component_type"] == SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED:
             # Should be only external_sku and country of origin should be None
-            if "external_sku" not in attrs.keys() and attrs["country_of_origin"]:
+            if "external_sku" not in attrs.keys():
                 raise ValidationError("External sku is required for externally sourced type.")
             # Set country_of_origin to None
             attrs["country_of_origin"] = None
 
-        elif attrs["component_type"] == SOURCE_COMPONENT_TYPE.made_in_house:
+        elif attrs["component_type"] == SOURCE_COMPONENT_TYPE.MADE_IN_HOUSE:
             # Should be only country_of_origin
-            if "country_of_origin" not in attrs.keys() and attrs["external_sku"]:
+            if "country_of_origin" not in attrs.keys():
                 raise ValidationError("Country of origin is required for made in house type.")
             attrs["external_sku"] = None
         return super().validate(attrs)
@@ -94,11 +97,11 @@ class SCTRCreateSerializer(ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        """Overwritten create method for setting up the product info."""
+        """Overwritten create method for setting up the SCTR info."""
         # Setup state
-        validated_data["state"] = SCTR_STATES.published
+        validated_data["state"] = SCTR_STATES.PUBLISHED
         # Setup cogs (they were checked in validation method)
-        validated_data["sctr_cogs"] = 100
+        validated_data["cogs"] = 100
         # Setup company
         user = self.context["request"].user
         validated_data["company"] = user.company
@@ -143,7 +146,7 @@ class SCTRGetSerializer(ModelSerializer):
             "unique_identifier_type",
             "version",
             "state",
-            "sctr_cogs",
+            "cogs",
             "company",
             "components"
         )
@@ -152,8 +155,7 @@ class SCTRGetSerializer(ModelSerializer):
 class SCTRDraftCreateSerializer(ModelSerializer):
     """SCTR creating draft serilizer."""
 
-    components = SourceComponentDraftSerializer(many=True, required=False)
-    unique_identifier = CharField(max_length=25, required=True)
+    components = SourceComponentDraftSerializer(many=True)
 
     class Meta:
         """Metaclass for the SCTRDraftCreateSerializer."""
@@ -167,35 +169,36 @@ class SCTRDraftCreateSerializer(ModelSerializer):
         )
 
     def create(self, validated_data):
-        """Overwritten create method for setting up the product info."""
+        """Overwritten create method for setting up the SCTR info."""
         # Setup state
-        validated_data["state"] = SCTR_STATES.draft
+        validated_data["state"] = SCTR_STATES.DRAFT
         # Setup cogs, if no components -- set to 0
-        validated_data["sctr_cogs"] = 0
+        validated_data["cogs"] = 0
         # Setup company
         user = self.context["request"].user
         validated_data["company"] = user.company
 
-        # If there are components - update cogs and create components
         if "components" in validated_data:
-            components = validated_data.pop("components")
+            components_data = validated_data.pop("components")
 
-            validated_data["sctr_cogs"] = sum([
+        sctr = SCTR.objects.create(**validated_data)
+        # If there are components - update cogs and create components
+        if components_data:
+            sctr.cogs = sum([
                 component["fraction_cogs"]
-                for component in components
+                for component in components_data
                 if "fraction_cogs" in component
             ])
-
-            sctr = SCTR.objects.create(**validated_data)
+            sctr.save()
             # Create each component
-            for component in components:
+            for component in components_data:
                 SourceComponent.objects.create(parent_sctr=sctr, **component)
 
         return sctr
 
 
 class SCTRPublishValidatorSerializer(ModelSerializer):
-    """Validates the product before moving it to the published state."""
+    """Validates the SCTR before moving it to the published state."""
 
     class Meta:
         """Meta class for SCTR serializer."""

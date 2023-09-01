@@ -9,13 +9,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
 import countryList from 'react-select-country-list'
 
-const EditProductForm = () => {
+const EditSCTRForm = () => {
   // authTokens are for sending request to the backend
   // updateUser for updating current user localStorage
   // user is needed to display local storage information
   const { authTokens } = useContext(AuthContext)
-  const { productIdentifier } = useParams()
-  const [product, setProduct] = useState([])
+  const { sctrIdentifier } = useParams()
+  const [sctr, setSCTR] = useState([])
   const [buttonType, setButtonType] = useState('')
   // If successfully editted, go to home page to prevent multiple editting
   const navigate = useNavigate()
@@ -32,7 +32,7 @@ const EditProductForm = () => {
   const options = useMemo(() => countryList().getData(), [])
 
   useEffect(() => {
-    async function getProductInfo () {
+    async function getSCTRInfo () {
       const config = {
         method: 'GET',
         headers: {
@@ -44,7 +44,7 @@ const EditProductForm = () => {
 
       let response = ''
       try {
-        response = await fetch('/api/product/delete_retrieve/' + productIdentifier + '/', config)
+        response = await fetch('/api/sctr/delete_retrieve/' + sctrIdentifier + '/', config)
       } catch (error) {
         alert('Server is not working')
         return
@@ -56,12 +56,12 @@ const EditProductForm = () => {
         alert('Action not allowed')
         navigate('/')
       } else {
-        setProduct(result)
+        setSCTR(result)
         setInputFields(result.components)
       }
     }
-    getProductInfo()
-  }, [authTokens, navigate, productIdentifier])
+    getSCTRInfo()
+  }, [authTokens, navigate, sctrIdentifier])
 
   // Handle submit
   const submitHandler = async (event) => {
@@ -69,9 +69,9 @@ const EditProductForm = () => {
     event.persist()
 
     const data = {
-      unique_identifier: event.target.unique_identifier.value ? event.target.unique_identifier.value : product.unique_identifier,
-      unique_identifier_type: event.target.unique_identifier_type.value ? event.target.unique_identifier_type.value : product.unique_identifier_type,
-      marketing_name: event.target.marketing_name[0].value ? event.target.marketing_name[0].value : product.marketing_name
+      unique_identifier: event.target.unique_identifier.value ? event.target.unique_identifier.value : sctr.unique_identifier,
+      unique_identifier_type: event.target.unique_identifier_type.value ? event.target.unique_identifier_type.value : sctr.unique_identifier_type,
+      marketing_name: event.target.marketing_name[0].value ? event.target.marketing_name[0].value : sctr.marketing_name
     }
 
     // Config for PATCH request
@@ -83,7 +83,7 @@ const EditProductForm = () => {
         Authorization: 'Bearer ' + authTokens.access
       }
     }
-    const configProduct = {
+    const configSCTR = {
       method: 'PATCH',
       headers: {
         Accept: 'application/json',
@@ -94,13 +94,13 @@ const EditProductForm = () => {
     }
 
     let response = ''
-    let responseProduct = ''
+    let responseSCTR = ''
     let responsesComponent = []
 
     let result = ''
 
     try {
-      responseProduct = await fetch('/api/product/patch/' + productIdentifier + '/', configProduct)
+      responseSCTR = await fetch('/api/sctr/patch/' + sctrIdentifier + '/', configSCTR)
       for (const index in inputFields) {
         const configComponent = {
           method: 'PATCH',
@@ -116,12 +116,12 @@ const EditProductForm = () => {
       }
 
       if (buttonType !== 'draft') {
-        response = await fetch('/api/product/to_published/' + productIdentifier + '/', config)
+        response = await fetch('/api/sctr/to_published/' + sctrIdentifier + '/', config)
         const resultPublish = await response.json()
 
         if (response.status === 200) {
           alert('Successfully published')
-          navigate('/products/' + productIdentifier)
+          navigate('/sctr/' + sctrIdentifier)
         } else if (response.status === 400) {
           let message = 'Invalid input data:'
           message += JSON.stringify(resultPublish)
@@ -136,12 +136,12 @@ const EditProductForm = () => {
       return
     }
 
-    result = await responseProduct.json()
+    result = await responseSCTR.json()
 
-    if (responseProduct.status === 200) {
+    if (responseSCTR.status === 200) {
       alert('Successfully editted')
-      navigate('/products/' + productIdentifier)
-    } else if (responseProduct.status === 400) {
+      navigate('/sctr/' + sctrIdentifier)
+    } else if (responseSCTR.status === 400) {
       let message = 'Invalid input data:'
       message += JSON.stringify(result)
       alert(message)
@@ -164,7 +164,7 @@ const EditProductForm = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/component/create/' + productIdentifier + '/', config)
+      response = await fetch('/api/component/create/' + sctrIdentifier + '/', config)
     } catch (error) {
       alert('Server is not responding')
       return
@@ -180,7 +180,7 @@ const EditProductForm = () => {
       id: result.id,
       fraction_cogs: 0,
       marketing_name: '',
-      component_type: 'Made In-House',
+      component_type: '2',
       external_sku: '',
       country_of_origin: ''
     })
@@ -247,21 +247,21 @@ const EditProductForm = () => {
       <Form onSubmit={submitHandler}>
         <Form.Group className="mb-3" controlId="unique_identifier">
           <Form.Label>Unique identifier</Form.Label>
-          <Form.Control type="text" placeholder={product.unique_identifier} />
+          <Form.Control type="text" placeholder={sctr.unique_identifier} />
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Unique dentifier type</Form.Label>
           <Form.Select aria-label="Select type" id="unique_identifier_type">
-            <option>{product.unique_identifier_type}</option>
-            <option value="SKU">SKU</option>
-            <option value="GNIT">GNIT</option>
+            <option>{sctr.unique_identifier_type}</option>
+            <option value="1">SKU</option>
+            <option value="2">GNIT</option>
           </Form.Select>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="marketing_name">
           <Form.Label>Marketing name</Form.Label>
-          <Form.Control type="text" placeholder={product.marketing_name} />
+          <Form.Control type="text" placeholder={sctr.marketing_name} />
         </Form.Group>
 
         <p>COGS: {calculateCOGS()}%</p>
@@ -311,15 +311,15 @@ const EditProductForm = () => {
                   value={inputField.component_type}
                   onChange={event => handleInputChange(index, event)}
                 >
-                  <option value="Made In-House">Made In-House</option>
-                  <option value="Externally Sourced">Externally Sourced</option>
+                  <option value="1">Externally Sourced</option>
+                  <option value="2">Made In-House</option>
                 </Form.Select>
               </Form.Group>
             </Col>
             <Col>
               {
                 inputField.component_type
-                  ? inputField.component_type === 'Externally Sourced'
+                  ? inputField.component_type === '1'
                     ? <Form.Group className="mb-3" controlId="external_sku">
                       <Form.Control
                         type="text"
@@ -367,4 +367,4 @@ const EditProductForm = () => {
   )
 }
 
-export default EditProductForm
+export default EditSCTRForm

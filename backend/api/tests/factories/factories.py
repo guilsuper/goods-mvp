@@ -1,5 +1,5 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Module contains Product and Administrator factories."""
+"""Module contains SCTR and Administrator factories."""
 import factory
 from api.models import SCTR_ID_TYPES
 from api.models import SCTR_STATES
@@ -78,7 +78,7 @@ class AdministratorFactory(DjangoModelFactory):
                 self.groups.add(group)
 
 
-class ProductFactory(DjangoModelFactory):
+class SCTRFactory(DjangoModelFactory):
     """SCTR factory."""
 
     class Meta:
@@ -90,8 +90,8 @@ class ProductFactory(DjangoModelFactory):
     unique_identifier_type = SCTR_ID_TYPES.SKU
     marketing_name = factory.Sequence(lambda n: int(str(n) * 8))
     version = 1
-    state = SCTR_STATES.published
-    sctr_cogs = 100
+    state = SCTR_STATES.PUBLISHED
+    cogs = 100
 
     company = factory.SubFactory(CompanyFactory)
 
@@ -106,7 +106,7 @@ class ComponentFactory(DjangoModelFactory):
 
     fraction_cogs = 100
     marketing_name = factory.Sequence(lambda n: int(str(n) * 8))
-    component_type = SOURCE_COMPONENT_TYPE.externally_sourced
+    component_type = SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED
     country_of_origin = None
     external_sku = factory.Sequence(lambda n: int(str(n) * 8))
-    parent_sctr = factory.SubFactory(ProductFactory)
+    parent_sctr = factory.SubFactory(SCTRFactory)

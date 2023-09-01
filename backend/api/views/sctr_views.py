@@ -1,12 +1,12 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """API SCTR-related views module."""
-from api.filter import ProductFilter
+from api.filter import SCTRFilter
 from api.models import SCTR
 from api.models import SCTR_STATES
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
 from api.permissions import IsComponentOwner
-from api.permissions import IsProductOwner
+from api.permissions import IsSCTROwner
 from api.permissions import ReadOnly
 from api.serializers import SCTRCreateSerializer
 from api.serializers import SCTRDraftCreateSerializer
@@ -27,46 +27,69 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 
-class ProductCreateView(CreateAPIView):
-    """Product creation."""
+class SCTRCreateView(CreateAPIView):
+    """SCTR creation."""
 
     serializer_class = SCTRCreateSerializer
     permission_classes = [IsAuthenticated, ]
 
 
-class ProductCreateDraftView(CreateAPIView):
-    """Product creation with draft state."""
+class SCTRCreateDraftView(CreateAPIView):
+    """SCTR creation with draft state."""
 
     serializer_class = SCTRDraftCreateSerializer
     permission_classes = [IsAuthenticated]
 
 
-class ProductPublishedListView(ListAPIView):
-    """Gets published products only and provides filtering."""
+class SCTRPublishedListView(ListAPIView):
+    """Gets published SCTRs only and provides filtering."""
 
     serializer_class = SCTRGetSerializer
-    queryset = SCTR.objects.filter(state=SCTR_STATES.published)
-    filterset_class = ProductFilter
+    queryset = SCTR.objects.filter(state=SCTR_STATES.PUBLISHED)
+    filterset_class = SCTRFilter
 
 
-class ProductCompanyListView(ListAPIView):
-    """Gets all user's company products and provides filtering."""
+class SCTRSwitchVisibilityView(UpdateAPIView):
+    """Switches SCTR visibility."""
+
+    permission_classes = [IsAuthenticated, IsSCTROwner]
+    lookup_field = "unique_identifier"
+    queryset = SCTR.objects.exclude(state=SCTR_STATES.DRAFT)
+
+    def update(self, request, unique_identifier):
+        """Switches SCTR visibility."""
+        sctr = self.get_object()
+
+        if sctr.state == SCTR_STATES.PUBLISHED:
+            sctr.state = SCTR_STATES.HIDDEN
+        else:
+            sctr.state = SCTR_STATES.PUBLISHED
+        sctr.save()
+
+        return Response(
+            {"message": "Successfuly switch visibility"},
+            status=200
+        )
+
+
+class SCTRCompanyListView(ListAPIView):
+    """Gets all user's company SCTRs and provides filtering."""
 
     permission_classes = [IsAuthenticated]
     serializer_class = SCTRGetSerializer
-    filterset_class = ProductFilter
+    filterset_class = SCTRFilter
 
     def get_queryset(self):
-        """Gets all products that are related to the user's company."""
+        """Gets all SCTRs that are related to the user's company."""
         return SCTR.objects.filter(
             company=self.request.user.company
         )
 
 
-class ProductRetrieveDestroyView(RetrieveDestroyAPIView):
-    """View has get and delete methods for product model."""
+class SCTRRetrieveDestroyView(RetrieveDestroyAPIView):
+    """View has get and delete methods for SCTR model."""
 
-    permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsProductOwner]
+    permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsSCTROwner]
     lookup_field = "unique_identifier"
     serializer_class = SCTRGetSerializer
 
@@ -76,40 +99,40 @@ class ProductRetrieveDestroyView(RetrieveDestroyAPIView):
         if self.request.user:
             return SCTR.objects.all()
         else:
-            return SCTR.objects.filter(state=SCTR_STATES.published)
+            return SCTR.objects.filter(state=SCTR_STATES.PUBLISHED)
 
 
-class ProductUpdateView(UpdateAPIView):
-    """View has patch method for product model."""
+class SCTRUpdateView(UpdateAPIView):
+    """View has patch method for SCTR model."""
 
-    permission_classes = [IsAuthenticated, IsProductOwner]
+    permission_classes = [IsAuthenticated, IsSCTROwner]
     lookup_field = "unique_identifier"
     serializer_class = SCTRSerializer
-    queryset = SCTR.objects.filter(state=SCTR_STATES.draft)
+    queryset = SCTR.objects.filter(state=SCTR_STATES.DRAFT)
 
 
-class ProductMoveToDraftView(UpdateAPIView):
+class SCTRMoveToDraftView(UpdateAPIView):
     """View for moving SCTR to draft state."""
 
-    permission_classes = [IsAuthenticated, IsProductOwner]
+    permission_classes = [IsAuthenticated, IsSCTROwner]
     lookup_field = "unique_identifier"
     serializer_class = SCTRSerializer
-    queryset = SCTR.objects.exclude(state=SCTR_STATES.draft)
+    queryset = SCTR.objects.exclude(state=SCTR_STATES.DRAFT)
 
     def patch(self, request, unique_identifier):
         """Update instance state."""
         instance = get_object_or_404(SCTR, unique_identifier=unique_identifier)
-        instance.state = SCTR_STATES.draft
+        instance.state = SCTR_STATES.DRAFT
         instance.save()
         return Response(status=200, data={"message": "Intance was moved to the draft state"})
 
 
-class ProductMoveToPublishedView(UpdateAPIView):
+class SCTRMoveToPublishedView(UpdateAPIView):
     """View for moving SCTR to draft state."""
 
-    permission_classes = [IsAuthenticated, IsProductOwner]
+    permission_classes = [IsAuthenticated, IsSCTROwner]
     lookup_field = "unique_identifier"
-    queryset = SCTR.objects.exclude(state=SCTR_STATES.published)
+    queryset = SCTR.objects.exclude(state=SCTR_STATES.PUBLISHED)
 
     def patch(self, request, unique_identifier):
         """Moves instance to published state."""
@@ -133,7 +156,7 @@ class ProductMoveToPublishedView(UpdateAPIView):
 
         if components.aggregate(Sum("fraction_cogs"))["fraction_cogs__sum"] != 100:
             return Response(status=400, data={"message": "COGS should be 100%"})
-        sctr.state = SCTR_STATES.published
+        sctr.state = SCTR_STATES.PUBLISHED
         sctr.save()
         return Response(status=200, data={"message": "Intance was moved to the published state"})
 
@@ -141,7 +164,7 @@ class ProductMoveToPublishedView(UpdateAPIView):
 class ComponentCreateView(CreateAPIView):
     """View for component creation."""
 
-    permission_classes = [IsAuthenticated, IsProductOwner]
+    permission_classes = [IsAuthenticated, IsSCTROwner]
     serializer_class = SourceComponentSerializer
 
     def post(self, request, unique_identifier):

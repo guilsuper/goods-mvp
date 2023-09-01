@@ -8,14 +8,14 @@ import { Col, Container, Form, Row, Button } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
 
-const CompanyProducts = () => {
-  const [products, setProducts] = useState([])
+const CompanySCTR = () => {
+  const [sctrs, setSCTRs] = useState([])
   const { user, authTokens } = useContext(AuthContext)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function getProducts () {
+    async function getSCTRs () {
       const config = {
         method: 'GET',
         headers: {
@@ -26,7 +26,7 @@ const CompanyProducts = () => {
       }
       let response = ''
       try {
-        response = await fetch('/api/product/get_by_company/', config)
+        response = await fetch('/api/sctr/get_by_company/', config)
       } catch (error) {
         alert('Server is not responding')
         return
@@ -34,13 +34,13 @@ const CompanyProducts = () => {
       const data = await response.json()
 
       if (response.status === 200) {
-        setProducts(data)
+        setSCTRs(data)
       } else {
         alert('Not authenticated or permission denied')
         navigate('/')
       }
     }
-    getProducts()
+    getSCTRs()
   }, [user])
 
   const submitHandler = async (event) => {
@@ -71,13 +71,13 @@ const CompanyProducts = () => {
     }
     let response = ''
     try {
-      response = await fetch('/api/product/get/' + query, config)
+      response = await fetch('/api/sctr/get/' + query, config)
     } catch (error) {
       alert('Server is not responding')
       return
     }
     const result = await response.json()
-    setProducts(result)
+    setSCTRs(result)
   }
 
   return (
@@ -90,7 +90,7 @@ const CompanyProducts = () => {
           <Container className="align-items-center py-2">
             <Form onSubmit={submitHandler}>
               <Form.Group className="mb-3" controlId="unique_identifier__icontains">
-                <Form.Label>Unique id contains...</Form.Label>
+                <Form.Label>Unique identifier contains...</Form.Label>
                 <Form.Control type="text" placeholder="Enter id" />
               </Form.Group>
 
@@ -99,12 +99,12 @@ const CompanyProducts = () => {
                 <Form.Control type="text" placeholder="Enter marketing name" />
               </Form.Group>
 
-              <Form.Group className="mb-3" controlId="sctr_cogs__lte">
+              <Form.Group className="mb-3" controlId="cogs__lte">
                 <Form.Label>SCTR COGS less than...</Form.Label>
                 <Form.Control type="text" placeholder="Enter SCTR COGS" />
               </Form.Group>
 
-              <Form.Group className="mb-3" controlId="sctr_cogs__gte">
+              <Form.Group className="mb-3" controlId="cogs__gte">
                 <Form.Label>SCTR COGS greater than...</Form.Label>
                 <Form.Control type="text" placeholder="Enter SCTR COGS" />
               </Form.Group>
@@ -115,7 +115,7 @@ const CompanyProducts = () => {
               <Button
                 variant="secondary"
                 as={Link}
-                to="/account/products/create"
+                to="/account/sctr/create"
                 className='ms-1'
               >Create</Button>
             </Form>
@@ -123,8 +123,8 @@ const CompanyProducts = () => {
         </Col>
         <Col>
           <Row className="justify-content-md-center">
-            {products.map((product, index) => (
-              <ListItem key={index} product={product}/>
+            {sctrs.map((sctr, index) => (
+              <ListItem key={index} sctr={sctr}/>
             ))}
           </Row>
         </Col>
@@ -133,4 +133,4 @@ const CompanyProducts = () => {
   )
 }
 
-export default CompanyProducts
+export default CompanySCTR
