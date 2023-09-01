@@ -146,6 +146,11 @@ repos:
     -   id: detect-secrets
         exclude: frontend/package.lock.json
 
+  - repo: https://github.com/aquasecurity/tfsec.git
+    rev: v1.28.1
+    hooks:
+    - id: tfsec
+
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
