@@ -151,6 +151,12 @@ repos:
     - id: detect-secrets
       exclude: frontend/package.lock.json
 
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.4
+    hooks:
+    - id: codespell
+      exclude: "(frontend/package-lock.json)"
+
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.26.3
     hooks:
