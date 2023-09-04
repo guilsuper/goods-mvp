@@ -67,4 +67,4 @@ tomli==2.0.1
 typing_extensions==4.7.1
 tzdata==2023.3
 urllib3==1.26.16
-virtualenv==20.24.3
+virtualenv==20.24.4
