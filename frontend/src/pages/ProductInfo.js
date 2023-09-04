@@ -83,8 +83,8 @@ const ProductInfo = () => {
   }
 
   // If product company wasn't loaded yet
-  // When page renders, product.company is undefiend
-  // And it is imposible to get product.company.name for example
+  // When page renders, product.company is undefined
+  // And it is impossible to get product.company.name for example
   if (!product.company) {
     return
   }

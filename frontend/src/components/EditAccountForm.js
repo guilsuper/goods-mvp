@@ -13,7 +13,7 @@ const EditAccountForm = () => {
   // updateUser for updating current user localStorage
   // user is needed to display local storage information
   const { authTokens, updateUser, user } = useContext(AuthContext)
-  // If successfully editted, go to home page to prevent multiple editting
+  // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
 
   const submitHandler = async (event) => {
