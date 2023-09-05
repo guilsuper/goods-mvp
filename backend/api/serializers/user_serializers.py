@@ -3,6 +3,8 @@
 from api.models import Administrator
 from api.serializers import CompanyRetrieveSerializer
 from django.contrib.auth.models import Group
+from rest_framework.serializers import BooleanField
+from rest_framework.serializers import CharField
 from rest_framework.serializers import ModelSerializer
 
 
@@ -19,8 +21,11 @@ class GroupSerializer(ModelSerializer):
 class AdministratorSerializer(ModelSerializer):
     """Administrator base serilizer."""
 
+    is_active = BooleanField(read_only=True)
     groups = GroupSerializer(many=True, read_only=True)
     company = CompanyRetrieveSerializer(read_only=True)
+
+    password = CharField(max_length=128, write_only=True)
 
     class Meta:
         """Metaclass for the AdministratorSerializer."""
@@ -31,7 +36,7 @@ class AdministratorSerializer(ModelSerializer):
         fields = (
             "password", "email",
             "first_name", "last_name",
-            "groups", "company"
+            "groups", "company", "is_active"
         )
 
     def create(self, validated_data):
@@ -57,41 +62,14 @@ class AdministratorSerializer(ModelSerializer):
         return instance
 
 
-class AdministratorRetrieveSerializer(ModelSerializer):
-    """Administrator retrieve serilizer."""
-
-    groups = GroupSerializer(many=True, read_only=True)
-    company = CompanyRetrieveSerializer(read_only=True)
-
-    class Meta:
-        """Metaclass for the AdministratorRetrieveSerializer."""
-
-        model = Administrator
-        exclude = (
-            "id", "is_superuser", "is_staff", "user_permissions"
-        )
-
-
-class PMRetrieveSerializer(ModelSerializer):
-    """PM retrieve serilizer."""
-
-    groups = GroupSerializer(many=True, read_only=True)
-    company = CompanyRetrieveSerializer(read_only=True)
-
-    class Meta:
-        """Metaclass for the PMRetrieveSerializer."""
-
-        model = Administrator
-        exclude = (
-            "id", "is_superuser", "is_staff", "user_permissions"
-        )
-
-
 class PMSerializer(ModelSerializer):
     """PM base serilizer."""
 
+    is_active = BooleanField(read_only=True)
     groups = GroupSerializer(many=True, read_only=True)
     company = CompanyRetrieveSerializer(read_only=True)
+
+    password = CharField(max_length=128, write_only=True)
 
     class Meta:
         """Metaclass for the PMSerializer."""
@@ -100,7 +78,7 @@ class PMSerializer(ModelSerializer):
         fields = (
             "password", "email",
             "first_name", "last_name",
-            "groups", "company"
+            "groups", "company", "is_active"
         )
 
     def create(self, validated_data):

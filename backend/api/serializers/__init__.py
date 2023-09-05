@@ -7,10 +7,8 @@ from api.serializers.sctr_and_coponent_serializers import SCTRDraftSerializer
 from api.serializers.sctr_and_coponent_serializers import SCTRPublishValidatorSerializer
 from api.serializers.sctr_and_coponent_serializers import SourceComponentDraftSerializer
 from api.serializers.sctr_and_coponent_serializers import SourceComponentSerializer
-from api.serializers.user_serializers import AdministratorRetrieveSerializer
 from api.serializers.user_serializers import AdministratorSerializer
 from api.serializers.user_serializers import GroupSerializer
-from api.serializers.user_serializers import PMRetrieveSerializer
 from api.serializers.user_serializers import PMSerializer
 
 
@@ -22,9 +20,7 @@ __all__ = [
     "SCTRPublishValidatorSerializer",
     "SourceComponentDraftSerializer",
     "SourceComponentSerializer",
-    "AdministratorRetrieveSerializer",
     "AdministratorSerializer",
     "GroupSerializer",
-    "PMRetrieveSerializer",
     "PMSerializer",
 ]

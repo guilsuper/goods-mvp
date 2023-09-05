@@ -71,18 +71,23 @@ def test_sctr_get_by_company(
     "user, status_code, is_same_company, sctr_state", [
         # Unauthenticated users can't get company's all SCTRs
         (None, 404, True, "HIDDEN"),
+        (None, 404, True, "DRAFT"),
         (None, 200, False, "PUBLISHED"),
         # Admins in the same company as a SCTR can get SCTRs
         ("admin", 200, True, "HIDDEN"),
+        ("admin", 200, True, "DRAFT"),
         ("admin", 200, True, "PUBLISHED"),
         # Admins in not the same company as a SCTR can get SCTRs
         ("admin", 404, False, "HIDDEN"),
+        ("admin", 404, False, "DRAFT"),
         ("admin", 200, False, "PUBLISHED"),
         # PMs in the same company as a SCTR can get SCTRs
         ("pm", 200, True, "HIDDEN"),
+        ("pm", 200, True, "DRAFT"),
         ("pm", 200, True, "PUBLISHED"),
         # PMs in not the same company as a SCTR can get SCTRs
         ("pm", 404, False, "HIDDEN"),
+        ("pm", 404, False, "DRAFT"),
         ("pm", 200, False, "PUBLISHED"),
     ]
 )
