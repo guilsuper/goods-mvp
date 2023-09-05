@@ -12,7 +12,7 @@ const ListItem = ({ sctr }) => {
   ListItem.propTypes = {
     sctr: PropTypes.object
   }
-  // If the SCTR wan't loaded yet
+  // If the SCTR wasn't loaded yet
   if (!sctr.state) {
     return
   }

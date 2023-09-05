@@ -19,7 +19,7 @@ const EditSCTRForm = () => {
   const [sctr, setSCTR] = useState([])
 
   const [buttonType, setButtonType] = useState('')
-  // If successfully editted, go to home page to prevent multiple editting
+  // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
 
   // components input fields data

@@ -21,7 +21,7 @@ from django.urls import reverse
         # User is not allowed to access it
         (None, 3, 3, 401),
         # Unhide draft SCTR as admin
-        # Draft views aren't aviable for this view
+        # Draft views aren't available for this view
         ("admin", 1, 1, 404),
         # Hide published SCTR as admin
         # SCTR state will be changed
@@ -30,7 +30,7 @@ from django.urls import reverse
         # SCTR state will be changed
         ("admin", 3, 2, 200),
         # Unhide draft SCTR as PM
-        # Draft views aren't aviable for this view
+        # Draft views aren't available for this view
         ("pm", 1, 1, 404),
         # Hide published SCTR as PM
         # SCTR state will be changed
@@ -84,7 +84,7 @@ def test_sctr_change_visibility_same_company(
         # User is not allowed to access it
         (None, 3, 3, 401),
         # Unhide draft SCTR as admin
-        # Draft views aren't aviable for this view
+        # Draft views aren't available for this view
         ("admin", 1, 1, 404),
         # Hide published SCTR as admin
         # Action not allowed
@@ -93,7 +93,7 @@ def test_sctr_change_visibility_same_company(
         # Action not allowed
         ("admin", 3, 3, 403),
         # Unhide draft SCTR as PM
-        # Draft views aren't aviable for this view
+        # Draft views aren't available for this view
         ("pm", 1, 1, 404),
         # Hide published SCTR as PM
         # Action not allowed

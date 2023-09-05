@@ -110,8 +110,8 @@ const SCTRInfo = () => {
   }
 
   // If SCTR company wasn't loaded yet
-  // When page renders, sctr.company is undefiend
-  // And it is imposible to get sctr.company.name for example
+  // When page renders, sctr.company is undefined
+  // And it is impossible to get sctr.company.name for example
   if (!sctr.company) {
     return
   }

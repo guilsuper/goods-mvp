@@ -82,7 +82,7 @@ class SCTRSwitchVisibilityView(UpdateAPIView):
         sctr.save()
 
         return Response(
-            {"message": "Successfuly switch visibility"},
+            {"message": "Successfully switch visibility"},
             status=200
         )
 
@@ -111,7 +111,7 @@ class SCTRRetrieveDestroyView(RetrieveDestroyAPIView):
     def get_queryset(self):
         """Queryset based on user's authentication."""
         # Not authenticated users can access only published SCTRs
-        # Authenticated users can acces published and own SCTRs
+        # Authenticated users can access published and own SCTRs
         published = SCTR.objects.filter(state=SCTR_STATES.PUBLISHED)
 
         if self.request.user.is_authenticated:
@@ -142,7 +142,7 @@ class SCTRMoveToDraftView(UpdateAPIView):
         instance = self.get_object()
         components = SourceComponent.objects.filter(parent_sctr=instance)
 
-        # Makes a copy of the SCTR with diferent version of the same SCTR
+        # Makes a copy of the SCTR with different version of the same SCTR
         # Also make a copy of each component
         instance.id = None
 
@@ -157,7 +157,7 @@ class SCTRMoveToDraftView(UpdateAPIView):
 
         return Response(
             status=200,
-            data={"message": "Intance was moved to the draft state"}
+            data={"message": "Instance was moved to the draft state"}
         )
 
 
@@ -204,7 +204,7 @@ class SCTRMoveToPublishedView(UpdateAPIView):
 
         sctr.state = SCTR_STATES.PUBLISHED
         sctr.save()
-        return Response(status=200, data={"message": "Intance was moved to the published state"})
+        return Response(status=200, data={"message": "Instance was moved to the published state"})
 
 
 class ComponentCreateView(CreateAPIView):

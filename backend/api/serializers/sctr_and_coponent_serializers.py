@@ -203,7 +203,7 @@ class SCTRCreateGetSerializer(ModelSerializer):
         # Setup company
         user = self.context["request"].user
         validated_data["company"] = user.company
-        # Create components separatly
+        # Create components separately
         components = validated_data.pop("components")
 
         sctr = SCTR.objects.create(**validated_data)
