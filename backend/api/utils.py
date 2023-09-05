@@ -48,7 +48,7 @@ def send_activation_email(user_id: int) -> bool:
     )
 
     mail = Mail(
-        from_email='support@freeworldcertified.org',
+        from_email="support@freeworldcertified.org",
         to_emails=[admin.email],
         subject=subject,
         html_content=message)
