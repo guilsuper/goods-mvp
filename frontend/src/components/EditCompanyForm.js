@@ -13,7 +13,7 @@ const EditCompanyForm = () => {
   // updateUser for updating current user localStorage
   // user is needed to display local storage information
   const { authTokens, updateUser, user } = useContext(AuthContext)
-  // If successfully editted, go to home page to prevent multiple editting
+  // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
 
   const { companyName } = useParams()
@@ -60,7 +60,7 @@ const EditCompanyForm = () => {
     const result = await response.json()
 
     if (response.status === 200) {
-      alert('Successfully editted')
+      alert('Successfully edited')
       updateUser()
       navigate('/account/info')
     } else if (response.status === 400) {
