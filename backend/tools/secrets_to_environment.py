@@ -11,8 +11,10 @@ NAME_PREFIX = "_GCP_SECRET_"
 
 
 def access_secret_version(secret_name):
-    '''from the google tutorial
-    '''
+    """Access secret by name
+    Based on example in google documentation here:
+    https://codelabs.developers.google.com/codelabs/secret-manager-python#6
+    """
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
 
@@ -24,7 +26,7 @@ def access_secret_version(secret_name):
 
 
 def main():
-    '''Iterates over the environment. For names that start with
+    """Iterates over the environment. For names that start with
     NAME_PREFIX it looks up the gcp secret found at that name. If it
     finds a secret with that name it strips the NAME_PREFIX from the
     name and prints the name and value in a form that can then be
@@ -43,7 +45,7 @@ def main():
     To get these values into your current environment:
     ./secrets_to_environment.py > /tmp/environment.sh
     source /tmp/environment.sh
-    '''
+    """
 
     print(f"# produced by {__file__}")
     for name, value in os.environ.items():
