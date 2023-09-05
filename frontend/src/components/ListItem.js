@@ -29,13 +29,13 @@ const ListItem = ({ sctr }) => {
         <Image src="/FreeWorldCertified-logo-192.png"/>
       </Row>
       <Row>
-        {'SCTR unique identifier: ' + sctr.unique_identifier}
+        {'Identifier: ' + sctr.unique_identifier}
       </Row>
       <Row>
-        {'SCTR facing name: ' + sctr.marketing_name}
+        {'Name: ' + sctr.marketing_name}
       </Row>
       <Row>
-        {'SCTR state: ' + toReadable(sctr.state)}
+        {'State: ' + toReadable(sctr.state)}
       </Row>
     </Col>
   )
