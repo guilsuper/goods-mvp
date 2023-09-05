@@ -15,7 +15,7 @@ const EditPMForm = () => {
   const { authTokens } = useContext(AuthContext)
   const { pmEmail } = useParams()
   const [pm, setPM] = useState([])
-  // If successfully editted, go to home page to prevent multiple editting
+  // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const EditPMForm = () => {
     const result = await response.json()
 
     if (response.status === 200) {
-      alert('Successfully editted')
+      alert('Successfully edited')
       navigate('/account/pm')
     } else if (response.status === 400) {
       let message = 'Invalid input data:'

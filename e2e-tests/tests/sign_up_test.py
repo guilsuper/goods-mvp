@@ -19,7 +19,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     assert "Free World Certified" in driver.title
 
     # Check if sign-up button exists
-    # It shoul lead to /sign-up url
+    # It should lead to /sign-up url
     button = driver.find_element(By.XPATH, "//a[@href='/sign-up']")
     assert button
 
@@ -92,7 +92,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     driver.get(link)
 
     # Check if sign-in button exists
-    # It shoul lead to /sign-in url
+    # It should lead to /sign-in url
     button = driver.find_element(By.XPATH, "//a[@href='/sign-in']")
     assert button
 
@@ -216,7 +216,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     # Wait for an alert
     WebDriverWait(driver, 10).until(EC.alert_is_present())
     alert = driver.switch_to.alert
-    assert alert.text == "Successfully editted"
+    assert alert.text == "Successfully edited"
     alert.accept()
 
     # Wait page to load
@@ -226,12 +226,12 @@ def test_sign_up_correct(driver: webdriver.Chrome):
         if driver.current_url == os.environ["FRONTEND"] + "/account/info":
             break
         time.sleep(1)
-    # If editting was successful, then redirect
+    # If editing was successful, then redirect
     assert driver.current_url == os.environ["FRONTEND"] + "/account/info"
 
     # Go back to company info and check the changes
     # Wait to load this element
-    # Check if element with new company wesite exists
+    # Check if element with new company website exists
     for _ in range(5):
         company_info_button = driver.find_element(By.LINK_TEXT, "Company info")
         if company_info_button:

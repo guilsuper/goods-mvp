@@ -39,7 +39,7 @@ class IsProductOwner(permissions.BasePermission):
 
 
 class IsAccountOwner(permissions.BasePermission):
-    """Object-level permission to only allow owner for editting."""
+    """Object-level permission to only allow owner for editing."""
 
     def has_object_permission(self, request, view, obj):
         """Allow self edit for account owner."""

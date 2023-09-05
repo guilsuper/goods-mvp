@@ -11,7 +11,7 @@ const PMForm = () => {
   // authTokens are for sending request to the backend
   // updateUser for updating current user localStorage
   const { authTokens } = useContext(AuthContext)
-  // If successfully editted, go to account/pm to prevent multiple editting
+  // If successfully edited, go to account/pm to prevent multiple editing
   const navigate = useNavigate()
 
   const submitHandler = async (event) => {

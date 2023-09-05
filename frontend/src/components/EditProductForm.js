@@ -16,7 +16,7 @@ const EditProductForm = () => {
   const { authTokens } = useContext(AuthContext)
   const { productSku } = useParams()
   const [product, setProduct] = useState([])
-  // If successfully editted, go to home page to prevent multiple editting
+  // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
 
   const options = useMemo(() => countryList().getData(), [])
