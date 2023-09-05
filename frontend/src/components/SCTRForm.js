@@ -16,8 +16,11 @@ const SCTRForm = () => {
   const [inputFields, setInputFields] = useState([{
     fraction_cogs: 0,
     marketing_name: '',
-    component_type: '1'
+    component_type_str: '',
+    external_sku: '',
+    country_of_origin: ''
   }])
+  // For different submits
   const [submitButton, setSubmitButton] = useState([{
     button: ''
   }])
@@ -28,21 +31,17 @@ const SCTRForm = () => {
     event.preventDefault()
     event.persist()
 
-    const data = {}
-
     // set data value from the form
-    Object.keys(event.target).forEach(function (attr) {
-      if (!isNaN(attr)) {
-        if (event.target[attr].style) {
-          // Clear bg color
-          event.target[attr].style = ''
-        }
-        if (event.target[attr].value !== '') {
-          // Add key and value pair to data from form field
-          data[event.target[attr].id] = event.target[attr].value
-        }
-      }
-    })
+    const data = {
+      unique_identifier:
+        event.target.unique_identifier.value,
+
+      unique_identifier_type_str:
+        event.target.unique_identifier_type_str.value,
+
+      marketing_name:
+        event.target.marketing_name[0].value
+    }
 
     data.components = inputFields
 
@@ -77,20 +76,11 @@ const SCTRForm = () => {
     } else if (response.status === 400) {
       let message = 'Invalid input data:'
       for (const invalidElement in result) {
-        // Server response may send a key with error, that doesn't match the id of the element
-        if (typeof event.target[invalidElement] !== 'undefined') {
-          event.target[invalidElement].style = 'border-color: red'
-        }
-        // special case for the marketing_name
-        if (invalidElement === 'marketing_name') {
-          event.target[invalidElement][0].style = 'border-color: red'
-        }
-
         if (invalidElement === 'components') {
           if (Array.isArray(result.components)) {
             for (const index in result.components) {
               for (const field in result.components[index]) {
-                message += '\n' + invalidElement + ' ' + index + ': ' + field + ' ' + result.components[index][field]
+                message += '\n' + invalidElement + ' ' + (+index + 1) + ': ' + field + ' ' + result.components[index][field]
               }
             }
           } else {
@@ -111,7 +101,9 @@ const SCTRForm = () => {
     values.push({
       fraction_cogs: 0,
       marketing_name: '',
-      component_type: '1'
+      component_type_str: '',
+      external_sku: '',
+      country_of_origin: ''
     })
     setInputFields(values)
   }
@@ -125,21 +117,6 @@ const SCTRForm = () => {
   const handleInputChange = (index, event) => {
     const values = [...inputFields]
     values[index][event.target.id] = event.target.value
-
-    // If component type was changed
-    if (event.target.id === 'component_type') {
-      if (values[index].component_type === '2') {
-        if (typeof values[index].external_sku !== 'undefined') {
-          delete values[index].external_sku
-        }
-        values[index].country_of_origin = ''
-      } else {
-        if (typeof values[index].country_of_origin !== 'undefined') {
-          delete values[index].country_of_origin
-        }
-        values[index].external_sku = ''
-      }
-    }
 
     setInputFields(values)
   }
@@ -163,10 +140,11 @@ const SCTRForm = () => {
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Unique dentifier type</Form.Label>
-        <Form.Select aria-label="Select type" id="unique_identifier_type">
-          <option value="1">SKU</option>
-          <option value="2">GNIT</option>
+        <Form.Label>Unique identifier type</Form.Label>
+        <Form.Select aria-label="Select type" id="unique_identifier_type_str">
+          <option>Select identifier type</option>
+          <option value="SKU">SKU</option>
+          <option value="GNIT">GNIT</option>
         </Form.Select>
       </Form.Group>
 
@@ -188,7 +166,7 @@ const SCTRForm = () => {
           <p>Component type</p>
         </Col>
         <Col className='ps-4'>
-          <p>External SKU or country of origin</p>
+          <p>External SKU and country of origin</p>
         </Col>
       </Row>
 
@@ -218,43 +196,41 @@ const SCTRForm = () => {
             <Form.Group className="mb-3">
               <Form.Select
                 aria-label="Select type"
-                id="component_type"
-                value={inputField.component_type}
+                id="component_type_str"
+                value={inputField.component_type_str}
                 onChange={event => handleInputChange(index, event)}
               >
-                <option value="1">Externally Sourced</option>
-                <option value="2">Made In-House</option>
+                <option>Select component type</option>
+                <option value="EXTERNALLY_SOURCED">Externally Sourced</option>
+                <option value="MADE_IN_HOUSE">Made In-House</option>
               </Form.Select>
             </Form.Group>
           </Col>
           <Col>
-            {
-              inputField.component_type
-                ? inputField.component_type === '1'
-                  ? <Form.Group className="mb-3" controlId="external_sku">
-                    <Form.Control
-                      type="text"
-                      value={inputField.external_sku}
-                      placeholder="Enter external sku"
-                      onChange={event => handleInputChange(index, event)}
-                    />
-                  </Form.Group>
-                  : <Form.Group className="mb-3">
-                      <Form.Select
-                        aria-label="Select country"
-                        id="country_of_origin"
-                        value={inputField.country_of_origin}
-                        placeholder="Enter country of origin"
-                        onChange={event => handleInputChange(index, event)}
-                      >
-                        <option>Select country</option>
-                        {options.map((option, i) => (
-                          <option key={option.value} value={option.value}>{option.label}</option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                : ' '
-            }
+
+            <Form.Group className="mb-3" controlId="external_sku">
+              <Form.Control
+                type="text"
+                value={inputField.external_sku}
+                placeholder="Enter external sku"
+                onChange={event => handleInputChange(index, event)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Select
+                aria-label="Select country"
+                id="country_of_origin"
+                value={inputField.country_of_origin}
+                placeholder="Enter country of origin"
+                onChange={event => handleInputChange(index, event)}
+              >
+                <option>Select country</option>
+                {options.map((option, i) => (
+                  <option key={option.value} value={option.value}>{option.label}</option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
           </Col>
           <Container>
             <Button onClick={() => handleAddFields()} className='me-2'>

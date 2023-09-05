@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState, Fragment } from 'react'
 import { Col, Row, Container, Button } from 'react-bootstrap'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
+import { toReadable } from '../utils/Utilities'
 
 const SCTRInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
@@ -102,7 +103,7 @@ const SCTRInfo = () => {
 
     if (response.status === 200) {
       alert('Successfully moved')
-      window.location.reload()
+      navigate('/account/sctr')
     } else {
       alert("Wasn't moved or permission denied")
     }
@@ -159,7 +160,7 @@ const SCTRInfo = () => {
         <Row className='text-secondary'><p>Unique identifier</p></Row>
         <Row><p>{sctr.unique_identifier}</p></Row>
 
-        <Row className='text-secondary'><p>Unique dentifier type</p></Row>
+        <Row className='text-secondary'><p>Unique identifier type</p></Row>
         <Row><p>{sctr.unique_identifier_type}</p></Row>
 
         <Row className='text-secondary'><p>Marketing name</p></Row>
@@ -169,7 +170,9 @@ const SCTRInfo = () => {
             isOwner(user)
               ? <>
               <Row className='text-secondary'><p>State</p></Row>
-              <Row><p>{sctr.state}</p></Row>
+              <Row><p>{toReadable(sctr.state)}</p></Row>
+              <Row className='text-secondary'><p>Version</p></Row>
+              <Row><p>{sctr.version}</p></Row>
             </>
               : ' '
         }
@@ -184,10 +187,10 @@ const SCTRInfo = () => {
             <p>Marketing name</p>
           </Col>
           <Col className='ps-4'>
-            <p>Component type</p>
+            <p>Component type (External SKU)</p>
           </Col>
           <Col className='ps-4'>
-            <p>External SKU or country of origin</p>
+            <p>Country of origin</p>
           </Col>
         </Row>
 
@@ -197,17 +200,12 @@ const SCTRInfo = () => {
 
           <Col><p>{component.marketing_name}</p></Col>
 
-          <Col><p>{component.component_type}</p></Col>
+          <Col>
+            <Row><p>{toReadable(component.component_type)}</p></Row>
+            <Row><p className='text-primary'>{component.external_sku}</p></Row>
+          </Col>
 
-          {
-            (component.component_type === 2)
-              ? <>
-                <Col><p>{component.country_of_origin}</p></Col>
-              </>
-              : <>
-                <Col><p>{component.external_sku}</p></Col>
-              </>
-          }
+          <Col><p>{component.country_of_origin}</p></Col>
         </Row>
         ))}
 
@@ -216,12 +214,12 @@ const SCTRInfo = () => {
             ? <Col className='w-25 mt-4'>
             <Row className='mb-3'>
               {
-                sctr.state === 1
+                sctr.state === 'DRAFT'
                   ? <>
                     <Button
                       variant='primary'
                       as={Link}
-                      to={'/account/sctr/edit/' + sctr.unique_identifier}
+                      to={'/account/sctr/edit/' + sctr.id}
                     >Edit</Button>
                   </>
                   : <>
@@ -235,10 +233,10 @@ const SCTRInfo = () => {
             </Row>
 
             {
-              sctr.state !== 1
+              sctr.state !== 'DRAFT'
                 ? <Row className='mt-3'>
                 {
-                  sctr.state === 3
+                  sctr.state === 'HIDDEN'
                     ? <>
                       <Button variant='secondary' onClick={switchVisibility}>Unhide</Button>
                     </>

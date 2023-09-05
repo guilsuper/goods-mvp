@@ -31,7 +31,7 @@ class IsCompanyAdministrator(permissions.BasePermission):
 
 
 class IsSCTROwner(permissions.BasePermission):
-    """Object-level permission to only allow PM edit or read it."""
+    """Object-level permission to only allow PM(Admin) edit or read it."""
 
     def has_object_permission(self, request, view, obj):
         """If user's company is the same as SCTR company."""
@@ -52,14 +52,6 @@ class IsAdministrator(permissions.BasePermission):
     def has_permission(self, request, view):
         """If Administrator."""
         return request.user.groups.filter(name="Administrator").exists()
-
-
-class IsPM(permissions.BasePermission):
-    """Object-level permission to only allow PMs for access."""
-
-    def has_permission(self, request, view):
-        """If PM."""
-        return request.user.groups.filter(name="PM").exists()
 
 
 class IsComponentOwner(permissions.BasePermission):

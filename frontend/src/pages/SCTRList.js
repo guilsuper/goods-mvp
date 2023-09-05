@@ -82,16 +82,6 @@ const SCTRList = () => {
                   <Form.Control type="text" placeholder="Enter marketing name" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="cogs__lte">
-                  <Form.Label>SCTR COGS less than...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter SCTR COGS" />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="cogs__gte">
-                  <Form.Label>SCTR COGS greater than...</Form.Label>
-                  <Form.Control type="text" placeholder="Enter SCTR COGS" />
-                </Form.Group>
-
                 <Form.Group className="mb-3" controlId="company__name__icontains">
                   <Form.Label>Company name contains...</Form.Label>
                   <Form.Control type="text" placeholder="Enter company name" />

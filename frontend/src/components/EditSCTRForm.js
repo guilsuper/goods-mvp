@@ -8,6 +8,7 @@ import AuthContext from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
 import countryList from 'react-select-country-list'
+import { toReadable } from '../utils/Utilities'
 
 const EditSCTRForm = () => {
   // authTokens are for sending request to the backend
@@ -16,21 +17,24 @@ const EditSCTRForm = () => {
   const { authTokens } = useContext(AuthContext)
   const { sctrIdentifier } = useParams()
   const [sctr, setSCTR] = useState([])
+
   const [buttonType, setButtonType] = useState('')
   // If successfully editted, go to home page to prevent multiple editting
   const navigate = useNavigate()
 
+  // components input fields data
   const [inputFields, setInputFields] = useState([{
-    id: '',
-    fraction_cogs: '',
+    id: 0,
+    fraction_cogs: 0,
     marketing_name: '',
-    component_type: '',
+    component_type_str: '',
     external_sku: '',
     country_of_origin: ''
   }])
 
   const options = useMemo(() => countryList().getData(), [])
 
+  // Get data about sctr
   useEffect(() => {
     async function getSCTRInfo () {
       const config = {
@@ -56,8 +60,22 @@ const EditSCTRForm = () => {
         alert('Action not allowed')
         navigate('/')
       } else {
+        // set sctr, components and inputFields
         setSCTR(result)
-        setInputFields(result.components)
+
+        // Change component_type to component_type_str
+        const data = []
+        for (const index in result.components) {
+          data.push({
+            id: result.components[index].id,
+            fraction_cogs: result.components[index].fraction_cogs,
+            marketing_name: result.components[index].marketing_name,
+            component_type_str: result.components[index].component_type,
+            external_sku: result.components[index].external_sku,
+            country_of_origin: result.components[index].country_of_origin
+          })
+        }
+        setInputFields(data)
       }
     }
     getSCTRInfo()
@@ -68,13 +86,25 @@ const EditSCTRForm = () => {
     event.preventDefault()
     event.persist()
 
+    // Get only not empty data
     const data = {
-      unique_identifier: event.target.unique_identifier.value ? event.target.unique_identifier.value : sctr.unique_identifier,
-      unique_identifier_type: event.target.unique_identifier_type.value ? event.target.unique_identifier_type.value : sctr.unique_identifier_type,
-      marketing_name: event.target.marketing_name[0].value ? event.target.marketing_name[0].value : sctr.marketing_name
+      unique_identifier:
+        event.target.unique_identifier.value
+          ? event.target.unique_identifier.value
+          : sctr.unique_identifier,
+
+      unique_identifier_type_str:
+        event.target.unique_identifier_type_str.value
+          ? event.target.unique_identifier_type_str.value
+          : sctr.unique_identifier_type,
+
+      marketing_name:
+        event.target.marketing_name[0].value
+          ? event.target.marketing_name[0].value
+          : sctr.marketing_name
     }
 
-    // Config for PATCH request
+    // Config for move to publish request
     const config = {
       method: 'PATCH',
       headers: {
@@ -83,6 +113,8 @@ const EditSCTRForm = () => {
         Authorization: 'Bearer ' + authTokens.access
       }
     }
+
+    // config to update SCTR
     const configSCTR = {
       method: 'PATCH',
       headers: {
@@ -93,14 +125,15 @@ const EditSCTRForm = () => {
       body: JSON.stringify(data)
     }
 
+    // responses for each request
     let response = ''
     let responseSCTR = ''
     let responsesComponent = []
 
-    let result = ''
-
     try {
+      // Save SCTR changes
       responseSCTR = await fetch('/api/sctr/patch/' + sctrIdentifier + '/', configSCTR)
+      // Save component changes
       for (const index in inputFields) {
         const configComponent = {
           method: 'PATCH',
@@ -111,16 +144,21 @@ const EditSCTRForm = () => {
           },
           body: JSON.stringify(inputFields[index])
         }
-        const resonseComponent = await fetch('/api/component/patch_delete_retrieve/' + inputFields[index].id + '/', configComponent)
+
+        const resonseComponent = await fetch(
+          '/api/component/patch_delete_retrieve/' + inputFields[index].id + '/',
+          configComponent
+        )
         responsesComponent = [...responsesComponent, resonseComponent]
       }
 
+      // If PUBLISH button was pressed
       if (buttonType !== 'draft') {
         response = await fetch('/api/sctr/to_published/' + sctrIdentifier + '/', config)
         const resultPublish = await response.json()
 
         if (response.status === 200) {
-          alert('Successfully published')
+          alert('Successfully saved and published')
           navigate('/sctr/' + sctrIdentifier)
         } else if (response.status === 400) {
           let message = 'Invalid input data:'
@@ -136,10 +174,15 @@ const EditSCTRForm = () => {
       return
     }
 
-    result = await responseSCTR.json()
+    // If PUBLISH button pressed, do not display these messages
+    if (buttonType !== 'draft') {
+      return
+    }
+
+    const result = await responseSCTR.json()
 
     if (responseSCTR.status === 200) {
-      alert('Successfully editted')
+      alert('SCTR Successfully editted')
       navigate('/sctr/' + sctrIdentifier)
     } else if (responseSCTR.status === 400) {
       let message = 'Invalid input data:'
@@ -149,9 +192,24 @@ const EditSCTRForm = () => {
       alert('Not authenticated or permission denied')
       navigate('/')
     }
+
+    for (const index in responsesComponent) {
+      if (responsesComponent[index].status === 200) {
+        alert('Component #' + (1 + +index) + ' successfully editted')
+        navigate('/sctr/' + sctrIdentifier)
+      } else if (responsesComponent[index].status === 400) {
+        let message = 'Invalid input data:'
+        message += JSON.stringify(await responsesComponent[index].json())
+        alert(message)
+      } else {
+        alert('Not authenticated or permission denied')
+        navigate('/')
+      }
+    }
   }
 
-  // Handle adding a field
+  // Handle adding a component fields
+  // Creates a new component in the backed
   const handleAddFields = async () => {
     const config = {
       method: 'POST',
@@ -174,21 +232,23 @@ const EditSCTRForm = () => {
 
     if (response.status !== 200) {
       alert('Server is not responding')
+      return
     }
+    // Update inputFields
     const values = [...inputFields]
     values.push({
       id: result.id,
-      fraction_cogs: 0,
-      marketing_name: '',
-      component_type: '2',
-      external_sku: '',
-      country_of_origin: ''
+      fraction_cogs: result.fraction_cogs,
+      marketing_name: result.marketing_name,
+      component_type_str: result.component_type,
+      external_sku: result.external_sku,
+      country_of_origin: result.country_of_origin
     })
-
     setInputFields(values)
   }
 
   // Handle removing a field
+  // Deletes component in the backend
   const handleRemoveFields = async (index) => {
     const componentId = inputFields[index].id
 
@@ -218,19 +278,15 @@ const EditSCTRForm = () => {
     setInputFields(values)
   }
 
+  // Changes inputFields list
   const handleInputChange = (index, event) => {
     const values = [...inputFields]
     values[index][event.target.id] = event.target.value
 
-    // If component type was changed
-    if (event.target.id === 'component_type') {
-      values[index].external_sku = ''
-      values[index].country_of_origin = ''
-    }
-
     setInputFields(values)
   }
 
+  // Quality of life feature, calculates all component COGS
   const calculateCOGS = () => {
     const sum = inputFields.reduce(function (prev, current) {
       return prev + +current.fraction_cogs
@@ -242,6 +298,12 @@ const EditSCTRForm = () => {
     return sum
   }
 
+  // If first component doesn't exist (data wasn't fetch)
+  // SCTR always has at least 1 component
+  if (!inputFields[0]) {
+    return
+  }
+
   return (
     <FormContainer>
       <Form onSubmit={submitHandler}>
@@ -251,11 +313,14 @@ const EditSCTRForm = () => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Unique dentifier type</Form.Label>
-          <Form.Select aria-label="Select type" id="unique_identifier_type">
-            <option>{sctr.unique_identifier_type}</option>
-            <option value="1">SKU</option>
-            <option value="2">GNIT</option>
+          <Form.Label>Unique identifier type</Form.Label>
+          <Form.Select
+            aria-label="Select type"
+            id="unique_identifier_type_str"
+          >
+            <option>Select identifier type</option>
+            <option value="SKU">SKU</option>
+            <option value="GNIT">GNIT</option>
           </Form.Select>
         </Form.Group>
 
@@ -277,7 +342,7 @@ const EditSCTRForm = () => {
             <p>Component type</p>
           </Col>
           <Col className='ps-4'>
-            <p>External SKU or country of origin</p>
+            <p>External SKU and country of origin</p>
           </Col>
         </Row>
 
@@ -287,7 +352,7 @@ const EditSCTRForm = () => {
               <Form.Group className="mb-3" controlId="fraction_cogs">
                 <Form.Control
                   type="text"
-                  placeholder="Enter fraction COGS"
+                  placeholder={inputField.fraction_cogs}
                   value={inputField.fraction_cogs}
                   onChange={event => handleInputChange(index, event)}
                 />
@@ -297,7 +362,7 @@ const EditSCTRForm = () => {
               <Form.Group className="mb-3" controlId="marketing_name">
                 <Form.Control
                   type="text"
-                  placeholder="Enter marketing name"
+                  placeholder={inputField.marketing_name}
                   value={inputField.marketing_name}
                   onChange={event => handleInputChange(index, event)}
                 />
@@ -307,43 +372,36 @@ const EditSCTRForm = () => {
               <Form.Group className="mb-3">
                 <Form.Select
                   aria-label="Select type"
-                  id="component_type"
-                  value={inputField.component_type}
+                  id="component_type_str"
                   onChange={event => handleInputChange(index, event)}
                 >
-                  <option value="1">Externally Sourced</option>
-                  <option value="2">Made In-House</option>
+                  <option>{toReadable(inputField.component_type_str)}</option>
+                  <option value="EXTERNALLY_SOURCED">Externally Sourced</option>
+                  <option value="MADE_IN_HOUSE">Made In-House</option>
                 </Form.Select>
               </Form.Group>
             </Col>
             <Col>
-              {
-                inputField.component_type
-                  ? inputField.component_type === '1'
-                    ? <Form.Group className="mb-3" controlId="external_sku">
-                      <Form.Control
-                        type="text"
-                        value={inputField.external_sku}
-                        placeholder="Enter external sku"
-                        onChange={event => handleInputChange(index, event)}
-                      />
-                    </Form.Group>
-                    : <Form.Group className="mb-3">
-                        <Form.Select
-                          aria-label="Select country"
-                          id="country_of_origin"
-                          value={inputField.country_of_origin}
-                          placeholder="Enter country of origin"
-                          onChange={event => handleInputChange(index, event)}
-                        >
-                          <option>Select country</option>
-                          {options.map((option, i) => (
-                            <option key={option.value} value={option.value}>{option.label}</option>
-                          ))}
-                        </Form.Select>
-                      </Form.Group>
-                  : ' '
-              }
+              <Form.Group className="mb-3" controlId="external_sku">
+                <Form.Control
+                  type="text"
+                  value={inputField.external_sku}
+                  placeholder={inputField.external_sku}
+                  onChange={event => handleInputChange(index, event)}
+                />
+              </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Select
+                    aria-label="Select country"
+                    id="country_of_origin"
+                    onChange={event => handleInputChange(index, event)}
+                  >
+                    <option>{toReadable(inputField.country_of_origin)}</option>
+                    {options.map((option, i) => (
+                      <option key={option.value} value={option.value}>{option.label}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
             </Col>
             <Container>
               <Button onClick={() => handleAddFields()} className='me-2'>

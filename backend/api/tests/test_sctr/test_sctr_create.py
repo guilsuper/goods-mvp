@@ -12,9 +12,15 @@ from django.urls import reverse
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
     "user, sctr_info, status_code, count", [
-        # Try to create as unauthorized user
+        # Try to create as unauthorized user without data
         # The user is not allowed to create it
         (None, None, 401, 1),
+        # Try to create as unauthorized user with correct data
+        # The user is not allowed to create it
+        (None, "sctr_dict", 401, 1),
+        # Try to create as unauthorized user with incorrect data
+        # The user is not allowed to create it
+        (None, "sctr_draft_dict", 401, 1),
         # Try to create as an admin with no specified fields
         # The SCTR won't be created
         ("admin", None, 400, 1),
@@ -75,9 +81,15 @@ def test_sctr_create_and_publish(
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
     "user, sctr_info, status_code, count", [
-        # Try to create as unauthorized user
+        # Try to create as unauthorized user without data
         # The user is not allowed to create it
         (None, None, 401, 1),
+        # Try to create as unauthorized user with correct data
+        # The user is not allowed to create it
+        (None, "sctr_dict", 401, 1),
+        # Try to create as unauthorized user with incorrect data
+        # The user is not allowed to create it
+        (None, "sctr_draft_dict", 401, 1),
         # Try to create as an admin with no specified fields
         # The sctr won't be created
         ("admin", None, 400, 1),

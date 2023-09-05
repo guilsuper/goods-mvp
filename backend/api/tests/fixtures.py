@@ -1,12 +1,10 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains useful fixtures."""
 import pytest
-from api.models import SCTR_ID_TYPES
-from api.models import SOURCE_COMPONENT_TYPE
 from api.tests.factories.factories import AdministratorFactory
 from api.tests.factories.factories import CompanyFactory
+from api.tests.factories.factories import ComponentFactory
 from api.tests.factories.factories import GroupFactory
-from api.tests.factories.factories import SCTRFactory
 from django.test import Client
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -18,7 +16,11 @@ def client():
 
 @pytest.fixture
 def sctr():
-    return SCTRFactory()
+    """Create component and SCTR."""
+    component = ComponentFactory()
+
+    # Returns SCTR that has component
+    return component.parent_sctr
 
 
 @pytest.fixture
@@ -77,21 +79,23 @@ def auth_header():
 def sctr_dict():
     """Builds SCTR object and returns dict with SCTR attributes."""
     obj = {
-        "unique_identifier_type": SCTR_ID_TYPES.SKU,
+        "unique_identifier_type_str": "SKU",
         "unique_identifier": "1aa24a211232aa",
         "marketing_name": "aaaa",
         "components": [
             {
                 "fraction_cogs": 99,
                 "marketing_name": "why",
-                "component_type": SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED,
-                "external_sku": "aaaaa"
+                "component_type_str": "EXTERNALLY_SOURCED",
+                "external_sku": "aaaaa",
+                "country_of_origin": "USA"
             },
             {
                 "fraction_cogs": 1,
                 "marketing_name": "why1",
-                "component_type": SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED,
-                "external_sku": "aaaaa1"
+                "component_type_str": "MADE_IN_HOUSE",
+                "external_sku": "aaaaa1",
+                "country_of_origin": "China"
             }
         ]
     }

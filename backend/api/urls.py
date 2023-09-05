@@ -42,33 +42,33 @@ urlpatterns = [
     path("sctr/get/", SCTRPublishedListView.as_view(), name="sctr-get"),
     path("sctr/get_by_company/", SCTRCompanyListView.as_view(), name="sctr-get-company"),
     path(
-        "sctr/delete_retrieve/<str:unique_identifier>/",
+        "sctr/delete_retrieve/<int:id>/",
         SCTRRetrieveDestroyView.as_view(),
         name="sctr-delete-retrieve"
     ),
     path(
-        "sctr/patch/<str:unique_identifier>/",
+        "sctr/patch/<int:id>/",
         SCTRUpdateView.as_view(),
         name="sctr-patch"
     ),
     path(
-        "sctr/to_draft/<str:unique_identifier>/",
+        "sctr/to_draft/<int:id>/",
         SCTRMoveToDraftView.as_view(),
         name="sctr-to-draft"
     ),
     path(
-        "sctr/to_published/<str:unique_identifier>/",
+        "sctr/to_published/<int:id>/",
         SCTRMoveToPublishedView.as_view(),
         name="sctr-to-published"
     ),
     path(
-        "sctr/switch_visibility/<str:unique_identifier>/",
+        "sctr/switch_visibility/<int:id>/",
         SCTRSwitchVisibilityView.as_view(),
         name="sctr-switch-visibility"
     ),
 
     path(
-        "component/create/<str:unique_identifier>/",
+        "component/create/<int:id>/",
         ComponentCreateView.as_view(),
         name="component-create"
     ),

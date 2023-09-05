@@ -4,7 +4,6 @@ from api.models import Administrator
 from api.permissions import IsAccountOwner
 from api.permissions import IsAdministrator
 from api.permissions import IsCompanyAdministrator
-from api.permissions import ReadOnly
 from api.serializers import AdministratorSerializer
 from api.serializers import CompanySerializer
 from api.serializers import PMSerializer
@@ -21,7 +20,6 @@ from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -187,12 +185,10 @@ class PMListView(ListAPIView):
 
 
 class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """Administrator patch, get and delete view."""
+    """Administrator and PM patch, get and delete view."""
 
-    serializer_class = AdministratorSerializer
     permission_classes = [
-        IsAuthenticatedOrReadOnly,
-        IsAdministrator | ReadOnly,
+        IsAuthenticated,
         IsAccountOwner
     ]
     queryset = Administrator.objects.all()
@@ -221,11 +217,17 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, request):
         """Overwritten delete method for Administrators."""
-        request.user.delete()
+        # Only administrators can delete accounts.
+        if request.user.groups.filter(name="Administrator").exists():
+            request.user.delete()
 
+            return Response(
+                status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
+                data={"message": "Successfully deleted"}
+            )
         return Response(
-            status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
-            data={"message": "Successfully deleted"}
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "Permission denied"}
         )
 
     def get_serializer_class(self):

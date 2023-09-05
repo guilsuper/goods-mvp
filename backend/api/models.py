@@ -18,37 +18,49 @@ full_domain_validator = RegexValidator(
 )
 
 
-class SCTR_ID_TYPES(IntEnum):
-    """Allowed coices for SCTR unique identifier types."""
-    SKU = 1
-    GNIT = 2
+class ChoicesEnum(IntEnum):
+    """Base class for choices."""
 
     @classmethod
     def choices(cls):
         return [(key.value, key.name) for key in cls]
 
+    @classmethod
+    def integer_from_name(cls, name):
+        """Get the integer of the attribute based on its name."""
+        try:
+            return cls[name].value
+        except KeyError:
+            return None
 
-class SCTR_STATES(IntEnum):
+    @classmethod
+    def name_from_integer(cls, value):
+        """Get the name of the attribute based on its integer value."""
+        for key in cls:
+            if key.value == value:
+                return key.name
+        return None
+
+
+class SCTR_ID_TYPES(ChoicesEnum):
+    """Allowed coices for SCTR unique identifier types."""
+    SKU = 1
+    GNIT = 2
+
+
+class SCTR_STATES(ChoicesEnum):
     """Allowed coices for SCTR states."""
 
     DRAFT = 1
     PUBLISHED = 2
     HIDDEN = 3
 
-    @classmethod
-    def choices(cls):
-        return [(key.value, key.name) for key in cls]
 
-
-class SOURCE_COMPONENT_TYPE(IntEnum):
+class SOURCE_COMPONENT_TYPE(ChoicesEnum):
     """Allowed choices for source component type."""
 
     EXTERNALLY_SOURCED = 1
     MADE_IN_HOUSE = 2
-
-    @classmethod
-    def choices(cls):
-        return [(key.value, key.name) for key in cls]
 
 
 class Company(models.Model):
@@ -147,10 +159,10 @@ class SCTR(models.Model):
     # According to the public information
     # SKU length is usually not more then 25 characters
     # GNIT length is 13
-    unique_identifier = models.CharField(max_length=25, unique=True)
+    unique_identifier = models.CharField(max_length=25)
     unique_identifier_type = models.IntegerField(
         choices=SCTR_ID_TYPES.choices(),
-        null=True
+        default=SCTR_ID_TYPES.SKU
     )
     marketing_name = models.CharField(
         max_length=500,

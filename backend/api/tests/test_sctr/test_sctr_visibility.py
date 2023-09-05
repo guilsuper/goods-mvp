@@ -61,7 +61,7 @@ def test_sctr_change_visibility_same_company(
         reverse(
             "sctr-switch-visibility",
             kwargs={
-                "unique_identifier": sctr.unique_identifier
+                "id": sctr.id
             }
         ),
         **credentials
@@ -124,7 +124,7 @@ def test_sctr_change_visibility_different_company(
         reverse(
             "sctr-switch-visibility",
             kwargs={
-                "unique_identifier": sctr.unique_identifier
+                "id": sctr.id
             }
         ),
         **credentials
