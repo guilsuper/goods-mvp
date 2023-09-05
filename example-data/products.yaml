@@ -1,0 +1,121 @@
+
+
+FWC Data Schema Version: 0.1
+
+Companies:
+  - Legal Name: Acme Manufacturer
+    Primary Domain: acme-manufacturer.com
+    Primary Domain Verified: true
+    Headquarters Country: USA
+    Jurisdiction Of Incorporation: Delaware, USA
+    Products:
+      - Product Name: Waffle Iron #8
+        SKU: TheWaffler8
+        Origin Reports:
+          Versions:
+          - Version: 1
+            Publication Date: 2023-08-21T01:23:45Z
+            Inputs:
+            - Fraction COGS: 0.2
+              Type: In-House
+              Description: Iron Bar Stock
+              Origin: USA
+            - Fraction COGS: 0.8
+              Type: In-House
+              Description: Forging of iron
+              Origin: USA
+          - Version: 2
+            Publication Date: 2023-08-31T01:23:45Z
+            Inputs:
+            - Fraction COGS: 0.3
+              Type: In-House
+              Description: Iron Bar Stock
+              Origin: USA
+            - Fraction COGS: 0.7
+              Type: In-House
+              Description: Forging of iron
+              Origin: Canada
+
+      - Product Name: Frying Pan #12
+        SKU: TheFryer12
+        Origin Reports:
+          Versions:
+          - Version: 1
+            Publication Date: 2023-08-29T01:23:45Z
+            Inputs:
+            - Fraction COGS: 0.7
+              Type: In-House
+              Description: Forging of iron
+              Origin: USA
+              Publication Date: 2023-08-31T01:23:45Z
+          - Version: 2
+            Publication Date: 2023-08-31T23:23:45Z
+            Inputs:
+            - Fraction COGS: 0.3
+              Type: External
+              Description: Fancy iron bar stock
+              Supplier:
+                Status: Guess
+                Origin: Zimbabwe
+                SKU: ultra-manganese-707
+                Legal Name: Excellent Zimbabwe, Ltd
+                Primary Domain: fancy-iron.ze
+                Headquarters Country: Zimbabwe
+                Jurisdiction Of Incorporation: Harare, Zimbabwe
+
+
+  - Legal Name: Essentia Mattresses
+    Primary Domain: myessentia.ca
+    Primary Domain Verified: true
+    Headquarters Country: Canada
+    Jurisdiction Of Incorporation: Canada
+    Products:
+      - Product Name: Opus Energie, Queen
+        SKU: 12348u9128u4
+        Origin Reports:
+          Versions:
+          - Version: 1
+            Publication Date: 2023-08-22T01:01:01Z
+            Inputs:
+            - Fraction COGS: 0.7
+              Type: In-House
+              Description: Labor for Assembly
+              Origin: Malaysia
+            - Fraction COGS: 0.3
+              Type: External
+              Description: Raw Latex
+              Supplier:
+                Status: Certified
+                Primary Domain: best-latex.br
+                SKU: latex-100-pure
+
+
+
+  - Legal Name: Best Latex, Inc.
+    Primary Domain: best-latex.br
+    Primary Domain Verified: true
+    Headquarters Country: Brazil            # key into the list of countries
+    Jurisdiction of Incorporation: Brazil   # key into the list of countries
+    Products:
+      - Product Name: Wonderful Latex
+        SKU: latex-100-pure
+        Origin Reports:
+          Versions:
+          - Version: 1
+            Publication Date: 2023-08-22T01:01:01Z
+            Inputs:
+            - Fraction COGS: 0.8
+              Type: In-House
+              Description: Latex
+              Origin: Brazil
+            - Fraction COGS: 0.2
+              Type: External
+              Description: Solvents
+              Supplier:
+                Status: Guess
+                Origin: USA
+                SKU: toluene
+                Legal Name: DuPont, Inc
+                Primary Domain: DuPont.com
+                Headquarters Country: USA
+                Jurisdiction Of Incorporation: USA

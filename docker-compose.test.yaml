@@ -101,7 +101,7 @@ services:
     stdin_open:
       true
     environment:
-      # React variable to ingore Host header
+      # React variable to ignore Host header
       # Any selenium requests to the frontend without it
       # Cause the "Invalid host header" error
       # This feature is acceptable for testing and development
