@@ -12,7 +12,7 @@ NAME_PREFIX = "_GCP_SECRET_"
 
 def access_secret_version(secret_name):
     """Access secret by name
-    Based on example in google documenation here:
+    Based on example in google documentation here:
     https://codelabs.developers.google.com/codelabs/secret-manager-python#6
     """
     # Create the Secret Manager client.

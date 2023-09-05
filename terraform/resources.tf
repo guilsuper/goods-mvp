@@ -339,7 +339,7 @@ resource "google_secret_manager_secret_iam_binding" "django_gs_bucket_name_accou
   ]
 }
 
-# create django superuser pasword
+# create django superuser password
 resource "random_password" "django_superuser_password" {
   length  = 24
   special = false
@@ -622,7 +622,7 @@ resource "google_project_iam_binding" "cloud_deploy_cloud_run_iam_binding" {
 # https://medium.com/@brodies.dev/deploying-cloud-run-workloads-with-google-cloud-deploy-e74af8e7200
 # https://cloud.google.com/deploy/docs/deploy-app-hooks
 
-# create a delivery pipline for the backend;
+# create a delivery pipeline for the backend;
 
 # github actions push an release into this resource; in turn this
 # resource deploys the service; and urns and pre/post deployment jobs
