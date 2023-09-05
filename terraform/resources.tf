@@ -164,7 +164,10 @@ resource "google_sql_database_instance" "postgres_main" {
     disk_size = "10" # gig
 
     ip_configuration {
-      ipv4_enabled = false
+      # temporarily ignore this warning until we create a VPC for
+      # connections between cloud run and cloud sql
+      # tfsec:ignore:google-sql-no-public-access
+      ipv4_enabled = true
       require_ssl  = true
     }
     # https://aquasecurity.github.io/tfsec/latest/checks/google/sql/enable-backup/
