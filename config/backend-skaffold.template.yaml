@@ -1,0 +1,34 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+deploy:
+  cloudrun: {}
+manifests:
+  rawYaml:
+  - 'backend-development.yaml'
+customActions:
+  - name: 'migrate-database'
+    containers:
+    - name: migrate-database
+      image: backend
+      command: ["/docker-predeploy-entrypoint.sh"]
+      args: [ ]
+      env:
+        - name: DEBUG
+          value: False
+        - name: POSTGRES_USER
+          value: pguser
+        - name: POSTGRES_HOST
+          value: /cloudsql/${GCLOUD_PROJECT}:${GAR_LOCATION}:postgres-main-instance
+        - name: POSTGRES_PORT
+        - name: DJANGO_DATABASE
+          value: production
+        - name: FRONTEND_HOST
+          value: https://${FQDN}
+        - name: ALLOWED_HOST
+          value: ${FQDN}
+        - name: _GCP_SECRET_POSTGRES_PASSWORD
+          value: projects/${GCLOUD_PROJECT}/secrets/django-database-password/versions/latest
+        - name: _GCP_SECRET_SECRET_KEY
+          value: projects/${GCLOUD_PROJECT}/secrets/django-secret-key/versions/latest
+        - name: _GCP_SECRET_GS_BUCKET_NAME
+          value: projects/${GCLOUD_PROJECT}/secrets/django-gs-bucket-name/versions/latest
