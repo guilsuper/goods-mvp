@@ -66,15 +66,15 @@ updates:
     reviewers:
       - "bakerkj"
 
-  # # Maintain dependencies for terraform
-  # - package-ecosystem: "terraform"
-  #   directory: "/backend"
-  #   schedule:
-  #     interval: "weekly"
-  #   commit-message:
-  #     prefix: "terraform"
-  #     include: "scope"
-  #   assignees:
-  #     - "bakerkj"
-  #   reviewers:
-  #     - "bakerkj"
+  # Maintain dependencies for terraform
+  - package-ecosystem: "terraform"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "terraform"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
