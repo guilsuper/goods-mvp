@@ -199,6 +199,7 @@ CORS_ORIGIN_WHITELIST = [
 
 if 'GS_BUCKET_NAME' in os.environ:
     GS_BUCKET_NAME = os.environ['GS_BUCKET_NAME']
+    GS_QUERYSTRING_AUTH = False
 
 STATICFILES_DIRS = [
     BASE_DIR / "website_root/",
