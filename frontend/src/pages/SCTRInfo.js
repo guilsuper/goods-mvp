@@ -182,7 +182,7 @@ const SCTRInfo = () => {
 
         <Row className='mt-4'>
           <Col className='ps-4'>
-            <p>Fraction COGS</p>
+            <p>Fraction of COGS</p>
           </Col>
           <Col className='ps-4'>
             <p>Marketing name</p>

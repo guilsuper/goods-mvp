@@ -2,11 +2,12 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useState, useMemo } from 'react'
+import React, { useContext, useState, useMemo, useEffect } from 'react'
 import { Button, Form, Container, Row, Col } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router'
 import countryList from 'react-select-country-list'
+import { Typeahead } from 'react-bootstrap-typeahead'
 
 const SCTRForm = () => {
   // authTokens are for sending request to the backend
@@ -16,7 +17,7 @@ const SCTRForm = () => {
   const [inputFields, setInputFields] = useState([{
     fraction_cogs: 0,
     marketing_name: '',
-    component_type_str: '',
+    component_type_str: 'EXTERNALLY_SOURCED',
     external_sku: '',
     country_of_origin: ''
   }])
@@ -24,8 +25,37 @@ const SCTRForm = () => {
   const [submitButton, setSubmitButton] = useState([{
     button: ''
   }])
+  const [sctrs, setSCTRs] = useState([])
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    async function getSCTRs () {
+      const config = {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }
+      let response = ''
+      try {
+        response = await fetch('/api/sctr/get/', config)
+      } catch (error) {
+        alert('Server is not responding')
+        return
+      }
+      const data = await response.json()
+
+      if (response.status === 200) {
+        setSCTRs(data)
+      } else {
+        alert('Not authenticated or permission denied')
+        navigate('/')
+      }
+    }
+    getSCTRs()
+  }, [setSCTRs])
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -101,7 +131,7 @@ const SCTRForm = () => {
     values.push({
       fraction_cogs: 0,
       marketing_name: '',
-      component_type_str: '',
+      component_type_str: 'EXTERNALLY_SOURCED',
       external_sku: '',
       country_of_origin: ''
     })
@@ -121,6 +151,14 @@ const SCTRForm = () => {
     setInputFields(values)
   }
 
+  const handleExternalSKUChange = (index, text, event) => {
+    // event here doesn't have event.target.id
+    const values = [...inputFields]
+    values[index].external_sku = text
+
+    setInputFields(values)
+  }
+
   const calculateCOGS = () => {
     const sum = inputFields.reduce(function (prev, current) {
       return prev + +current.fraction_cogs
@@ -135,14 +173,13 @@ const SCTRForm = () => {
   return (
     <Form onSubmit={submitHandler}>
       <Form.Group className="mb-3" controlId="unique_identifier">
-        <Form.Label>Unique identifier</Form.Label>
+        <Form.Label>Identifier</Form.Label>
         <Form.Control type="text" placeholder="Enter unique identifier" />
       </Form.Group>
 
       <Form.Group className="mb-3">
-        <Form.Label>Unique identifier type</Form.Label>
+        <Form.Label>Identifier type</Form.Label>
         <Form.Select aria-label="Select type" id="unique_identifier_type_str">
-          <option>Select identifier type</option>
           <option value="SKU">SKU</option>
           <option value="GNIT">GNIT</option>
         </Form.Select>
@@ -166,7 +203,7 @@ const SCTRForm = () => {
           <p>Component type</p>
         </Col>
         <Col className='ps-4'>
-          <p>External SKU and country of origin</p>
+          <p>External SKU and Country of Origin</p>
         </Col>
       </Row>
 
@@ -200,22 +237,12 @@ const SCTRForm = () => {
                 value={inputField.component_type_str}
                 onChange={event => handleInputChange(index, event)}
               >
-                <option>Select component type</option>
                 <option value="EXTERNALLY_SOURCED">Externally Sourced</option>
                 <option value="MADE_IN_HOUSE">Made In-House</option>
               </Form.Select>
             </Form.Group>
           </Col>
           <Col>
-
-            <Form.Group className="mb-3" controlId="external_sku">
-              <Form.Control
-                type="text"
-                value={inputField.external_sku}
-                placeholder="Enter external sku"
-                onChange={event => handleInputChange(index, event)}
-              />
-            </Form.Group>
             <Form.Group className="mb-3">
               <Form.Select
                 aria-label="Select country"
@@ -230,7 +257,18 @@ const SCTRForm = () => {
                 ))}
               </Form.Select>
             </Form.Group>
-
+              { inputField.component_type_str === 'EXTERNALLY_SOURCED'
+                ? <Form.Group>
+                <Form.Label>Enter external SKU</Form.Label>
+                <Typeahead
+                  id="external_sku"
+                  onInputChange={(text, event) => handleExternalSKUChange(index, text, event)}
+                  options={sctrs.map(sctr => sctr.unique_identifier)}
+                  placeholder="Enter external sku"
+                />
+              </Form.Group>
+                : ' '
+              }
           </Col>
           <Container>
             <Button onClick={() => handleAddFields()} className='me-2'>

@@ -54,6 +54,9 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
     fraction_cogs = FloatField(required=True)
     # To make it required
     country_of_origin = CountryField(required=True, name_only=True)
+    # To allow blank if MADE_IN_HOUSE
+    # Additional validation in validate method
+    external_sku = CharField(max_length=25, allow_blank=True)
 
     class Meta:
         """Metaclass for the SourceComponentSerializer."""
@@ -94,13 +97,18 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
 
     id = IntegerField(read_only=True)
     # Transforms component_type to readable string
-    component_type_str = CharField(max_length=18, write_only=True, required=False)
+    component_type_str = CharField(
+        max_length=18,
+        write_only=True,
+        required=False,
+        allow_blank=True
+    )
     component_type = ComponentTypeToString(
         choices=SOURCE_COMPONENT_TYPE.choices(),
         read_only=True
     )
     # To display a country full name instead of a code
-    country_of_origin = CountryField(required=False, name_only=True)
+    country_of_origin = CountryField(required=False, name_only=True, allow_blank=True)
     # To allow this field be blank
     external_sku = CharField(max_length=25, required=False, allow_blank=True)
 
@@ -116,7 +124,8 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
             # Map the string value to the corresponding integer value from SCTR_ID_TYPES
             return SOURCE_COMPONENT_TYPE[value.upper()]
         except KeyError:
-            raise ValidationError("Invalid component_type")
+            # Set default
+            return SOURCE_COMPONENT_TYPE["MADE_IN_HOUSE"]
 
     def create(self, validated_data):
         """Adds component type."""
@@ -219,6 +228,7 @@ class SCTRDraftSerializer(ModelSerializer):
     """SCTR creating draft serilizer."""
 
     components = SourceComponentDraftSerializer(many=True)
+    marketing_name = CharField(max_length=500, allow_blank=True)
 
     class Meta:
         """Metaclass for the SCTRDraftSerializer."""

@@ -73,12 +73,12 @@ const SCTRList = () => {
             <Fragment>
               <Form onSubmit={submitHandler}>
                 <Form.Group className="mb-3" controlId="unique_identifier__icontains">
-                  <Form.Label>Unique identifier contains...</Form.Label>
+                  <Form.Label>Identifier contains...</Form.Label>
                   <Form.Control type="text" placeholder="Enter id" />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="marketing_name__icontains">
-                  <Form.Label>Public facing id contains...</Form.Label>
+                  <Form.Label>Marketing name contains...</Form.Label>
                   <Form.Control type="text" placeholder="Enter marketing name" />
                 </Form.Group>
 

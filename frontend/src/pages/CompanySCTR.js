@@ -90,22 +90,22 @@ const CompanySCTR = () => {
           <Container className="align-items-center py-2">
             <Form onSubmit={submitHandler}>
               <Form.Group className="mb-3" controlId="unique_identifier__icontains">
-                <Form.Label>Unique identifier contains...</Form.Label>
+                <Form.Label>Identifier contains...</Form.Label>
                 <Form.Control type="text" placeholder="Enter id" />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="marketing_name__icontains">
-                <Form.Label>Public facing id contains...</Form.Label>
+                <Form.Label>Marketing Name...</Form.Label>
                 <Form.Control type="text" placeholder="Enter marketing name" />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="cogs__lte">
-                <Form.Label>SCTR COGS less than...</Form.Label>
+                <Form.Label>COGS less than...</Form.Label>
                 <Form.Control type="text" placeholder="Enter SCTR COGS" />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="cogs__gte">
-                <Form.Label>SCTR COGS greater than...</Form.Label>
+                <Form.Label>COGS greater than...</Form.Label>
                 <Form.Control type="text" placeholder="Enter SCTR COGS" />
               </Form.Group>
 

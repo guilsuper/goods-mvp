@@ -8,7 +8,7 @@ import AuthContext from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
 import countryList from 'react-select-country-list'
-import { toReadable } from '../utils/Utilities'
+import { Typeahead } from 'react-bootstrap-typeahead'
 
 const EditSCTRForm = () => {
   // authTokens are for sending request to the backend
@@ -31,6 +31,8 @@ const EditSCTRForm = () => {
     external_sku: '',
     country_of_origin: ''
   }])
+
+  const [sctrs, setSCTRs] = useState([])
 
   const options = useMemo(() => countryList().getData(), [])
 
@@ -79,7 +81,33 @@ const EditSCTRForm = () => {
       }
     }
     getSCTRInfo()
-  }, [authTokens, navigate, sctrIdentifier])
+
+    async function getSCTRs () {
+      const config = {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      }
+      let response = ''
+      try {
+        response = await fetch('/api/sctr/get/', config)
+      } catch (error) {
+        alert('Server is not responding')
+        return
+      }
+      const data = await response.json()
+
+      if (response.status === 200) {
+        setSCTRs(data)
+      } else {
+        alert('Not authenticated or permission denied')
+        navigate('/')
+      }
+    }
+    getSCTRs()
+  }, [authTokens, navigate, sctrIdentifier, setSCTRs])
 
   // Handle submit
   const submitHandler = async (event) => {
@@ -298,6 +326,14 @@ const EditSCTRForm = () => {
     return sum
   }
 
+  const handleExternalSKUChange = (index, text, event) => {
+    // event here doesn't have event.target.id
+    const values = [...inputFields]
+    values[index].external_sku = text
+
+    setInputFields(values)
+  }
+
   // If first component doesn't exist (data wasn't fetch)
   // SCTR always has at least 1 component
   if (!inputFields[0]) {
@@ -317,8 +353,8 @@ const EditSCTRForm = () => {
           <Form.Select
             aria-label="Select type"
             id="unique_identifier_type_str"
+            value={sctr.unique_identifier_type}
           >
-            <option>Select identifier type</option>
             <option value="SKU">SKU</option>
             <option value="GNIT">GNIT</option>
           </Form.Select>
@@ -374,34 +410,38 @@ const EditSCTRForm = () => {
                   aria-label="Select type"
                   id="component_type_str"
                   onChange={event => handleInputChange(index, event)}
+                  value={inputField.component_type_str}
                 >
-                  <option>{toReadable(inputField.component_type_str)}</option>
                   <option value="EXTERNALLY_SOURCED">Externally Sourced</option>
                   <option value="MADE_IN_HOUSE">Made In-House</option>
                 </Form.Select>
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group className="mb-3" controlId="external_sku">
-                <Form.Control
-                  type="text"
-                  value={inputField.external_sku}
-                  placeholder={inputField.external_sku}
+              <Form.Group className="mb-3">
+                <Form.Select
+                  aria-label="Select country"
+                  id="country_of_origin"
                   onChange={event => handleInputChange(index, event)}
+                  value={inputField.country_of_origin}
+                >
+                  {options.map((option, i) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+              { inputField.component_type_str === 'EXTERNALLY_SOURCED'
+                ? <Form.Group>
+                <Form.Label>Enter external SKU</Form.Label>
+                <Typeahead
+                  id="external_sku"
+                  onInputChange={(text, event) => handleExternalSKUChange(index, text, event)}
+                  options={sctrs.map(sctr => sctr.unique_identifier)}
+                  placeholder={inputField.external_sku}
                 />
               </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Select
-                    aria-label="Select country"
-                    id="country_of_origin"
-                    onChange={event => handleInputChange(index, event)}
-                  >
-                    <option>{toReadable(inputField.country_of_origin)}</option>
-                    {options.map((option, i) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                : ' '
+              }
             </Col>
             <Container>
               <Button onClick={() => handleAddFields()} className='me-2'>
