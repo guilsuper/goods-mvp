@@ -13,6 +13,7 @@ updates:
       - "bakerkj"
     reviewers:
       - "guilsuper"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for pip
   - package-ecosystem: "pip"
@@ -26,6 +27,7 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -39,6 +41,7 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for e2e-tests pip
   - package-ecosystem: "pip"
@@ -52,6 +55,7 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for docker
   - package-ecosystem: "docker"
@@ -65,6 +69,7 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for terraform
   - package-ecosystem: "terraform"
@@ -78,3 +83,4 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
