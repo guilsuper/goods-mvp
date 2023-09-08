@@ -20,7 +20,7 @@ from django.urls import reverse
         (None, "sctr_dict", 401, 1),
         # Try to create as unauthorized user with incorrect data
         # The user is not allowed to create it
-        (None, "sctr_draft_dict", 401, 1),
+        (None, "sctr_invalid_dict", 401, 1),
         # Try to create as an admin with no specified fields
         # The SCTR won't be created
         ("admin", None, 400, 1),
@@ -29,7 +29,7 @@ from django.urls import reverse
         ("admin", "sctr_dict", 201, 2),
         # Try to create as an admin with a incorrect specified fields
         # The SCTR will not be created
-        ("admin", "sctr_draft_dict", 400, 1),
+        ("admin", "sctr_invalid_dict", 400, 1),
         # Try to create as a pm with no specified fields
         # The SCTR won't be created
         ("pm", None, 400, 1),
@@ -38,7 +38,7 @@ from django.urls import reverse
         ("pm", "sctr_dict", 201, 2),
         # Try to create as a pm with a incorrect specified fields
         # The SCTR will not be created
-        ("pm", "sctr_draft_dict", 400, 1),
+        ("pm", "sctr_invalid_dict", 400, 1),
     ]
 )
 def test_sctr_create_and_publish(
@@ -94,7 +94,7 @@ def test_sctr_create_and_publish(
         (None, "sctr_dict", 401, 1),
         # Try to create as unauthorized user with incorrect data
         # The user is not allowed to create it
-        (None, "sctr_draft_dict", 401, 1),
+        (None, "sctr_invalid_dict", 401, 1),
         # Try to create as an admin with no specified fields
         # The sctr won't be created
         ("admin", None, 400, 1),
@@ -103,7 +103,7 @@ def test_sctr_create_and_publish(
         ("admin", "sctr_dict", 201, 2),
         # Try to create as an admin with a incorrect specified fields
         # The sctr will be created
-        ("admin", "sctr_draft_dict", 201, 2),
+        ("admin", "sctr_invalid_dict", 201, 2),
         # Try to create as a pm with no specified fields
         # The sctr won't be created
         ("pm", None, 400, 1),
@@ -112,7 +112,7 @@ def test_sctr_create_and_publish(
         ("pm", "sctr_dict", 201, 2),
         # Try to create as a pm with a incorrect specified fields
         # The sctr will be created
-        ("pm", "sctr_draft_dict", 201, 2),
+        ("pm", "sctr_invalid_dict", 201, 2),
     ]
 )
 def test_sctr_create_draft(
@@ -131,7 +131,7 @@ def test_sctr_create_draft(
 
     # If parameter is not empty, replace it with actual data
     if sctr_info:
-        # If sctr_info is not None, it contains string "sctr_draft_dict"
+        # If sctr_info is not None, it contains string "sctr_invalid_dict"
         sctr_info = request.getfixturevalue(sctr_info)
 
     response = client.post(

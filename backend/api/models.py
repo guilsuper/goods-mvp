@@ -186,6 +186,8 @@ class SCTR(models.Model):
         ]
     )
 
+    is_latest_version = models.BooleanField(default=False)
+
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 

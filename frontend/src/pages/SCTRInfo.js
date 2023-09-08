@@ -21,11 +21,13 @@ const SCTRInfo = () => {
         method: 'GET',
         headers: {
           Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authTokens.access
+          'Content-Type': 'application/json'
         }
       }
-
+      // Set authorization if exists
+      if (authTokens) {
+        config.headers.Authorization = 'Bearer ' + authTokens.access
+      }
       let response = ''
       try {
         response = await fetch('/api/sctr/delete_retrieve/' + sctrIdentifier + '/', config)
@@ -170,6 +172,8 @@ const SCTRInfo = () => {
         {
             isOwner(user)
               ? <>
+              <Row className='text-secondary'><p>Is latest version</p></Row>
+              <Row><p>{sctr.is_latest_version ? 'True' : 'False'}</p></Row>
               <Row className='text-secondary'><p>State</p></Row>
               <Row><p>{toReadable(sctr.state)}</p></Row>
               <Row className='text-secondary'><p>Version</p></Row>

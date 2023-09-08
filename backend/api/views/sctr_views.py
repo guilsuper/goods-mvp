@@ -60,7 +60,7 @@ class SCTRPublishedListView(ListAPIView):
     """Gets published SCTRs only and provides filtering."""
 
     serializer_class = SCTRCreateGetSerializer
-    queryset = SCTR.objects.filter(state=SCTR_STATES.PUBLISHED)
+    queryset = SCTR.objects.filter(state=SCTR_STATES.PUBLISHED, is_latest_version=True)
     filterset_class = SCTRFilter
 
 
@@ -76,8 +76,31 @@ class SCTRSwitchVisibilityView(UpdateAPIView):
         sctr = self.get_object()
 
         if sctr.state == SCTR_STATES.PUBLISHED:
+            # Should set a is_latest_version to another SCTR
+            # Get previous version if exists
+            previous = SCTR.objects.filter(
+                unique_identifier=sctr.unique_identifier,
+                state=SCTR_STATES.PUBLISHED
+            ).order_by('-version')
+            # If has published SCTRs set last as latest version
+            if len(previous) > 1:
+                instance = previous[1]
+                instance.is_latest_version = True
+                instance.save()
+
             sctr.state = SCTR_STATES.HIDDEN
+            sctr.is_latest_version = False
         else:
+            # is_latest_version should be updated in current SCTR
+            current = SCTR.objects.filter(
+                unique_identifier=sctr.unique_identifier,
+                state=SCTR_STATES.PUBLISHED
+            ).order_by('-version')
+            if current:
+                if sctr.version > current[0].version:
+                    sctr.is_latest_version = True
+                    current[0].is_latest_version = False
+                    current[0].save()
             sctr.state = SCTR_STATES.PUBLISHED
         sctr.save()
 
@@ -107,6 +130,23 @@ class SCTRRetrieveDestroyView(RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsSCTROwner]
     lookup_field = "id"
     serializer_class = SCTRCreateGetSerializer
+
+    def delete(self, request, id):
+        instance = self.get_object()
+        # Only published SCTR can have this as True
+        if instance.is_latest_version:
+            new_latest = SCTR.objects.filter(
+                unique_identifier=instance.unique_identifier,
+                state=SCTR_STATES.PUBLISHED
+            ).order_by('-version')
+            # If more then 1 published or hidden sctrs
+            if len(new_latest) > 1:
+                obj = new_latest[1]
+                obj.is_latest_version = True
+                obj.save()
+
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def get_queryset(self):
         """Queryset based on user's authentication."""
@@ -146,7 +186,9 @@ class SCTRMoveToDraftView(UpdateAPIView):
         # Also make a copy of each component
         instance.id = None
 
-        instance.version += 1
+        # Not yet published, so it doesn't have the latest version
+        # This will be changed when draft is moved to published state
+        instance.is_latest_version = False
         instance.state = SCTR_STATES.DRAFT
         instance.save()
 
@@ -202,7 +244,29 @@ class SCTRMoveToPublishedView(UpdateAPIView):
         if not components_serialized.is_valid():
             return Response(status=400, data=components_serialized.errors)
 
+        # Set previous SCTR is_latest_version to False
+        # If it exists, it's only 1 instance
+        old_sctr = SCTR.objects.filter(
+            unique_identifier=sctr.unique_identifier,
+            is_latest_version=True
+        )
+        if old_sctr:
+            old_sctr[0].is_latest_version = False
+            old_sctr[0].save()
+
         sctr.state = SCTR_STATES.PUBLISHED
+        sctr.is_latest_version = True
+        # Real latest version number is in SCTR that are published or hidden
+        old_sctr = SCTR.objects.filter(
+            unique_identifier=sctr.unique_identifier,
+            state__in=[SCTR_STATES.PUBLISHED, SCTR_STATES.HIDDEN]
+        ).order_by('-version')
+        # If found -- version is changed according to old_sctr with the highest version
+        if old_sctr:
+            sctr.version = old_sctr[0].version + 1
+        else:
+            sctr.version += 1
+
         sctr.save()
         return Response(status=200, data={"message": "Instance was moved to the published state"})
 

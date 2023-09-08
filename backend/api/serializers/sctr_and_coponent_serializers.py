@@ -8,6 +8,7 @@ from api.models import SourceComponent
 from api.serializers import CompanySerializer
 from django_countries.serializer_fields import CountryField
 from django_countries.serializers import CountryFieldMixin
+from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import ChoiceField
 from rest_framework.serializers import FloatField
@@ -68,6 +69,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
         """Check if greater than 0."""
         if value <= 0:
             raise ValidationError("Should be more then 0")
+        return value
 
     def validate_component_type_str(self, value):
         """Custom validation to convert string component type to integer."""
@@ -127,6 +129,7 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
         """Check if greater than 0."""
         if value < 0:
             raise ValidationError("Should be more or equal to 0")
+        return value
 
     def validate_component_type_str(self, value):
         """Custom validation to convert string component type to integer."""
@@ -168,6 +171,7 @@ class SCTRCreateGetSerializer(ModelSerializer):
         choices=SCTR_ID_TYPES,
         read_only=True
     )
+    is_latest_version = BooleanField(read_only=True)
 
     class Meta:
         """Metaclass for the SCTRCreateSerializer."""
@@ -186,7 +190,8 @@ class SCTRCreateGetSerializer(ModelSerializer):
             "version",
             "state",
             "cogs",
-            "unique_identifier_type"
+            "unique_identifier_type",
+            "is_latest_version"
         )
 
     def validate_unique_identifier_type_str(self, value):
@@ -206,7 +211,12 @@ class SCTRCreateGetSerializer(ModelSerializer):
             if len(attrs["unique_identifier"]) != 13:
                 raise ValidationError("GNIT must contain 13 digits.")
 
-        if sum([component["fraction_cogs"] for component in attrs["components"]]) != 100:
+        cogs = sum([
+            component["fraction_cogs"]
+            for component in attrs["components"]
+            if "fraction_cogs" in component and component["fraction_cogs"]
+        ])
+        if cogs != 100:
             raise ValidationError("Sum of COGS must be 100.")
 
         return super().validate(attrs)
@@ -222,6 +232,8 @@ class SCTRCreateGetSerializer(ModelSerializer):
         # Setup company
         user = self.context["request"].user
         validated_data["company"] = user.company
+        # Set as latest version
+        validated_data["is_latest_version"] = True
         # Create components separately
         components = validated_data.pop("components")
 
@@ -238,7 +250,7 @@ class SCTRDraftSerializer(ModelSerializer):
     """SCTR creating draft serilizer."""
 
     components = SourceComponentDraftSerializer(many=True)
-    marketing_name = CharField(max_length=500, allow_blank=True)
+    marketing_name = CharField(max_length=500, allow_blank=True, required=False)
 
     class Meta:
         """Metaclass for the SCTRDraftSerializer."""
@@ -260,6 +272,8 @@ class SCTRDraftSerializer(ModelSerializer):
         # Setup company
         user = self.context["request"].user
         validated_data["company"] = user.company
+        # Set as latest version
+        validated_data["is_latest_version"] = True
 
         if "components" in validated_data:
             components_data = validated_data.pop("components")
@@ -270,7 +284,7 @@ class SCTRDraftSerializer(ModelSerializer):
             sctr.cogs = sum([
                 component["fraction_cogs"]
                 for component in components_data
-                if "fraction_cogs" in component
+                if "fraction_cogs" in component and component["fraction_cogs"]
             ])
             # To save COGS update
             sctr.save()

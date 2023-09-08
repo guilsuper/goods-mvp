@@ -92,6 +92,7 @@ class SCTRFactory(DjangoModelFactory):
     version = 1
     state = SCTR_STATES.PUBLISHED
     cogs = 100
+    is_latest_version = True
 
     company = factory.SubFactory(CompanyFactory)
 
