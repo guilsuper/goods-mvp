@@ -197,11 +197,11 @@ CORS_ORIGIN_WHITELIST = [
     os.environ["FRONTEND_HOST"]
 ]
 
-if 'GS_BUCKET_NAME' in os.environ:
-    GS_BUCKET_NAME = os.environ['GS_BUCKET_NAME']
+if "GS_BUCKET_NAME" in os.environ:
+    GS_BUCKET_NAME = os.environ["GS_BUCKET_NAME"]
     GS_QUERYSTRING_AUTH = False
-    if 'FRONTEND_HOST' in os.environ:
-        GS_CUSTOM_ENDPOINT = os.environ['FRONTEND_HOST']
+    if "FRONTEND_HOST" in os.environ:
+        GS_CUSTOM_ENDPOINT = os.environ["FRONTEND_HOST"]
 
 STATICFILES_DIRS = [
     BASE_DIR / "website_root/",
