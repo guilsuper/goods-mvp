@@ -163,14 +163,43 @@ resource "google_sql_database_instance" "postgres_main" {
     tier      = "db-f1-micro"
     disk_size = "10" # gig
 
-    # Enable this in production!
-    # backup_configuration {
-    #  enabled = true
-    # }
-    # ip_configuration {
-    #  ipv4_enabled    = true
-    #  private_network = "projects/${var.gcp_project_id}/global/networks/default"
-    # }
+    ip_configuration {
+      # temporarily ignore this warning until we create a VPC for
+      # connections between cloud run and cloud sql
+      # tfsec:ignore:google-sql-no-public-access
+      ipv4_enabled = true
+      require_ssl  = true
+    }
+    # https://aquasecurity.github.io/tfsec/latest/checks/google/sql/enable-backup/
+    backup_configuration {
+      enabled = true
+    }
+    # https://aquasecurity.github.io/tfsec/v1.28.1/checks/google/sql/pg-log-connections/
+    database_flags {
+      name  = "log_connections"
+      value = "on"
+    }
+    # https://aquasecurity.github.io/tfsec/latest/checks/google/sql/enable-pg-temp-file-logging/
+    database_flags {
+      name  = "log_temp_files"
+      value = "0"
+    }
+    # https://aquasecurity.github.io/tfsec/v1.28.1/checks/google/sql/pg-log-lock-waits/
+    database_flags {
+      name  = "log_lock_waits"
+      value = "on"
+    }
+    # https://aquasecurity.github.io/tfsec/latest/checks/google/sql/pg-log-disconnections/
+    database_flags {
+      name  = "log_disconnections"
+      value = "on"
+    }
+    # https://aquasecurity.github.io/tfsec/latest/checks/google/sql/pg-log-checkpoints/
+    database_flags {
+      name  = "log_checkpoints"
+      value = "on"
+    }
+
   }
   deletion_protection = "true"
 }
@@ -198,9 +227,13 @@ resource "google_sql_user" "postgres_user" {
 
 #########################################################################################################################
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
+
+# for now ignore this tfsec warning
+# tfsec:ignore:google-storage-bucket-encryption-customer-key
 resource "google_storage_bucket" "google_storage_bucket_static_site" {
   name     = "fwc-static-site"
   location = var.gcp_region
+
 
   storage_class = "STANDARD"
   force_destroy = true
@@ -223,6 +256,9 @@ resource "google_storage_bucket" "google_storage_bucket_static_site" {
 resource "google_storage_bucket_iam_member" "member" {
   bucket = google_storage_bucket.google_storage_bucket_static_site.name
   role   = "roles/storage.objectViewer"
+
+  # we intentionally want public access to this bucket
+  # tfsec:ignore:google-storage-no-public-access
   member = "allUsers"
 }
 
