@@ -60,3 +60,14 @@ node -v
 
 - If it fails, consider running [nvm](https://github.com/nvm-sh/nvm), and using that to run
   version 16 or above.
+
+### Github Actions / Workflows
+
+- These can be tested using the [act](https://github.com/nektos/act) tool
+- Ubuntu installation can be found [here](https://lindevs.com/install-act-on-ubuntu)
+
+```bash
+wget -qO act.tar.gz https://github.com/nektos/act/releases/latest/download/act_Linux_x86_64.tar.gz
+sudo tar xf act.tar.gz -C /usr/local/bin act
+act --version
+```
