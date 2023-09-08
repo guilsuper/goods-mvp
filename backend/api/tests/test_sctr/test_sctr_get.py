@@ -6,18 +6,21 @@ sctr-get-company
 sctr-delete-retrieve
 """
 import pytest
+from api.models import SCTR
 from api.models import SCTR_STATES
 from django.urls import reverse
 
 
 @pytest.mark.django_db()
-def test_sctr_get(client, sctr):
+def test_sctr_get(client, sctr, sctr_hidden, sctr_draft):
     """Tests sctr-get."""
     # Try to get SCTRs as unauthorized user
     # Returns all visible SCTRs
     response = client.get(reverse("sctr-get"))
 
     assert response.status_code == 200
+    # Check if SCTRs were initialized
+    assert len(SCTR.objects.all()) == 3
     # If response contains one SCTR information
     if isinstance(response.json(), list):
         assert len(response.json()) == 1
@@ -27,16 +30,16 @@ def test_sctr_get(client, sctr):
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
     "user, status_code, is_same_company, count", [
-        # Unauthenticated users can't get company's all SCTRs
+        # Unauthenticated users can't get companie's SCTRs
         (None, 401, True, 0),
         (None, 401, False, 0),
-        # Admins in the same company as a SCTR can get SCTRs
+        # Admins in the same company as a SCTR can get companie's SCTRs
         ("admin", 200, True, 1),
-        # Admins in not the same company as a SCTR can get SCTRs
+        # Admins in not the same company as a SCTR can get companie's SCTRs
         ("admin", 200, False, 0),
-        # PMs in the same company as a SCTR can get SCTRs
+        # PMs in the same company as a SCTR can get companie's SCTRs
         ("pm", 200, True, 1),
-        # PMs in not the same company as a SCTR can get SCTRs
+        # PMs in not the same company as a SCTR can get companie's SCTRs
         ("pm", 200, False, 0)
     ]
 )

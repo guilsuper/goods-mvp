@@ -12,31 +12,28 @@ from django.urls import reverse
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
     "user, sctr_state, new_state, status_code", [
-        # Unhide draft SCTR as unauthorized
-        # User is not allowed to access it
+        # An unauthenticated user is not allowed to change the view of a SCTR
         (None, "DRAFT", "DRAFT", 401),
-        # Hide published SCTR as unauthorized
-        # User is not allowed to access it
+        # An unauthenticated user is not allowed to change the view of a SCTR
         (None, "PUBLISHED", "PUBLISHED", 401),
-        # Unhide hidden SCTR as unauthorized
-        # User is not allowed to access it
+        # An unauthenticated user is not allowed to change the view of a SCTR
         (None, "HIDDEN", "HIDDEN", 401),
-        # Unhide draft SCTR as admin
+        # Unhide draft SCTR as admin in the same company
         # Draft views aren't available for this view
         ("admin", "DRAFT", "DRAFT", 404),
-        # Hide published SCTR as admin
+        # Hide published SCTR as admin in the same company
         # SCTR state will be changed
         ("admin", "PUBLISHED", "HIDDEN", 200),
-        # Unhide hidden SCTR as admin
+        # Unhide hidden SCTR as admin in the same company
         # SCTR state will be changed
         ("admin", "HIDDEN", "PUBLISHED", 200),
-        # Unhide draft SCTR as PM
+        # Unhide draft SCTR as PM in the same company
         # Draft views aren't available for this view
         ("pm", "DRAFT", "DRAFT", 404),
-        # Hide published SCTR as PM
+        # Hide published SCTR as PM in the same company
         # SCTR state will be changed
         ("pm", "PUBLISHED", "HIDDEN", 200),
-        # Unhide hidden SCTR as PM
+        # Unhide hidden SCTR as PM in the same company
         # SCTR state will be changed
         ("pm", "HIDDEN", "PUBLISHED", 200),
     ]
@@ -74,40 +71,37 @@ def test_sctr_change_visibility_same_company(
 
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
-    "user, sctr_state, new_state, status_code", [
-        # Unhide draft SCTR as unauthorized
-        # User is not allowed to access it
-        (None, "DRAFT", "DRAFT", 401),
-        # Hide published SCTR as unauthorized
-        # User is not allowed to access it
-        (None, "PUBLISHED", "PUBLISHED", 401),
-        # Unhide hidden SCTR as unauthorized
-        # User is not allowed to access it
-        (None, "HIDDEN", "HIDDEN", 401),
-        # Unhide draft SCTR as admin
+    "user, sctr_state, status_code", [
+        # An unauthenticated user is not allowed to change the view of a SCTR
+        (None, "DRAFT", 401),
+        # An unauthenticated user is not allowed to change the view of a SCTR
+        (None, "PUBLISHED", 401),
+        # An unauthenticated user is not allowed to change the view of a SCTR
+        (None, "HIDDEN", 401),
+        # Unhide draft SCTR as admin in a different company
         # Draft views aren't available for this view
-        ("admin", "DRAFT", "DRAFT", 404),
-        # Hide published SCTR as admin
+        ("admin", "DRAFT", 404),
+        # Hide published SCTR as admin in a different company
         # Action not allowed
-        ("admin", "PUBLISHED", "PUBLISHED", 403),
-        # Unhide hidden SCTR as admin
+        ("admin", "PUBLISHED", 403),
+        # Unhide hidden SCTR as admin in a different company
         # Action not allowed
-        ("admin", "HIDDEN", "HIDDEN", 403),
-        # Unhide draft SCTR as PM
+        ("admin", "HIDDEN", 403),
+        # Unhide draft SCTR as PM in a different company
         # Draft views aren't available for this view
-        ("pm", "DRAFT", "DRAFT", 404),
-        # Hide published SCTR as PM
+        ("pm", "DRAFT", 404),
+        # Hide published SCTR as PM in a different company
         # Action not allowed
-        ("pm", "PUBLISHED", "PUBLISHED", 403),
-        # Unhide hidden SCTR as PM
+        ("pm", "PUBLISHED", 403),
+        # Unhide hidden SCTR as PM in a different company
         # Action not allowed
-        ("pm", "HIDDEN", "HIDDEN", 403),
+        ("pm", "HIDDEN", 403),
     ]
 )
 def test_sctr_change_visibility_different_company(
     request, client, sctr,
-    auth_header, user, sctr_state,
-    new_state, status_code
+    auth_header, user,
+    sctr_state, status_code
 ):
     """Tests sctr-switch-visibility url."""
     # credentials must be a dict to pass them to the post request
@@ -132,4 +126,4 @@ def test_sctr_change_visibility_different_company(
     )
 
     assert response.status_code == status_code
-    assert SCTR.objects.get(id=sctr.id).state == SCTR_STATES.integer_from_name(new_state)
+    assert SCTR.objects.get(id=sctr.id).state == SCTR_STATES.integer_from_name(sctr_state)

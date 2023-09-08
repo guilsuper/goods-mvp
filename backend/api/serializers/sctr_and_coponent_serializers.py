@@ -85,7 +85,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
             raise ValidationError("component_type_str is required.")
 
         if attrs["component_type_str"] == "EXTERNALLY_SOURCED":
-            # Should be only external_sku and country of origin should be None
+            # Check if external sku exists if component type is EXTERNALLY_SOURCED
             if "external_sku" not in attrs.keys():
                 raise ValidationError("External sku is required for externally sourced type.")
             # Remove whitespaces and check if other characters left
@@ -100,7 +100,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
 
 
 class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
-    """Source Component 'create a draft' and upddate serializer."""
+    """Source Component 'create a draft' and update serializer."""
 
     id = IntegerField(read_only=True)
     # Transforms component_type to readable string

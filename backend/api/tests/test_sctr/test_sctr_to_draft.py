@@ -57,8 +57,9 @@ def test_sctr_move_to_draft(
         # Check that 2 SCTRs exists with the same identifier
         sctrs = SCTR.objects.filter(unique_identifier=sctr.unique_identifier)
         assert len(sctrs) == count
-        # And they have different versions, version difference is 1
+        # The version should be changed after moving to published state
         assert abs(sctrs[1].version - sctrs[0].version) == 0
         # Check that new sctr is in draft state
         new_sctr = [sctr_curr for sctr_curr in sctrs if sctr_curr.id != sctr.id][0]
-        assert new_sctr.state == SCTR_STATES.integer_from_name("DRAFT")
+        assert new_sctr.state == SCTR_STATES.DRAFT
+        assert sctr.state == SCTR_STATES.PUBLISHED

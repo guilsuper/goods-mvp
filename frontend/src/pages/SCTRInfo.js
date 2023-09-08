@@ -207,7 +207,7 @@ const SCTRInfo = () => {
 
           <Col>
             <Row><p>{toReadable(component.component_type)}</p></Row>
-            <Row><p className='text-primary'>{component.external_sku}</p></Row>
+            <Row><p>{component.external_sku}</p></Row>
           </Col>
 
           <Col><p>{component.country_of_origin}</p></Col>

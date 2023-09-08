@@ -11,40 +11,40 @@ from django.urls import reverse
 
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
-    "user, sctr_info, status_code, count", [
+    "user, sctr_info, status_code, sctr_created", [
         # Try to create as unauthorized user without data
         # The user is not allowed to create it
-        (None, None, 401, 1),
+        (None, None, 401, False),
         # Try to create as unauthorized user with correct data
         # The user is not allowed to create it
-        (None, "sctr_dict", 401, 1),
+        (None, "sctr_dict", 401, False),
         # Try to create as unauthorized user with incorrect data
         # The user is not allowed to create it
-        (None, "sctr_invalid_dict", 401, 1),
+        (None, "sctr_invalid_dict", 401, False),
         # Try to create as an admin with no specified fields
         # The SCTR won't be created
-        ("admin", None, 400, 1),
+        ("admin", None, 400, False),
         # Try to create as an admin with a correct specified fields
         # The SCTR will be created
-        ("admin", "sctr_dict", 201, 2),
+        ("admin", "sctr_dict", 201, True),
         # Try to create as an admin with a incorrect specified fields
         # The SCTR will not be created
-        ("admin", "sctr_invalid_dict", 400, 1),
+        ("admin", "sctr_invalid_dict", 400, False),
         # Try to create as a pm with no specified fields
         # The SCTR won't be created
-        ("pm", None, 400, 1),
+        ("pm", None, 400, False),
         # Try to create as a pm with a correct specified fields
         # The SCTR will be created
-        ("pm", "sctr_dict", 201, 2),
+        ("pm", "sctr_dict", 201, True),
         # Try to create as a pm with a incorrect specified fields
         # The SCTR will not be created
-        ("pm", "sctr_invalid_dict", 400, 1),
+        ("pm", "sctr_invalid_dict", 400, False),
     ]
 )
 def test_sctr_create_and_publish(
     request, client, sctr,
     auth_header, user, sctr_info,
-    status_code, count
+    status_code, sctr_created
 ):
     """Tests sctr-create url."""
     # credentials must be a dict to pass them to the post request
@@ -68,11 +68,7 @@ def test_sctr_create_and_publish(
     )
 
     assert response.status_code == status_code
-    assert len(SCTR.objects.all()) == count
-
-    # One sctr is created after using a sctr fixture
-    # The second is created after user's request
-    sctr_created = count == 2
+    assert len(SCTR.objects.all()) == 2 if sctr_created else 1
 
     if sctr_created:
         current_sctr = SCTR.objects.filter(
@@ -85,40 +81,40 @@ def test_sctr_create_and_publish(
 
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
-    "user, sctr_info, status_code, count", [
+    "user, sctr_info, status_code, sctr_created", [
         # Try to create as unauthorized user without data
         # The user is not allowed to create it
-        (None, None, 401, 1),
+        (None, None, 401, False),
         # Try to create as unauthorized user with correct data
         # The user is not allowed to create it
-        (None, "sctr_dict", 401, 1),
+        (None, "sctr_dict", 401, False),
         # Try to create as unauthorized user with incorrect data
         # The user is not allowed to create it
-        (None, "sctr_invalid_dict", 401, 1),
+        (None, "sctr_invalid_dict", 401, False),
         # Try to create as an admin with no specified fields
         # The sctr won't be created
-        ("admin", None, 400, 1),
+        ("admin", None, 400, False),
         # Try to create as an admin with a correct specified fields
         # The sctr will be created
-        ("admin", "sctr_dict", 201, 2),
+        ("admin", "sctr_dict", 201, True),
         # Try to create as an admin with a incorrect specified fields
         # The sctr will be created
-        ("admin", "sctr_invalid_dict", 201, 2),
+        ("admin", "sctr_invalid_dict", 201, True),
         # Try to create as a pm with no specified fields
         # The sctr won't be created
-        ("pm", None, 400, 1),
+        ("pm", None, 400, False),
         # Try to create as a pm with a correct specified fields
         # The sctr will be created
-        ("pm", "sctr_dict", 201, 2),
+        ("pm", "sctr_dict", 201, True),
         # Try to create as a pm with a incorrect specified fields
         # The sctr will be created
-        ("pm", "sctr_invalid_dict", 201, 2),
+        ("pm", "sctr_invalid_dict", 201, True),
     ]
 )
 def test_sctr_create_draft(
     request, client, sctr,
     auth_header, user, sctr_info,
-    status_code, count
+    status_code, sctr_created
 ):
     """Tests sctr-create-draft url."""
     # credentials must be a dict to pass them to the post request
@@ -142,11 +138,7 @@ def test_sctr_create_draft(
     )
 
     assert response.status_code == status_code
-    assert len(SCTR.objects.all()) == count
-
-    # One sctr is created after using a sctr fixture
-    # The second is created after user's request
-    sctr_created = count == 2
+    assert len(SCTR.objects.all()) == 2 if sctr_created else 1
 
     if sctr_created:
         current_sctr = SCTR.objects.filter(

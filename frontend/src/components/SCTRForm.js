@@ -174,7 +174,7 @@ const SCTRForm = () => {
     <Form onSubmit={submitHandler}>
       <Form.Group className="mb-3" controlId="unique_identifier">
         <Form.Label>Identifier</Form.Label>
-        <Form.Control type="text" placeholder="Enter unique identifier" />
+        <Form.Control type="text" placeholder="Enter identifier" />
       </Form.Group>
 
       <Form.Group className="mb-3">

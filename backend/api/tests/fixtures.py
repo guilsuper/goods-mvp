@@ -5,6 +5,8 @@ from api.tests.factories.factories import AdministratorFactory
 from api.tests.factories.factories import CompanyFactory
 from api.tests.factories.factories import ComponentFactory
 from api.tests.factories.factories import GroupFactory
+from api.tests.factories.factories import SCTR_STATES
+from api.tests.factories.factories import SCTRFactory
 from django.test import Client
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -16,8 +18,28 @@ def client():
 
 @pytest.fixture
 def sctr():
-    """Create component and SCTR."""
+    """Create component and SCTR with published state."""
     component = ComponentFactory()
+
+    # Returns SCTR that has component
+    return component.parent_sctr
+
+
+@pytest.fixture
+def sctr_hidden():
+    """Create component and SCTR with hidden state."""
+    sctr_hidden = SCTRFactory(state=SCTR_STATES.HIDDEN)
+    component = ComponentFactory(parent_sctr=sctr_hidden)
+
+    # Returns SCTR that has component
+    return component.parent_sctr
+
+
+@pytest.fixture
+def sctr_draft():
+    """Create component and SCTR with draft state."""
+    sctr_draft = SCTRFactory(state=SCTR_STATES.DRAFT)
+    component = ComponentFactory(parent_sctr=sctr_draft)
 
     # Returns SCTR that has component
     return component.parent_sctr
