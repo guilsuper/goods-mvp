@@ -33,8 +33,8 @@ google-crc32c==1.5.0
 google-resumable-media==2.5.0
 googleapis-common-protos==1.60.0
 grpc-google-iam-v1==0.12.6
-grpcio==1.57.0
-grpcio-status==1.57.0
+grpcio==1.58.0
+grpcio-status==1.58.0
 identify==2.5.24
 idna==3.4
 iniconfig==2.0.0
