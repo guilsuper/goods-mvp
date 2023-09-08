@@ -172,6 +172,9 @@ repos:
       # Flake doesn't ignore these folders by itself
       exclude: "(migrations)/.*"
 
+      additional_dependencies:
+      - flake8-quotes
+
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.46.0
     hooks:

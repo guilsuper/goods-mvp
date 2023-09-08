@@ -81,11 +81,11 @@ def test_sign_up_correct(driver: webdriver.Chrome):
 
     # ensure everything is in the first email that we expect
     assert len(emails) > 0
-    assert 'content' in emails[0]
-    assert len(emails[0]['content']) > 0
-    assert 'value' in emails[0]['content'][0]
+    assert "content" in emails[0]
+    assert len(emails[0]["content"]) > 0
+    assert "value" in emails[0]["content"][0]
 
-    text = emails[0]['content'][0]['value']
+    text = emails[0]["content"][0]["value"]
 
     regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
     link = os.environ["FRONTEND"] + regex.search(text).group(1)

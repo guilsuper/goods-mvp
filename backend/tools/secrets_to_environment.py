@@ -22,7 +22,7 @@ def access_secret_version(secret_name):
     response = client.access_secret_version(name=secret_name)
 
     # Return the decoded payload.
-    return response.payload.data.decode('UTF-8')
+    return response.payload.data.decode("UTF-8")
 
 
 def main():
@@ -57,7 +57,7 @@ def main():
             try:
                 secret = access_secret_version(value)
 
-                print(f"{new_name}=\"{secret}\"")
+                print(f'{new_name}="{secret}"')
                 print(f"export {new_name}")
 
             except Exception as e:
