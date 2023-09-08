@@ -65,16 +65,17 @@ jobs:
         echo 'FRONTEND_HOST="http://localhost"' >> .env
 
     - name: Run Tests
-      working-directory: ./backend
       run: |
-        pytest --junitxml=../test-results/pytest.xml
+        pytest --junitxml=./test-results/pytest.xml --cov --cov-report=xml:./coverage-results/pytest-coverage-report.xml ./backend
 
     - name: Upload Backend Test Results
       if: always()
       uses: actions/upload-artifact@v3
       with:
         name: test-results
-        path: test-results
+        path: |
+          test-results/
+          coverage-results/
 
   #########################################################################
   frontend-build-and-tests:
@@ -104,14 +105,16 @@ jobs:
     - name: Run Frontend Tests
       working-directory: ./frontend
       run: |
-        npm test -- --passWithNoTests
+        npm run test-ci
 
     - name: Upload Test Results
       if: always()
       uses: actions/upload-artifact@v3
       with:
         name: test-results
-        path: test-results
+        path: |
+          test-results/
+          coverage-results/
 
   #########################################################################
   e2e-tests:
@@ -152,7 +155,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: test-results
-        path: test-results
 
     - name: Publish Test Results
       id: test-results
@@ -162,3 +164,22 @@ jobs:
           test-results/**/*.xml
           test-results/**/*.trx
           test-results/**/*.json
+
+    - name: Generate Code Coverage Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: "coverage-results/pytest-coverage-report.xml,coverage-results/cobertura-coverage.xml"
+        badge: false
+        fail_below_min: false
+        format: markdown
+        hide_complexity: true
+        indicators: true
+        output: both
+        thresholds: '50 75'
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md

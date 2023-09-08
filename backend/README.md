@@ -80,3 +80,20 @@ python manage.py migrate
 ```bash
 python manage.py runserver
 ```
+
+### How to run tests locally
+
+- Start the terminal.
+
+- Go to the directory "backend/"
+
+- Create backend/.env (see above)
+
+- Run the following commands
+
+```bash
+python -m venv venv
+./venv/Scripts/activate
+pip install -r ./requirements.txt
+pytest --junitxml=../test-results/pytest.xml  --cov --cov-report=xml:../coverage-results/pytest-coverage-report.xml
+```

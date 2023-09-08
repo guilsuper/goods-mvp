@@ -70,6 +70,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 test-results/
+coverage-results/
 
 # Translations
 *.mo
