@@ -81,7 +81,7 @@ class SCTRSwitchVisibilityView(UpdateAPIView):
             previous = SCTR.objects.filter(
                 unique_identifier=sctr.unique_identifier,
                 state=SCTR_STATES.PUBLISHED
-            ).order_by('-version')
+            ).order_by("-version")
             # If has published SCTRs set last as latest version
             if len(previous) > 1:
                 instance = previous[1]
@@ -95,7 +95,7 @@ class SCTRSwitchVisibilityView(UpdateAPIView):
             current = SCTR.objects.filter(
                 unique_identifier=sctr.unique_identifier,
                 state=SCTR_STATES.PUBLISHED
-            ).order_by('-version')
+            ).order_by("-version")
             if current:
                 if sctr.version > current[0].version:
                     sctr.is_latest_version = True
@@ -138,7 +138,7 @@ class SCTRRetrieveDestroyView(RetrieveDestroyAPIView):
             new_latest = SCTR.objects.filter(
                 unique_identifier=instance.unique_identifier,
                 state=SCTR_STATES.PUBLISHED
-            ).order_by('-version')
+            ).order_by("-version")
             # If more then 1 published or hidden sctrs
             if len(new_latest) > 1:
                 obj = new_latest[1]
@@ -260,7 +260,7 @@ class SCTRMoveToPublishedView(UpdateAPIView):
         old_sctr = SCTR.objects.filter(
             unique_identifier=sctr.unique_identifier,
             state__in=[SCTR_STATES.PUBLISHED, SCTR_STATES.HIDDEN]
-        ).order_by('-version')
+        ).order_by("-version")
         # If found -- version is changed according to old_sctr with the highest version
         if old_sctr:
             sctr.version = old_sctr[0].version + 1

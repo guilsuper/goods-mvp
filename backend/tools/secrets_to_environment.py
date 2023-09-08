@@ -57,7 +57,7 @@ def main():
             try:
                 secret = access_secret_version(value)
 
-                print(f'{new_name}="{secret}"')
+                print(f"{new_name}='{secret}'")
                 print(f"export {new_name}")
 
             except Exception as e:
