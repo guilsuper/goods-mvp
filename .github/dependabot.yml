@@ -13,6 +13,13 @@ updates:
       - "bakerkj"
     reviewers:
       - "guilsuper"
+    open-pull-requests-limit: 10
+    groups:
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
 
   # Maintain dependencies for pip
   - package-ecosystem: "pip"
@@ -26,6 +33,7 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -39,6 +47,12 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    groups:
+      minor:
+        update-types:
+          - "minor"
+          - "patch"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for e2e-tests pip
   - package-ecosystem: "pip"
@@ -52,6 +66,7 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
 
   # Maintain dependencies for docker
   - package-ecosystem: "docker"
@@ -65,16 +80,18 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    open-pull-requests-limit: 10
 
-  # # Maintain dependencies for terraform
-  # - package-ecosystem: "terraform"
-  #   directory: "/backend"
-  #   schedule:
-  #     interval: "weekly"
-  #   commit-message:
-  #     prefix: "terraform"
-  #     include: "scope"
-  #   assignees:
-  #     - "bakerkj"
-  #   reviewers:
-  #     - "bakerkj"
+  # Maintain dependencies for terraform
+  - package-ecosystem: "terraform"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "terraform"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
+    open-pull-requests-limit: 10

@@ -71,7 +71,7 @@ const Header = () => {
           {user ? <NavLink eventKey="6" as={Link} to="/account/sctr">Our SCTR</NavLink> : ' '}
           { user && isAdmin()
             ? <NavLink eventKey="7" as={Link} to="/account/pm">
-            Create PM
+            Create Product Owner
           </NavLink>
             : ' '}
         </Nav>

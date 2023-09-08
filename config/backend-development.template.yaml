@@ -1,0 +1,89 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: 'cloudrun-service-backend'
+  annotations:
+    run.googleapis.com/ingress: internal-and-cloud-load-balancing
+    run.googleapis.com/ingress-status: internal-and-cloud-load-balancing
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/cloudsql-instances: ${GCLOUD_PROJECT}:${GAR_LOCATION}:postgres-main-instance
+        # https://cloud.google.com/run/docs/configuring/services/cpu (allow system to increase the CPU count on startup)
+        run.googleapis.com/startup-cpu-boost: 'true'
+        # https://cloud.google.com/run/docs/configuring/min-instances (set to 1 to avoid cold start)
+        # autoscaling.knative.dev/minScale: '1'
+        autoscaling.knative.dev/maxScale: '2'
+    spec:
+      containers:
+      - name: 'cloudrun-service-backend'
+        image: backend
+        command: ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+        ports:
+        - containerPort: 8080
+          name: http1
+        env:
+        - name: DEBUG
+          value: False
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: django-database-password
+        - name: POSTGRES_USER
+          value: pguser
+        - name: POSTGRES_HOST
+          value: /cloudsql/${GCLOUD_PROJECT}:${GAR_LOCATION}:postgres-main-instance
+        - name: POSTGRES_PORT
+        - name: DJANGO_DATABASE
+          value: production
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: django-secret-key
+        - name: GS_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: django-gs-bucket-name
+        - name: FRONTEND_HOST
+          value: https://${FQDN}
+        - name: SENDGRID_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: sendgrid-api-key
+        - name: ALLOWED_HOST
+          value: ${FQDN}
+        startupProbe:
+          httpGet:
+            path: /api/
+            port: 8080
+            httpHeaders:
+              - name: HOST
+                value: ${FQDN}
+          initialDelaySeconds: 2
+          timeoutSeconds: 2
+          failureThreshold: 3
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /api/
+            port: 8080
+            httpHeaders:
+              - name: HOST
+                value: ${FQDN}
+          initialDelaySeconds: 1
+          timeoutSeconds: 2
+          failureThreshold: 2
+          periodSeconds: 60
+      # https://cloud.google.com/run/docs/configuring/request-timeout
+      timeoutSeconds: 30
+      # https://cloud.google.com/run/docs/configuring/concurrency
+      containerConcurrency: 20
+
+#######
+# https://cloud.google.com/run/docs/configuring/healthchecks
+# https://cloud.google.com/blog/products/serverless/cloud-run-healthchecks/

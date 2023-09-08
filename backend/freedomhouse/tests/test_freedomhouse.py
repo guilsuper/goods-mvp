@@ -2,8 +2,8 @@
 
 def test_freedomhouse():
     from freedomhouse import places, FreedomStatus
-    usa = places['United States']
+    usa = places["United States"]
     assert usa.score == 83
 
-    china = places['China']
+    china = places["China"]
     assert china.status == FreedomStatus.NotFree
