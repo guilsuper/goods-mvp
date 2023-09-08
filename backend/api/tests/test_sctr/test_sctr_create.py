@@ -70,12 +70,17 @@ def test_sctr_create_and_publish(
     assert response.status_code == status_code
     assert len(SCTR.objects.all()) == count
 
-    if count == 2:
+    # One sctr is created after using a sctr fixture
+    # The second is created after user's request
+    sctr_created = count == 2
+
+    if sctr_created:
         current_sctr = SCTR.objects.filter(
             unique_identifier=sctr_info["unique_identifier"]
         ).first()
 
         assert current_sctr.company == user.company
+        assert current_sctr.unique_identifier == sctr_info["unique_identifier"]
 
 
 @pytest.mark.django_db()
@@ -139,9 +144,14 @@ def test_sctr_create_draft(
     assert response.status_code == status_code
     assert len(SCTR.objects.all()) == count
 
-    if count == 2:
+    # One sctr is created after using a sctr fixture
+    # The second is created after user's request
+    sctr_created = count == 2
+
+    if sctr_created:
         current_sctr = SCTR.objects.filter(
             unique_identifier=sctr_info["unique_identifier"]
         ).first()
 
         assert current_sctr.company == user.company
+        assert current_sctr.unique_identifier == sctr_info["unique_identifier"]

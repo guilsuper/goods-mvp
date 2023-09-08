@@ -86,9 +86,9 @@ class SCTRFactory(DjangoModelFactory):
 
         model = "api.SCTR"
 
-    unique_identifier = factory.Sequence(lambda n: int(str(n) * 8))
+    unique_identifier = factory.Sequence(lambda n: str(n) * 8)
     unique_identifier_type = SCTR_ID_TYPES.SKU
-    marketing_name = factory.Sequence(lambda n: int(str(n) * 8))
+    marketing_name = factory.Sequence(lambda n: str(n) * 8)
     version = 1
     state = SCTR_STATES.PUBLISHED
     cogs = 100

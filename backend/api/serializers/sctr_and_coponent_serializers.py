@@ -64,6 +64,11 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
         model = SourceComponent
         exclude = ("parent_sctr", )
 
+    def validate_fraction_cogs(self, value):
+        """Check if greater than 0."""
+        if value <= 0:
+            raise ValidationError("Should be more then 0")
+
     def validate_component_type_str(self, value):
         """Custom validation to convert string component type to integer."""
         try:
@@ -117,6 +122,11 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
 
         model = SourceComponent
         exclude = ("parent_sctr", )
+
+    def validate_fraction_cogs(self, value):
+        """Check if greater than 0."""
+        if value < 0:
+            raise ValidationError("Should be more or equal to 0")
 
     def validate_component_type_str(self, value):
         """Custom validation to convert string component type to integer."""

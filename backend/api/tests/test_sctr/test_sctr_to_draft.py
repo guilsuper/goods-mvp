@@ -5,6 +5,7 @@ sctr-to-draft
 """
 import pytest
 from api.models import SCTR
+from api.models import SCTR_STATES
 from django.urls import reverse
 
 
@@ -50,3 +51,14 @@ def test_sctr_move_to_draft(
 
     assert response.status_code == status_code
     assert len(SCTR.objects.all()) == count
+
+    # If moved to draft
+    if status_code == 200:
+        # Check that 2 SCTRs exists with the same identifier
+        sctrs = SCTR.objects.filter(unique_identifier=sctr.unique_identifier)
+        assert len(sctrs) == count
+        # And they have different versions, version difference is 1
+        assert abs(sctrs[1].version - sctrs[0].version) == 1
+        # Check that new sctr is in draft state
+        new_sctr = [sctr_curr for sctr_curr in sctrs if sctr_curr.id != sctr.id][0]
+        assert new_sctr.state == SCTR_STATES.integer_from_name("DRAFT")

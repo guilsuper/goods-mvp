@@ -19,7 +19,9 @@ def test_sctr_get(client, sctr):
 
     assert response.status_code == 200
     # If response contains one SCTR information
-    assert len(response.json()) == 1
+    if isinstance(response.json(), list):
+        assert len(response.json()) == 1
+        assert response.json()[0]["unique_identifier"] == sctr.unique_identifier
 
 
 @pytest.mark.django_db()
@@ -64,28 +66,35 @@ def test_sctr_get_by_company(
     # If response contains list of SCTRs
     if isinstance(response.json(), list):
         assert len(response.json()) == count
+        # If count not 0
+        if count:
+            assert response.json()[0]["unique_identifier"] == sctr.unique_identifier
 
 
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
     "user, status_code, is_same_company, sctr_state", [
-        # Unauthenticated users can't get company's all SCTRs
+        # Unauthenticated users can get only published SCTRs
         (None, 404, True, "HIDDEN"),
         (None, 404, True, "DRAFT"),
         (None, 200, False, "PUBLISHED"),
-        # Admins in the same company as a SCTR can get SCTRs
+        # Admins in the same company as a SCTR
+        # can get SCTRs despide its state
         ("admin", 200, True, "HIDDEN"),
         ("admin", 200, True, "DRAFT"),
         ("admin", 200, True, "PUBLISHED"),
-        # Admins in not the same company as a SCTR can get SCTRs
+        # Admins in not the same company as a SCTR
+        # can get SCTRs that are published only
         ("admin", 404, False, "HIDDEN"),
         ("admin", 404, False, "DRAFT"),
         ("admin", 200, False, "PUBLISHED"),
-        # PMs in the same company as a SCTR can get SCTRs
+        # PMs in the same company as a SCTR
+        # can get SCTRs despide its state
         ("pm", 200, True, "HIDDEN"),
         ("pm", 200, True, "DRAFT"),
         ("pm", 200, True, "PUBLISHED"),
-        # PMs in not the same company as a SCTR can get SCTRs
+        # PMs in not the same company as a SCTR
+        # can get SCTRs that are published only
         ("pm", 404, False, "HIDDEN"),
         ("pm", 404, False, "DRAFT"),
         ("pm", 200, False, "PUBLISHED"),
@@ -120,3 +129,5 @@ def test_sctr_get_single(
     )
 
     assert response.status_code == status_code
+    if status_code == 200:
+        assert response.json()["unique_identifier"] == sctr.unique_identifier

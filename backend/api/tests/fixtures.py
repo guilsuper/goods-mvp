@@ -77,7 +77,7 @@ def auth_header():
 
 @pytest.fixture
 def sctr_dict():
-    """Builds SCTR object and returns dict with SCTR attributes."""
+    """Returns dict with SCTR and components for 'create and publish'."""
     obj = {
         "unique_identifier_type_str": "SKU",
         "unique_identifier": "1aa24a211232aa",
@@ -103,8 +103,11 @@ def sctr_dict():
 
 
 @pytest.fixture
-def sctr_draft_dict():
-    """Builds SCTR object and returns draft dict with SCTR attributes."""
+def sctr_invalid_dict():
+    """Returns dict with SCTR and components that is invalid for 'create and publish'.
+
+    This data is valid for creating a draft
+    """
     obj = {
         "unique_identifier": "1aa24a211232aa",
         "components": [
