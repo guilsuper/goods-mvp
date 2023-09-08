@@ -163,6 +163,11 @@ repos:
     - id: check-github-workflows
     - id: check-dependabot
 
+  - repo: https://github.com/aquasecurity/tfsec.git
+    rev: v1.28.1
+    hooks:
+    - id: tfsec
+
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
@@ -171,6 +176,9 @@ repos:
 
       # Flake doesn't ignore these folders by itself
       exclude: "(migrations)/.*"
+
+      additional_dependencies:
+      - flake8-quotes
 
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.46.0
@@ -184,3 +192,8 @@ repos:
       - eslint-plugin-n@^16.0.1
       - eslint-plugin-promise@^6.1.1
       args: [ --fix, --ignore-pattern node_modules]
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.82.0
+    hooks:
+    - id: terraform_fmt

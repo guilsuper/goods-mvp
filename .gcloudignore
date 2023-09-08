@@ -1,0 +1,8 @@
+.gcloudignore
+.git/
+.gitignore
+.github/
+terraform/
+e2e-tests/
+backend/venv/
+frontend/node_modules/
