@@ -197,8 +197,8 @@ CORS_ORIGIN_WHITELIST = [
     os.environ["FRONTEND_HOST"]
 ]
 
-if 'GS_BUCKET_NAME' in os.environ:
-    GS_BUCKET_NAME = os.environ['GS_BUCKET_NAME']
+if "GS_BUCKET_NAME" in os.environ:
+    GS_BUCKET_NAME = os.environ["GS_BUCKET_NAME"]
 
 STATICFILES_DIRS = [
     BASE_DIR / "website_root/",
