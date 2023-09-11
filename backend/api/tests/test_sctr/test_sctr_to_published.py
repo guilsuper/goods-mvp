@@ -43,7 +43,7 @@ def test_sctr_move_to_publish(
     credentials = dict()
 
     # Set sctr to Draft state
-    sctr.state = SCTR_STATES.integer_from_name("DRAFT")
+    sctr.state = SCTR_STATES.DRAFT
     sctr.save()
     # Set incorrect sctr data
     if not is_correct_sctr:
@@ -66,6 +66,6 @@ def test_sctr_move_to_publish(
 
     assert response.status_code == status_code
     if status_code == 200:
-        assert SCTR.objects.get(id=sctr.id).state == SCTR_STATES.integer_from_name("PUBLISHED")
+        assert SCTR.objects.get(id=sctr.id).state == SCTR_STATES.PUBLISHED
     else:
-        assert SCTR.objects.get(id=sctr.id).state == SCTR_STATES.integer_from_name("DRAFT")
+        assert SCTR.objects.get(id=sctr.id).state == SCTR_STATES.DRAFT

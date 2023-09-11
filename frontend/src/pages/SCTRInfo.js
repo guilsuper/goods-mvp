@@ -192,7 +192,7 @@ const SCTRInfo = () => {
             <p>Marketing name</p>
           </Col>
           <Col className='ps-4'>
-            <p>Component type (External SKU)</p>
+            <p>Component type (Company Name & External SKU)</p>
           </Col>
           <Col className='ps-4'>
             <p>Country of origin</p>
@@ -207,6 +207,7 @@ const SCTRInfo = () => {
 
           <Col>
             <Row><p>{toReadable(component.component_type)}</p></Row>
+            <Row><p>{component.company_name}</p></Row>
             <Row><p>{component.external_sku}</p></Row>
           </Col>
 

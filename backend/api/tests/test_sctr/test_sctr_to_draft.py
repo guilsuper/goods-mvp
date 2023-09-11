@@ -11,26 +11,26 @@ from django.urls import reverse
 
 @pytest.mark.django_db()
 @pytest.mark.parametrize(
-    "user, status_code, is_same_company, count", [
+    "user, status_code, is_same_company, draft_created", [
         # Unauthorized users can't use this
-        (None, 401, False, 1),
-        (None, 401, True, 1),
+        (None, 401, False, False),
+        (None, 401, True, False),
         # Admins from the different company can't move to draft
-        ("admin", 403, False, 1),
+        ("admin", 403, False, False),
         # Admins from the same company can move SCTR to draft
         # Copy of SCTR will be created in the draft state
-        ("admin", 200, True, 2),
+        ("admin", 200, True, True),
         # PMs from the different company can't move to draft
-        ("pm", 403, False, 1),
+        ("pm", 403, False, False),
         # PMs from the same company can move SCTR to draft
         # Copy of SCTR will be created in the draft state
-        ("pm", 200, True, 2),
+        ("pm", 200, True, True),
     ]
 )
 def test_sctr_move_to_draft(
     request, client, sctr,
     auth_header, user, is_same_company,
-    status_code, count
+    status_code, draft_created
 ):
     """Tests sctr-to-draft url."""
     # credentials must be a dict to pass them to the post request
@@ -50,13 +50,13 @@ def test_sctr_move_to_draft(
     )
 
     assert response.status_code == status_code
-    assert len(SCTR.objects.all()) == count
+    assert len(SCTR.objects.all()) == 2 if draft_created else 1
 
     # If moved to draft
-    if status_code == 200:
+    if draft_created:
         # Check that 2 SCTRs exists with the same identifier
         sctrs = SCTR.objects.filter(unique_identifier=sctr.unique_identifier)
-        assert len(sctrs) == count
+        assert len(sctrs) == 2 if draft_created else 1
         # The version should be changed after moving to published state
         assert abs(sctrs[1].version - sctrs[0].version) == 0
         # Check that new sctr is in draft state

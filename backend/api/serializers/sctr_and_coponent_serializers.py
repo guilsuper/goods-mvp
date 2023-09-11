@@ -58,6 +58,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
     # To allow blank if MADE_IN_HOUSE
     # Additional validation in validate method
     external_sku = CharField(max_length=25, allow_blank=True)
+    company_name = CharField(max_length=200, allow_blank=True)
 
     class Meta:
         """Metaclass for the SourceComponentSerializer."""
@@ -86,11 +87,10 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
 
         if attrs["component_type_str"] == "EXTERNALLY_SOURCED":
             # Check if external sku exists if component type is EXTERNALLY_SOURCED
-            if "external_sku" not in attrs.keys():
-                raise ValidationError("External sku is required for externally sourced type.")
-            # Remove whitespaces and check if other characters left
-            if len(attrs["external_sku"].strip()) == 0:
-                raise ValidationError("External sku may not be blank.")
+            if "external_sku" not in attrs or "company_name" not in attrs:
+                raise ValidationError(
+                    "External sku and company name is required for externally sourced type."
+                )
         return super().validate(attrs)
 
     def create(self, validated_data):
@@ -116,8 +116,9 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
     )
     # To display a country full name instead of a code
     country_of_origin = CountryField(required=False, name_only=True, allow_blank=True)
-    # To allow this field be blank
+    # To allow these fields be blank
     external_sku = CharField(max_length=25, required=False, allow_blank=True)
+    company_name = CharField(max_length=200, required=False, allow_blank=True)
 
     class Meta:
         """Metaclass for the SourceComponent draft Serializer."""
@@ -234,6 +235,7 @@ class SCTRCreateGetSerializer(ModelSerializer):
         validated_data["company"] = user.company
         # Set as latest version
         validated_data["is_latest_version"] = True
+        validated_data["version"] = 1
         # Create components separately
         components = validated_data.pop("components")
 
@@ -274,6 +276,8 @@ class SCTRDraftSerializer(ModelSerializer):
         validated_data["company"] = user.company
         # Set as latest version
         validated_data["is_latest_version"] = True
+        # Version will be 1 after moving to published state
+        validated_data["version"] = 0
 
         if "components" in validated_data:
             components_data = validated_data.pop("components")

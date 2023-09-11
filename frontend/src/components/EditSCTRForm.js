@@ -29,10 +29,14 @@ const EditSCTRForm = () => {
     marketing_name: '',
     component_type_str: '',
     external_sku: '',
-    country_of_origin: ''
+    country_of_origin: '',
+    company_name: ''
   }])
 
+  // Are constant values that represents all existing published SCTRs
   const [sctrs, setSCTRs] = useState([])
+  // Will change depending on user's input in external_sku and company_name
+  const [availableSCTRs, setAvailableSCTR] = useState([])
 
   const options = useMemo(() => countryList().getData(), [])
 
@@ -74,7 +78,8 @@ const EditSCTRForm = () => {
             marketing_name: result.components[index].marketing_name,
             component_type_str: result.components[index].component_type,
             external_sku: result.components[index].external_sku,
-            country_of_origin: result.components[index].country_of_origin
+            country_of_origin: result.components[index].country_of_origin,
+            company_name: result.components[index].company_name
           })
         }
         setInputFields(data)
@@ -106,7 +111,11 @@ const EditSCTRForm = () => {
         navigate('/')
       }
     }
+    // Set all available SCTRs for a external sku field
     getSCTRs()
+    // Set available choices that depends on external sku field and company name
+    console.log(sctrs)
+    setAvailableSCTR(sctrs)
   }, [authTokens, navigate, sctrIdentifier, setSCTRs])
 
   // Handle submit
@@ -270,7 +279,8 @@ const EditSCTRForm = () => {
       marketing_name: result.marketing_name,
       component_type_str: result.component_type,
       external_sku: result.external_sku,
-      country_of_origin: result.country_of_origin
+      country_of_origin: result.country_of_origin,
+      company_name: result.company_name
     })
     setInputFields(values)
   }
@@ -331,6 +341,34 @@ const EditSCTRForm = () => {
     const values = [...inputFields]
     values[index].external_sku = text
 
+    setAvailableSCTR(sctrs.filter(sctr => sctr.unique_identifier === text))
+    // When user deletes all characters
+    if (!text) {
+      // If company name is set
+      if (values[index].company_name) {
+        setAvailableSCTR(sctrs.filter(sctr => sctr.company.name === values[index].company_name))
+      } else {
+        setAvailableSCTR(sctrs)
+      }
+    }
+    setInputFields(values)
+  }
+
+  const handleCompanyNameChange = (index, text, event) => {
+    // event here doesn't have event.target.id
+    const values = [...inputFields]
+    values[index].company_name = text
+
+    setAvailableSCTR(sctrs.filter(sctr => sctr.company.name === text))
+    // When user deletes all characters
+    if (!text) {
+      // If external_sku is set
+      if (values[index].external_sku) {
+        setAvailableSCTR(sctrs.filter(sctr => sctr.unique_identifier === values[index].external_sku))
+      } else {
+        setAvailableSCTR(sctrs)
+      }
+    }
     setInputFields(values)
   }
 
@@ -431,15 +469,29 @@ const EditSCTRForm = () => {
                 </Form.Select>
               </Form.Group>
               { inputField.component_type_str === 'EXTERNALLY_SOURCED'
-                ? <Form.Group>
-                <Form.Label>Enter external SKU</Form.Label>
-                <Typeahead
-                  id="external_sku"
-                  onInputChange={(text, event) => handleExternalSKUChange(index, text, event)}
-                  options={sctrs.map(sctr => sctr.unique_identifier)}
-                  placeholder={inputField.external_sku}
-                />
-              </Form.Group>
+                ? <>
+                    <Form.Group>
+                      <Form.Label>Enter Company Name</Form.Label>
+                      <Typeahead
+                        id="company_name"
+                        onChange={(text, event) => handleCompanyNameChange(index, text[0], event)}
+                        onInputChange={(text, event) => handleCompanyNameChange(index, text, event)}
+                        // Get only unique values (company names) and cast to Array to use filter function
+                        options={Array.from(new Set(availableSCTRs.map(sctr => sctr.company.name)))}
+                        placeholder="Enter company name"
+                      />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Enter external SKU</Form.Label>
+                      <Typeahead
+                        id="external_sku"
+                        onChange={(text, event) => handleExternalSKUChange(index, text[0], event)}
+                        onInputChange={(text, event) => handleExternalSKUChange(index, text, event)}
+                        options={availableSCTRs.map(sctr => sctr.unique_identifier)}
+                        placeholder="Enter external sku"
+                      />
+                    </Form.Group>
+                </>
                 : ' '
               }
             </Col>

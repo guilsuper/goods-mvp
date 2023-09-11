@@ -218,7 +218,8 @@ class SCTRMoveToPublishedView(UpdateAPIView):
             "fraction_cogs",
             "component_type",
             "external_sku",
-            "country_of_origin"
+            "country_of_origin",
+            "company_name"
         )
 
         # Check if COGS is 100

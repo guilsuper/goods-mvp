@@ -81,7 +81,7 @@ def test_sctr_get_by_company(
         (None, 404, True, "HIDDEN"),
         (None, 404, True, "DRAFT"),
         (None, 200, False, "PUBLISHED"),
-        # Admins in the same company as a SCTR
+        # Admins in the same company as a SCTR can get all th SCTRs
         # can get SCTRs despide its state
         ("admin", 200, True, "HIDDEN"),
         ("admin", 200, True, "DRAFT"),

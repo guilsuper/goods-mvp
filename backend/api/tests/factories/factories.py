@@ -106,8 +106,9 @@ class ComponentFactory(DjangoModelFactory):
         model = "api.SourceComponent"
 
     fraction_cogs = 100
-    marketing_name = factory.Sequence(lambda n: int(str(n) * 8))
+    marketing_name = factory.Sequence(lambda n: str(n) * 8)
     component_type = SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED
     country_of_origin = "USA"
     external_sku = factory.Sequence(lambda n: int(str(n) * 8))
     parent_sctr = factory.SubFactory(SCTRFactory)
+    company_name = factory.Sequence(lambda n: str(n) * 8)

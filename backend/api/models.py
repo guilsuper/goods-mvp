@@ -169,9 +169,9 @@ class SCTR(models.Model):
         null=True)
 
     version = models.IntegerField(
-        default=1,
+        default=0,
         validators=[
-            MinValueValidator(1)
+            MinValueValidator(0)
         ]
     )
     state = models.IntegerField(
@@ -208,5 +208,10 @@ class SourceComponent(models.Model):
     # This check is applied in the serializer
     country_of_origin = CountryField(null=True)
     external_sku = models.CharField(max_length=25, null=True)
+
+    # If externally sourced, should store company name
+    # The company name should be as a string,
+    # in case it isn't in our DB and should be saved
+    company_name = models.CharField(max_length=200, null=True)
 
     parent_sctr = models.ForeignKey(SCTR, related_name="components", on_delete=models.CASCADE)
