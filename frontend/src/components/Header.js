@@ -37,8 +37,8 @@ const Header = () => {
           align={isToggle ? 'start' : 'end'}
           className="me-3"
         >
-          <Dropdown.Item eventKey="1" href="/account/info">Profile settings</Dropdown.Item>
-          <Dropdown.Item eventKey="2" onClick={logoutUser}>Signout</Dropdown.Item>
+          <Dropdown.Item eventKey="accountInfo" href="/account/info">Profile settings</Dropdown.Item>
+          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>Signout</Dropdown.Item>
         </DropdownButton>
       )
     }
@@ -65,12 +65,12 @@ const Header = () => {
       />
       <Navbar.Collapse id="navbarScroll">
         <Nav>
-          <NavLink eventKey="1" as={Link} to="/">Home</NavLink>
-          <NavLink eventKey="2" as={Link} to="/sctr">SCTR</NavLink>
-          <NavLink eventKey="5" as={Link} to="/about">About</NavLink>
-          {user ? <NavLink eventKey="6" as={Link} to="/account/sctr">Our SCTR</NavLink> : ' '}
+          <NavLink eventKey="home" as={Link} to="/">Home</NavLink>
+          <NavLink eventKey="sctr" as={Link} to="/sctr">SCTR</NavLink>
+          <NavLink eventKey="about" as={Link} to="/about">About</NavLink>
+          {user ? <NavLink eventKey="ourSCTR" as={Link} to="/account/sctr">Our SCTR</NavLink> : ' '}
           { user && isAdmin()
-            ? <NavLink eventKey="7" as={Link} to="/account/pm">
+            ? <NavLink eventKey="accountPM" as={Link} to="/account/pm">
             Create Product Owner
           </NavLink>
             : ' '}
