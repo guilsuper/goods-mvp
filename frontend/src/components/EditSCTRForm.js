@@ -114,7 +114,6 @@ const EditSCTRForm = () => {
     // Set all available SCTRs for a external sku field
     getSCTRs()
     // Set available choices that depends on external sku field and company name
-    console.log(sctrs)
     setAvailableSCTR(sctrs)
   }, [authTokens, navigate, sctrIdentifier, setSCTRs])
 
