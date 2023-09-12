@@ -35,3 +35,13 @@ npm install
 ```bash
 npm start
 ```
+
+### How to run tests locally
+
+- Start the terminal.
+- Run the following commands
+
+```bash
+npm install
+npm test -- --passWithNoTests --coverage --coverageDirectory=../coverage-results/
+```
