@@ -1,20 +1,12 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""API views module."""
-from api.filter import ProductFilter
+"""API user-related views module."""
 from api.models import Administrator
-from api.models import Company
-from api.models import Product
 from api.permissions import IsAccountOwner
 from api.permissions import IsAdministrator
 from api.permissions import IsCompanyAdministrator
-from api.permissions import IsProductOwner
-from api.permissions import ReadOnly
 from api.serializers import AdministratorSerializer
-from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CompanySerializer
 from api.serializers import PMSerializer
-from api.serializers import ProductCreateSerializer
-from api.serializers import ProductGetSerializer
 from api.tokens import account_activation_token
 from api.utils import send_activation_email
 from django.contrib.auth import get_user_model
@@ -24,53 +16,12 @@ from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveAPIView
-from rest_framework.generics import RetrieveUpdateAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-
-class Smoke(ListAPIView):
-    """Backend healthcheck."""
-
-    def get(self, request):
-        """Retrieving basic response."""
-        return Response("Working as intended.")
-
-
-class ProductCreateView(CreateAPIView):
-    """Product creation."""
-
-    serializer_class = ProductCreateSerializer
-    queryset = Product.objects.all()
-    permission_classes = [IsAuthenticated, ]
-
-
-class ProductListView(ListAPIView):
-    """Product retrieving all and filtering."""
-
-    serializer_class = ProductGetSerializer
-    queryset = Product.objects.all()
-    filterset_class = ProductFilter
-
-
-class ProductRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """View has patch, get and delete methods for product model."""
-
-    permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsProductOwner]
-    queryset = Product.objects.all()
-    lookup_field = "sku_id"
-
-    def get_serializer_class(self):
-        """Set initial serializer based on a request method."""
-        if self.request.method == "GET":
-            return ProductGetSerializer
-        else:
-            return ProductCreateSerializer
 
 
 class CreateAdministratorAndCompanyView(APIView):
@@ -179,62 +130,6 @@ class ActivationView(RetrieveAPIView):
         )
 
 
-class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    """Administrator and PM patch, get and delete view."""
-
-    permission_classes = [
-        IsAuthenticated,
-        IsAccountOwner
-    ]
-    queryset = Administrator.objects.all()
-
-    def patch(self, request):
-        """Overwritten patch method for using patch without pk."""
-        instance = request.user
-        serializer = self.get_serializer(
-            instance,
-            data=request.data,
-            partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-        return Response(serializer.data)
-
-    def get(self, request):
-        """Returns serialized request.user."""
-        self.serializer_class = self.get_serializer_class()
-        return Response(
-            {
-                **self.serializer_class(request.user).data,
-            }
-        )
-
-    def delete(self, request):
-        """Overwritten delete method for Administrators."""
-        # Only administrators can delete accounts.
-        if request.user.groups.filter(name="Administrator").exists():
-            request.user.delete()
-
-            return Response(
-                status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
-                data={"message": "Successfully deleted"}
-            )
-        return Response(
-            status=status.HTTP_403_FORBIDDEN,
-            data={"message": "Permission denied"}
-        )
-
-    def get_serializer_class(self):
-        """Get serializer based on the user group."""
-        if self.request.user.groups.filter(
-            name="Administrator"
-        ).exists():
-            return AdministratorSerializer
-        else:
-            return PMSerializer
-
-
 class PMCreateView(CreateAPIView):
     """PM creation."""
 
@@ -289,18 +184,57 @@ class PMListView(ListAPIView):
         )
 
 
-class CompanyUpdateRetrieveView(RetrieveUpdateAPIView):
-    """Updates or retrieves company information."""
+class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    """Administrator and PM patch, get and delete view."""
 
     permission_classes = [
         IsAuthenticated,
-        IsAdministrator,
-        IsCompanyAdministrator
+        IsAccountOwner
     ]
-    queryset = Company.objects.all()
-    lookup_field = "slug"
+    queryset = Administrator.objects.all()
+
+    def patch(self, request):
+        """Overwritten patch method for using patch without pk."""
+        instance = request.user
+        serializer = self.get_serializer(
+            instance,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
+    def get(self, request):
+        """Returns serialized request.user."""
+        self.serializer_class = self.get_serializer_class()
+        return Response(
+            {
+                **self.serializer_class(request.user).data,
+            }
+        )
+
+    def delete(self, request):
+        """Overwritten delete method for Administrators."""
+        # Only administrators can delete accounts.
+        if request.user.groups.filter(name="Administrator").exists():
+            request.user.delete()
+
+            return Response(
+                status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
+                data={"message": "Successfully deleted"}
+            )
+        return Response(
+            status=status.HTTP_403_FORBIDDEN,
+            data={"message": "Permission denied"}
+        )
 
     def get_serializer_class(self):
-        if self.request.method == "GET":
-            return CompanyRetrieveSerializer
-        return CompanySerializer
+        """Get serializer based on the user group."""
+        if self.request.user.groups.filter(
+            name="Administrator"
+        ).exists():
+            return AdministratorSerializer
+        else:
+            return PMSerializer

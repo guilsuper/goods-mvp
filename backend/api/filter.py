@@ -1,26 +1,21 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Module with ProductFIlter."""
+"""Module with SCTRFIlter."""
 import django_filters
-from api.models import Product
+from api.models import SCTR
 
 
-class ProductFilter(django_filters.FilterSet):
-    """FIlter for Product objects."""
+class SCTRFilter(django_filters.FilterSet):
+    """FIlter for SCTR objects."""
 
     class Meta:
-        """Metaclas of the ProductFilter."""
+        """Metaclas of the SCTRFilter."""
 
-        model = Product
+        model = SCTR
         fields = {
-            "sku_id": ["icontains"],
-            "public_facing_id": ["icontains"],
-            "public_facing_name": ["icontains"],
-            "description": ["icontains"],
+            "unique_identifier": ["icontains"],
+            "marketing_name": ["icontains"],
 
-            "sctr_date": ["gt", "lt"],
-            "sctr_cogs": ["gte", "lte"],
+            "cogs": ["gte", "lte"],
 
-            "product_input_manufacturer": ["icontains"],
-            "product_input_type": ["icontains"],
-            "company__name": ["exact"]
+            "company__name": ["icontains"]
         }

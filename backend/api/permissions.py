@@ -25,16 +25,16 @@ class IsCompanyAdministrator(permissions.BasePermission):
             return False
 
         # If obj is a company and administrator is in that company
-        # Or if obj is a PM/Product, then admin can access it
+        # Or if obj is a PM/SCTR, then admin can access it
         # if belongs to the same company
         return obj == request.user.company or obj.company == request.user.company
 
 
-class IsProductOwner(permissions.BasePermission):
-    """Object-level permission to only allow PM edit or read it."""
+class IsSCTROwner(permissions.BasePermission):
+    """Object-level permission to only allow PM(Admin) edit or read it."""
 
     def has_object_permission(self, request, view, obj):
-        """If user's company is the same as product company."""
+        """If user's company is the same as SCTR company."""
         return obj.company == request.user.company
 
 
@@ -54,9 +54,9 @@ class IsAdministrator(permissions.BasePermission):
         return request.user.groups.filter(name="Administrator").exists()
 
 
-class IsPM(permissions.BasePermission):
-    """Object-level permission to only allow PMs for access."""
+class IsComponentOwner(permissions.BasePermission):
+    """Object permissions to update component."""
 
-    def has_permission(self, request, view):
-        """If PM."""
-        return request.user.groups.filter(name="PM").exists()
+    def has_object_permission(self, request, view, obj):
+        """Allow self edit for account owner."""
+        return request.user.company == obj.parent_sctr.company

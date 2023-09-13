@@ -1,9 +1,10 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains database tables as models."""
+from enum import IntEnum
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import Group
-from django.core.validators import MaxValueValidator
 from django.core.validators import MinValueValidator
 from django.core.validators import RegexValidator
 from django.db import models
@@ -17,21 +18,49 @@ full_domain_validator = RegexValidator(
 )
 
 
-class PRODUCT_TYPES(models.TextChoices):
-    """Allowed coices for product types."""
+class ChoicesEnum(IntEnum):
+    """Base class for choices."""
 
-    convenience_goods = "Convenience Goods"
-    raw_materials = "Raw Materials"
-    component_parts = "Component Parts"
-    software = "Software"
-    hardware = "Hardware"
-    consumer_electronics = "Consumer Electronics"
-    cookware = "Cookware"
-    appliances = "Appliances"
-    homegoods = "Homegoods"
-    clothing = "Clothing"
-    jewelry = "Jewelry"
-    art = "Art"
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.name) for key in cls]
+
+    @classmethod
+    def integer_from_name(cls, name):
+        """Get the integer of the attribute based on its name."""
+        try:
+            return cls[name].value
+        except KeyError:
+            return None
+
+    @classmethod
+    def name_from_integer(cls, value):
+        """Get the name of the attribute based on its integer value."""
+        for key in cls:
+            if key.value == value:
+                return key.name
+        return None
+
+
+class SCTR_ID_TYPES(ChoicesEnum):
+    """Allowed coices for SCTR unique identifier types."""
+    SKU = 1
+    GNIT = 2
+
+
+class SCTR_STATES(ChoicesEnum):
+    """Allowed coices for SCTR states."""
+
+    DRAFT = 1
+    PUBLISHED = 2
+    HIDDEN = 3
+
+
+class SOURCE_COMPONENT_TYPE(ChoicesEnum):
+    """Allowed choices for source component type."""
+
+    EXTERNALLY_SOURCED = 1
+    MADE_IN_HOUSE = 2
 
 
 class Company(models.Model):
@@ -124,42 +153,65 @@ class Administrator(AbstractUser):
         group.user_set.add(self)
 
 
-class Product(models.Model):
-    """Product model."""
+class SCTR(models.Model):
+    """SCTR model."""
 
-    sku_id = models.IntegerField(unique=True)
-    public_facing_id = models.IntegerField()
-    public_facing_name = models.CharField(max_length=500)
-    description = models.TextField(max_length=2000)
+    # According to the public information
+    # SKU length is usually not more then 25 characters
+    # GNIT length is 13
+    unique_identifier = models.CharField(max_length=25)
+    unique_identifier_type = models.IntegerField(
+        choices=SCTR_ID_TYPES.choices(),
+        default=SCTR_ID_TYPES.SKU
+    )
+    marketing_name = models.CharField(
+        max_length=500,
+        null=True)
 
-    sctr_date = models.DateField()
-    sctr_cogs = models.FloatField(
+    version = models.IntegerField(
+        default=0,
         validators=[
-            MaxValueValidator(100),
             MinValueValidator(0)
         ]
     )
-    cogs_coutry_recipients = CountryField()
-
-    product_input_manufacturer = models.CharField(max_length=200)
-    product_input_type = models.CharField(
-        max_length=20,
-        choices=PRODUCT_TYPES.choices
+    state = models.IntegerField(
+        default=SCTR_STATES.DRAFT,
+        choices=SCTR_STATES.choices()
     )
+
+    cogs = models.FloatField(
+        default=0,
+        validators=[
+            MinValueValidator(0)
+        ]
+    )
+
+    is_latest_version = models.BooleanField(default=False)
 
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
-class SubComponent(models.Model):
-    """Product model."""
+class SourceComponent(models.Model):
+    """SCTR source components model."""
 
-    sub_sku_id = models.IntegerField()
-    sub_public_facing_name = models.CharField(max_length=500, null=True)
-    sub_cogs_coutry_recipients = CountryField(null=True)
-    sub_product_input_type = models.CharField(
-        max_length=20,
-        choices=PRODUCT_TYPES.choices,
+    fraction_cogs = models.FloatField(
+        blank=True,
+        null=True
+    )
+    marketing_name = models.CharField(max_length=500, null=True, blank=True)
+    component_type = models.IntegerField(
+        choices=SOURCE_COMPONENT_TYPE.choices(),
         null=True
     )
 
-    main_sku_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    # On of this fields will be set according to the type
+    # This check is applied in the serializer
+    country_of_origin = CountryField(null=True)
+    external_sku = models.CharField(max_length=25, null=True)
+
+    # If externally sourced, should store company name
+    # The company name should be as a string,
+    # in case it isn't in our DB and should be saved
+    company_name = models.CharField(max_length=200, null=True)
+
+    parent_sctr = models.ForeignKey(SCTR, related_name="components", on_delete=models.CASCADE)
