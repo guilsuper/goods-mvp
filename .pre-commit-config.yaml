@@ -193,7 +193,7 @@ repos:
       - eslint-plugin-n@^16.0.1
       - eslint-plugin-promise@^6.1.1
       - jest@^29.6.4
-      args: [ --fix, --ignore-pattern node_modules]
+      args: [ --fix, --ignore-pattern, node_modules, ]
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.82.0

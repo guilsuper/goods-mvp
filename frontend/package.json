@@ -22,12 +22,6 @@
     "test-ci": "react-scripts test --watchAll=false --testResultsProcessor='jest-junit' --coverage --coverageDirectory=../coverage-results/ --coverageReporters=cobertura --coverageReporters=text --coverageReporters=text-summary",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
