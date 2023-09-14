@@ -161,7 +161,7 @@ python manage.py dumpdata | jq > /tmp/data.json
 - run load data
 
 ```bash
-(.venv) bakerkj@periwinkle:~/fwc3/backend (bakerkj/load-demo-data|…1△1)$ python manage.py loaddata /tmp/data.json
+python manage.py loaddata /tmp/data.json
 System check identified some issues:
 Installed 119 object(s) from 1 fixture(s)
 ```
