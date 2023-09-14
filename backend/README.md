@@ -97,3 +97,71 @@ python -m venv venv
 pip install -r ./requirements.txt
 pytest --junitxml=../test-results/pytest.xml  --cov --cov-report=xml:../coverage-results/pytest-coverage-report.xml
 ```
+
+### Load & Dump database data
+
+- get cloud-sql-proxy
+
+```bash
+curl -o ./cloud-sql-proxy https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.6.1/cloud-sql-proxy.linux.amd64
+chmod +x ./cloud-sql-proxy
+sudo mkdir /cloudsql
+sudo chown 777 /cloudsql
+```
+
+- authenticate and run cloud-sql-proxy
+
+```bash
+gcloud auth application-default login
+./cloud-sql-proxy --unix-socket /cloudsql fwc-alpha-website:us-east1:postgres-main-instance
+```
+
+- you can test this connection with psql (the password can be found in the
+  [secret manager](/django-database-password/versions?project=fwc-alpha-website)
+  under the django-database-password key
+
+```bash
+psql -U pguser -h /cloudsql/fwc-alpha-website:us-east1:postgres-main-instance -d postgres
+postgres=> select * from api_sctr;
+ id | uid | uit | marketing_name | version | state | cogs | company_id | is_latest_version
+----+-----+-----+----------------+---------+-------+------+------------+-------------------
+  4 | ABC666 |   1 | ABC BadHammer  |       1 |     1 |  100 |          3 | f
+  3 | ABC666 |   1 | ABC BadHammer  |       1 |     3 |  100 |          3 | f
+(2 rows)
+
+postgres=>
+```
+
+- adjust your backend/.env file to talk to the cloud sql
+
+```bash
+SECRET_KEY= <<< FILL ME IN from google serets >>>
+DJANGO_DATABASE=production
+POSTGRES_NAME=postgres
+POSTGRES_USER=pguser
+POSTGRES_PASSWORD= <<< FILL ME IN from google secrets >>>
+POSTGRES_HOST=/cloudsql/fwc-alpha-website:us-east1:postgres-main-instance
+```
+
+- setup backend
+
+```bash
+python -m venv backend/.venv
+source backend/.venv/bin/activate
+pip install -r backend/requirements.txt
+```
+
+- run dump data
+
+```bash
+cd backend/
+python manage.py dumpdata | jq > /tmp/data.json
+```
+
+- run load data
+
+```bash
+(.venv) bakerkj@periwinkle:~/fwc3/backend (bakerkj/load-demo-data|…1△1)$ python manage.py loaddata /tmp/data.json
+System check identified some issues:
+Installed 119 object(s) from 1 fixture(s)
+```
