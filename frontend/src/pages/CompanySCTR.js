@@ -101,12 +101,12 @@ const CompanySCTR = () => {
 
               <Form.Group className="mb-3" controlId="cogs__lte">
                 <Form.Label>COGS less than...</Form.Label>
-                <Form.Control type="text" placeholder="Enter SCTR COGS" />
+                <Form.Control type="text" placeholder="Enter COGS" />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="cogs__gte">
                 <Form.Label>COGS greater than...</Form.Label>
-                <Form.Control type="text" placeholder="Enter SCTR COGS" />
+                <Form.Control type="text" placeholder="Enter COGS" />
               </Form.Group>
 
               <Button variant="primary" type="submit">
