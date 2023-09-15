@@ -27,6 +27,13 @@ python -m venv venv
 ./venv/Scripts/activate
 ```
 
+or possibly:
+
+```bash
+python -m venv venv
+./venv/bin/activate
+```
+
 ### Required to install
 
 - Project requirements:
