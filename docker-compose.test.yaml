@@ -9,6 +9,7 @@ services:
     environment:
       - FRONTEND=http://frontend:3000
       - SENDGRID_HOST=http://sendgrid-mock:3000
+      - DB_URI=postgresql://postgres:postgres@db-test:5432/test-postgres
     depends_on:
       backend:
         condition: service_healthy
@@ -24,7 +25,7 @@ services:
     tmpfs:
       - /var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=test-postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     healthcheck:
@@ -66,7 +67,7 @@ services:
       - ALLOWED_HOST=backend
 
       - POSTGRES_HOST=db-test
-      - POSTGRES_NAME=postgres
+      - POSTGRES_NAME=test-postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_PORT=5432
