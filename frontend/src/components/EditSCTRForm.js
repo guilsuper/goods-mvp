@@ -465,6 +465,9 @@ const EditSCTRForm = () => {
                   onChange={event => handleInputChange(index, event)}
                   // Value should be a country code
                   // But the Django response contains a full name
+                  // After a user uses a select, it turns to a code by react package
+                  // It is import to handle both
+                  // in future we probably will make Django to return codes
                   value={
                     inputField.country_of_origin.length !== 2
                       ? countryList().getValue(inputField.country_of_origin)
