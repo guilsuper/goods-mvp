@@ -22,12 +22,14 @@ cd backend
 
 - Setup virtual environment inside your project folder
 
+On Windows:
+
 ```bash
 python -m venv venv
 ./venv/Scripts/activate
 ```
 
-or possibly:
+On Linux and macOS:
 
 ```bash
 python -m venv venv
