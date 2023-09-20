@@ -1,19 +1,19 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains useful fixtures."""
 import os
+from typing import Callable
 
 import pytest
+import requests
 from dotenv import load_dotenv
 from selenium import webdriver
-from sqlalchemy import create_engine
-from sqlalchemy import text
+from tests.utils import init_client
 
 
 load_dotenv()
 
 
-DB_URI = os.environ["DB_URI"]
-engine = create_engine(DB_URI)
+_client = init_client()
 
 
 @pytest.fixture
@@ -28,83 +28,44 @@ def driver():
 
 
 @pytest.fixture
-def sctr_create():
-    """Creates an SCTR using raw query to the DB."""
-    def create(company_id):
-        """Creates an SCTR an link it to company."""
-        sctr = {
-            "id": 1,
-            "unique_identifier": "asd",
-            # It's SKU type
-            "unique_identifier_type": "1",
-            "marketing_name": "asdd",
-            "version": "1",
-            # Published state
-            "state": "2",
-            "cogs": "100",
-            "company_id": company_id,
-            "is_latest_version": "t"
-        }
-        stmt = f"""
-            INSERT INTO api_sctr VALUES
-            {tuple(sctr.values())}
-        """
-        with engine.connect() as conn:
-            conn.execute(text(stmt))
-            conn.commit()
-            return sctr
-
-    return create
+def client() -> dict:
+    """Returns client info and auth tokens."""
+    return _client
 
 
 @pytest.fixture
-def company_create():
-    """Creates a company using raw query to the DB."""
-    def create():
-        """Creates a company."""
-        company = {
-            "id": 2,
-            "website": "aaaa11.com",
-            "name": "aaa11",
-            "jurisdiction": "ggggg",
-            "company_unique_identifier": "kjkjkj",
-            "slug": "aaa11"
+def sctr_create(client: dict) -> Callable:
+    """Returns a function to configure SCTR creation using a request to the backend."""
+    def create() -> dict:
+        """Creates an SCTR and returns dict with SCTR info."""
+        data = {
+            "unique_identifier_type_str": "SKU",
+            "unique_identifier": "1aa24a211232aa",
+            "marketing_name": "aaaa",
+            "components": [
+                {
+                    "fraction_cogs": 99,
+                    "marketing_name": "why",
+                    "component_type_str": "EXTERNALLY_SOURCED",
+                    "external_sku": "aaaaa",
+                    "country_of_origin": "USA",
+                    "company_name": "Mojang"
+                },
+                {
+                    "fraction_cogs": 1,
+                    "marketing_name": "why1",
+                    "component_type_str": "MADE_IN_HOUSE",
+                    "external_sku": "aaaaa1",
+                    "country_of_origin": "China",
+                    "company_name": "Alabama"
+                }
+            ]
         }
-        stmt = f"""
-            INSERT INTO api_company VALUES
-            {tuple(company.values())}
-        """
-        with engine.connect() as conn:
-            conn.execute(text(stmt))
-            conn.commit()
-            return company
-
-    return create
-
-
-@pytest.fixture
-def component_create():
-    """Creates an component using raw query to the DB."""
-    def create(sctr_id):
-        """Creates an component an link it to sctr."""
-        component = {
-            "id": 1,
-            "fraction_cogs": "100",
-            "marketing_name": "asdqwe",
-            # It's Externally Sourced type
-            "component_type": "1",
-            "country_of_origin": "AG",
-            "external_sku": "daqwe",
-            "parent_sctr_id": sctr_id,
-            "company_name": "qwezc"
-        }
-        stmt = f"""
-            INSERT INTO api_sourcecomponent VALUES
-            {tuple(component.values())}
-        """
-        with engine.connect() as conn:
-            conn.execute(text(stmt))
-            conn.commit()
-            return component
+        sctr = requests.post(
+            os.environ["BACKEND"] + "/api/sctr/create/",
+            json=data,
+            headers={"Authorization": f"Bearer {client['tokens']['access']}"}
+        ).json()
+        return sctr
 
     return create

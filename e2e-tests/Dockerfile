@@ -8,9 +8,6 @@ COPY . /e2e-tests/
 USER root
 RUN apt update
 RUN apt install -y python3-pip
-# Needed for psycopg2 package
-RUN apt install -y libpq-dev
-
 RUN pip install -r ./requirements.txt
 
-CMD ["pytest", "-s", "--junitxml=../test-results/pytest-e2e.xml"]
+CMD ["pytest", "--junitxml=../test-results/pytest-e2e.xml"]
