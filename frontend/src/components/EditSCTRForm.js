@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
 import countryList from 'react-select-country-list'
 import { Typeahead } from 'react-bootstrap-typeahead'
+import ReactCountryFlag from 'react-country-flag'
 
 const EditSCTRForm = () => {
   // authTokens are for sending request to the backend
@@ -404,18 +405,21 @@ const EditSCTRForm = () => {
 
         <p>COGS: {calculateCOGS()}%</p>
 
-        <Row>
+        <Row className='mt-4'>
           <Col className='ps-4'>
-            <p>Fraction COGS</p>
+            <p className="text-center">Fraction of COGS</p>
           </Col>
           <Col className='ps-4'>
-            <p>Marketing name</p>
+            <p className="text-center">Marketing name</p>
           </Col>
           <Col className='ps-4'>
-            <p>Component type</p>
+            <p className="text-center">Component type (Company Name & External SKU)</p>
           </Col>
           <Col className='ps-4'>
-            <p>External SKU and country of origin</p>
+            <p className="text-center">Country of origin</p>
+          </Col>
+          <Col className='ps-4'>
+            <p className="text-center">Country flag</p>
           </Col>
         </Row>
 
@@ -457,10 +461,18 @@ const EditSCTRForm = () => {
             <Col>
               <Form.Group className="mb-3">
                 <Form.Select
-                  aria-label="Select country"
                   id="country_of_origin"
                   onChange={event => handleInputChange(index, event)}
-                  value={inputField.country_of_origin}
+                  // Value should be a country code
+                  // But the Django response contains a full name
+                  // After a user uses a select, it turns to a code by react package
+                  // It is import to handle both
+                  // in future we probably will make Django to return codes
+                  value={
+                    inputField.country_of_origin.length !== 2
+                      ? countryList().getValue(inputField.country_of_origin)
+                      : inputField.country_of_origin
+                  }
                 >
                   {options.map((option, i) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -477,7 +489,7 @@ const EditSCTRForm = () => {
                         onInputChange={(text, event) => handleCompanyNameChange(index, text, event)}
                         // Get only unique values (company names) and cast to Array to use filter function
                         options={Array.from(new Set(availableSCTRs.map(sctr => sctr.company.name)))}
-                        placeholder="Enter company name"
+                        placeholder={inputField.company_name}
                       />
                     </Form.Group>
                     <Form.Group>
@@ -487,10 +499,31 @@ const EditSCTRForm = () => {
                         onChange={(text, event) => handleExternalSKUChange(index, text[0], event)}
                         onInputChange={(text, event) => handleExternalSKUChange(index, text, event)}
                         options={availableSCTRs.map(sctr => sctr.unique_identifier)}
-                        placeholder="Enter external sku"
+                        placeholder={inputField.external_sku}
                       />
                     </Form.Group>
                 </>
+                : ' '
+              }
+            </Col>
+            <Col className='d-flex align-items-center justify-content-center'>
+              { inputField.country_of_origin
+                ? <ReactCountryFlag
+                    // Django response has a full name, but the select field is using codes as values
+                    // This step will translate name to a code
+                    countryCode={
+                      inputField.country_of_origin.length !== 2
+                        ? countryList().getValue(inputField.country_of_origin)
+                        : inputField.country_of_origin
+                    }
+                    svg
+                    style={{
+                      width: '6.6em',
+                      height: '5em',
+                      border: '1px solid #dee2e6'
+                    }}
+                    title={inputField.country_of_origin}
+                  />
                 : ' '
               }
             </Col>
