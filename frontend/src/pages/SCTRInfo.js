@@ -2,11 +2,13 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useEffect, useState, Fragment } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Col, Row, Container, Button } from 'react-bootstrap'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import { toReadable } from '../utils/Utilities'
+import ReactCountryFlag from 'react-country-flag'
+import countryList from 'react-select-country-list'
 
 const SCTRInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
@@ -186,16 +188,19 @@ const SCTRInfo = () => {
 
         <Row className='mt-4'>
           <Col className='ps-4'>
-            <p>Fraction of COGS</p>
+            <p className="text-center">Fraction of COGS</p>
           </Col>
           <Col className='ps-4'>
-            <p>name</p>
+            <p className="text-center">Short Description</p>
           </Col>
           <Col className='ps-4'>
-            <p>Component type (Company Name & External SKU)</p>
+            <p className="text-center">Component type (Company Name & External SKU)</p>
           </Col>
           <Col className='ps-4'>
-            <p>Country of origin</p>
+            <p className="text-center">Country of origin</p>
+          </Col>
+          <Col className='ps-4'>
+            <p className="text-center">Country flag</p>
           </Col>
         </Row>
 
@@ -212,6 +217,18 @@ const SCTRInfo = () => {
           </Col>
 
           <Col><p>{component.country_of_origin}</p></Col>
+          <Col className='d-flex align-items-center justify-content-center'>
+            <ReactCountryFlag
+              countryCode={countryList().getValue(component.country_of_origin)}
+              svg
+              style={{
+                width: '6.6em',
+                height: '5em',
+                border: '1px solid #dee2e6'
+              }}
+              title={countryList().getValue(component.country_of_origin)}
+            />
+          </Col>
         </Row>
         ))}
 

@@ -1,3 +1,8 @@
 /*
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
+@media screen and (max-width: 992px) {
+  html {
+    font-size: calc(0.2em + 1vw);
+  }
+}

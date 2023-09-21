@@ -8,6 +8,7 @@ import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router'
 import countryList from 'react-select-country-list'
 import { Typeahead } from 'react-bootstrap-typeahead'
+import ReactCountryFlag from 'react-country-flag'
 
 const SCTRForm = () => {
   // authTokens are for sending request to the backend
@@ -228,18 +229,21 @@ const SCTRForm = () => {
 
       <p>COGS: {calculateCOGS()}%</p>
 
-      <Row>
+      <Row className='mt-4'>
         <Col className='ps-4'>
-          <p>Fraction of COGS</p>
+          <p className="text-center">Fraction of COGS</p>
         </Col>
         <Col className='ps-4'>
-          <p>Short Description</p>
+          <p className="text-center">Short Description</p>
         </Col>
         <Col className='ps-4'>
-          <p>Component type</p>
+          <p className="text-center">Component type (Company Name & External SKU)</p>
         </Col>
         <Col className='ps-4'>
-          <p>External SKU and Country of Origin</p>
+          <p className="text-center">Country of origin</p>
+        </Col>
+        <Col className='ps-4'>
+          <p className="text-center">Country flag</p>
         </Col>
       </Row>
 
@@ -319,6 +323,21 @@ const SCTRForm = () => {
                 </>
                 : ' '
               }
+          </Col>
+          <Col className='d-flex align-items-center justify-content-center'>
+            { inputField.country_of_origin
+              ? <ReactCountryFlag
+                  countryCode={inputField.country_of_origin}
+                  svg
+                  style={{
+                    width: '6.6em',
+                    height: '5em',
+                    border: '1px solid #dee2e6'
+                  }}
+                  title={inputField.country_of_origin}
+                />
+              : ' '
+            }
           </Col>
           <Container>
             <Button onClick={() => handleAddFields()} className='me-2'>
