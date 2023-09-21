@@ -10,7 +10,6 @@ services:
       - FRONTEND=http://frontend:3000
       - BACKEND=http://backend:8000
       - SENDGRID_HOST=http://sendgrid-mock:3000
-      - DB_URI=postgresql://postgres:postgres@db-test:5432/postgres
     depends_on:
       backend:
         condition: service_healthy

@@ -32,7 +32,7 @@ def get_emails(email: str) -> list():
 
 
 def init_client() -> dict:
-    """Creates a user in the project and returns its info and auth tokens."""
+    """Creates a user in the project and returns its info and initial tokens."""
     data = {
         "email": "nazar@gmail.com",
         "password": "1234",
@@ -56,6 +56,7 @@ def init_client() -> dict:
 
     text = emails[0]["content"][0]["value"]
 
+    # Compiles activation link that can be used to make a request to the backend
     regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
     link = os.environ["BACKEND"] + regex.search(text).group(1).replace(
         "/activated", "/api/activate"

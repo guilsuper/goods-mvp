@@ -251,6 +251,7 @@ class SCTRCreateGetSerializer(ModelSerializer):
 class SCTRDraftSerializer(ModelSerializer):
     """SCTR creating draft serilizer."""
 
+    id = IntegerField(read_only=True)
     components = SourceComponentDraftSerializer(many=True)
     marketing_name = CharField(max_length=500, allow_blank=True, required=False)
 
@@ -259,6 +260,7 @@ class SCTRDraftSerializer(ModelSerializer):
 
         model = SCTR
         fields = (
+            "id",
             "unique_identifier_type",
             "unique_identifier",
             "marketing_name",
