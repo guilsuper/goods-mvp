@@ -158,7 +158,7 @@ const SCTRInfo = () => {
 
   return (
     <Container>
-      <h3 className='text-center'>Create Origin Report</h3>
+      <h3 className='text-center'>Origin Report</h3>
       <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
         <Row className='text-secondary'><p>Identifier Type</p></Row>
         <Row><p>{sctr.unique_identifier_type}</p></Row>
