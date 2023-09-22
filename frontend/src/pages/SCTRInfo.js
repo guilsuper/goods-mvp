@@ -160,15 +160,15 @@ const SCTRInfo = () => {
 
   return (
     <Container>
-      <h3 className='text-center'>SCTR information</h3>
+      <h3 className='text-center'>Origin Report</h3>
       <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
-        <Row className='text-secondary'><p>Unique identifier</p></Row>
-        <Row><p>{sctr.unique_identifier}</p></Row>
-
-        <Row className='text-secondary'><p>Unique identifier type</p></Row>
+        <Row className='text-secondary'><p>Identifier Type</p></Row>
         <Row><p>{sctr.unique_identifier_type}</p></Row>
 
-        <Row className='text-secondary'><p>Marketing name</p></Row>
+        <Row className='text-secondary'><p>Identifier</p></Row>
+        <Row><p>{sctr.unique_identifier}</p></Row>
+
+        <Row className='text-secondary'><p>Short Description</p></Row>
         <Row><p>{sctr.marketing_name}</p></Row>
 
         {
@@ -191,7 +191,7 @@ const SCTRInfo = () => {
             <p className="text-center">Fraction of COGS</p>
           </Col>
           <Col className='ps-4'>
-            <p className="text-center">Marketing name</p>
+            <p className="text-center">Short Description</p>
           </Col>
           <Col className='ps-4'>
             <p className="text-center">Component type (Company Name & External SKU)</p>

@@ -381,25 +381,25 @@ const EditSCTRForm = () => {
   return (
     <FormContainer>
       <Form onSubmit={submitHandler}>
-        <Form.Group className="mb-3" controlId="unique_identifier">
-          <Form.Label>Unique identifier</Form.Label>
-          <Form.Control type="text" placeholder={sctr.unique_identifier} />
-        </Form.Group>
-
         <Form.Group className="mb-3">
-          <Form.Label>Unique identifier type</Form.Label>
+          <Form.Label>Identifier type</Form.Label>
           <Form.Select
             aria-label="Select type"
             id="unique_identifier_type_str"
             value={sctr.unique_identifier_type}
           >
             <option value="SKU">SKU</option>
-            <option value="GNIT">GNIT</option>
+            <option value="GTIN">GTIN</option>
           </Form.Select>
         </Form.Group>
 
+        <Form.Group className="mb-3" controlId="unique_identifier">
+          <Form.Label>Identifier</Form.Label>
+          <Form.Control type="text" placeholder={sctr.unique_identifier} />
+        </Form.Group>
+
         <Form.Group className="mb-3" controlId="marketing_name">
-          <Form.Label>Marketing name</Form.Label>
+          <Form.Label>Short description</Form.Label>
           <Form.Control type="text" placeholder={sctr.marketing_name} />
         </Form.Group>
 
@@ -410,7 +410,7 @@ const EditSCTRForm = () => {
             <p className="text-center">Fraction of COGS</p>
           </Col>
           <Col className='ps-4'>
-            <p className="text-center">Marketing name</p>
+            <p className="text-center">Short Description</p>
           </Col>
           <Col className='ps-4'>
             <p className="text-center">Component type (Company Name & External SKU)</p>
