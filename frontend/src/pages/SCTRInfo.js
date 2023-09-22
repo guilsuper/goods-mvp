@@ -9,11 +9,14 @@ import AuthContext from '../context/AuthContext'
 import { toReadable } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
 import countryList from 'react-select-country-list'
+import GetQRCode from '../components/QRCode'
 
 const SCTRInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
   const { sctrIdentifier } = useParams()
   const [sctr, setSCTR] = useState([])
+
+  const qrcodeURL = window.location.href
 
   const navigate = useNavigate()
 
@@ -183,7 +186,14 @@ const SCTRInfo = () => {
             </>
               : ' '
         }
-
+        {
+          sctr.state === 'PUBLISHED'
+            ? <>
+                <Row className='text-secondary'><p>QR Code</p></Row>
+                <Row><GetQRCode path={qrcodeURL} /></Row>
+              </>
+            : ' '
+        }
         <p className='text-secondary'>COGS: {calculateCOGS()}%</p>
 
         <Row className='mt-4'>
