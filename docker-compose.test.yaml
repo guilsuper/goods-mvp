@@ -8,6 +8,7 @@ services:
       - ./test-results:/test-results
     environment:
       - FRONTEND=http://frontend:3000
+      - BACKEND=http://backend:8000
       - SENDGRID_HOST=http://sendgrid-mock:3000
     depends_on:
       backend:

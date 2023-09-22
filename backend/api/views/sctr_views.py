@@ -55,6 +55,15 @@ class SCTRCreateDraftView(CreateAPIView):
     serializer_class = SCTRDraftSerializer
     permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        """Returns instance with id after creation."""
+        instance = serializer.save()
+
+        # Serialize the instance with the id field
+        serialized_data = self.serializer_class(instance).data
+
+        return Response(serialized_data, status=status.HTTP_201_CREATED)
+
 
 class SCTRPublishedListView(ListAPIView):
     """Gets published SCTRs only and provides filtering."""
