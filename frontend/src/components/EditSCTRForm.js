@@ -463,16 +463,7 @@ const EditSCTRForm = () => {
                 <Form.Select
                   id="country_of_origin"
                   onChange={event => handleInputChange(index, event)}
-                  // Value should be a country code
-                  // But the Django response contains a full name
-                  // After a user uses a select, it turns to a code by react package
-                  // It is import to handle both
-                  // in future we probably will make Django to return codes
-                  value={
-                    inputField.country_of_origin.length !== 2
-                      ? countryList().getValue(inputField.country_of_origin)
-                      : inputField.country_of_origin
-                  }
+                  value={inputField.country_of_origin}
                 >
                   {options.map((option, i) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -509,13 +500,7 @@ const EditSCTRForm = () => {
             <Col className='d-flex align-items-center justify-content-center'>
               { inputField.country_of_origin
                 ? <ReactCountryFlag
-                    // Django response has a full name, but the select field is using codes as values
-                    // This step will translate name to a code
-                    countryCode={
-                      inputField.country_of_origin.length !== 2
-                        ? countryList().getValue(inputField.country_of_origin)
-                        : inputField.country_of_origin
-                    }
+                    countryCode={inputField.country_of_origin}
                     svg
                     style={{
                       width: '6.6em',

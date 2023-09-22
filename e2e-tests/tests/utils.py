@@ -1,5 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 import os
+import re
+import time
 
 import requests
 
@@ -27,3 +29,45 @@ def get_emails(email: str) -> list():
     result.raise_for_status()
 
     return result.json()
+
+
+def init_client() -> dict:
+    """Creates a user in the project and returns its info and initial tokens."""
+    data = {
+        "email": "nazar@gmail.com",
+        "password": "1234",
+        "website": "aaaa.com",
+        "name": "aaaa",
+        "jurisdiction": "bruh"
+    }
+    user = requests.post(
+        os.environ["BACKEND"] + "/api/admin_and_company/create/",
+        data=data
+    ).json()
+
+    # Wait for email to get
+    for _ in range(10):
+        time.sleep(1)
+        emails = get_emails(user["email"])
+
+        # If there are messages in sendgird
+        if len(emails) > 0:
+            break
+
+    text = emails[0]["content"][0]["value"]
+
+    # Compiles activation link that can be used to make a request to the backend
+    regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
+    link = os.environ["BACKEND"] + regex.search(text).group(1).replace(
+        "/activated", "/api/activate"
+    )
+    requests.get(link)
+
+    user["tokens"] = requests.post(
+        os.environ["BACKEND"] + "/api/token/",
+        data={
+            "email": data["email"],
+            "password": data["password"]
+        }
+    ).json()
+    return user

@@ -153,3 +153,6 @@ dmypy.json
 # Ignore local Postgres data folder
 *~
 data/
+
+# Ignore GCP credentials
+gcp-credentials.json

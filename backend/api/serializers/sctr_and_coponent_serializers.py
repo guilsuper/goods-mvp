@@ -54,7 +54,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
     # To make it required
     fraction_cogs = FloatField(required=True)
     # To make it required
-    country_of_origin = CountryField(required=True, name_only=True)
+    country_of_origin = CountryField(required=True)
     # To allow blank if MADE_IN_HOUSE
     # Additional validation in validate method
     external_sku = CharField(max_length=25, allow_blank=True)
@@ -115,7 +115,7 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
         read_only=True
     )
     # To display a country full name instead of a code
-    country_of_origin = CountryField(required=False, name_only=True, allow_blank=True)
+    country_of_origin = CountryField(required=False, allow_blank=True)
     # To allow these fields be blank
     external_sku = CharField(max_length=25, required=False, allow_blank=True)
     company_name = CharField(max_length=200, required=False, allow_blank=True)
@@ -251,6 +251,7 @@ class SCTRCreateGetSerializer(ModelSerializer):
 class SCTRDraftSerializer(ModelSerializer):
     """SCTR creating draft serilizer."""
 
+    id = IntegerField(read_only=True)
     components = SourceComponentDraftSerializer(many=True)
     marketing_name = CharField(max_length=500, allow_blank=True, required=False)
 
@@ -259,6 +260,7 @@ class SCTRDraftSerializer(ModelSerializer):
 
         model = SCTR
         fields = (
+            "id",
             "unique_identifier_type",
             "unique_identifier",
             "marketing_name",

@@ -226,17 +226,17 @@ const SCTRInfo = () => {
             <Row><p>{component.external_sku}</p></Row>
           </Col>
 
-          <Col><p>{component.country_of_origin}</p></Col>
+          <Col><p>{countryList().getLabel(component.country_of_origin)}</p></Col>
           <Col className='d-flex align-items-center justify-content-center'>
             <ReactCountryFlag
-              countryCode={countryList().getValue(component.country_of_origin)}
+              countryCode={component.country_of_origin}
               svg
               style={{
                 width: '6.6em',
                 height: '5em',
                 border: '1px solid #dee2e6'
               }}
-              title={countryList().getValue(component.country_of_origin)}
+              title={component.country_of_origin}
             />
           </Col>
         </Row>
