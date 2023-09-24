@@ -8,6 +8,7 @@ import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router'
 import countryList from 'react-select-country-list'
 import { Typeahead } from 'react-bootstrap-typeahead'
+import ReactCountryFlag from 'react-country-flag'
 
 const SCTRForm = () => {
   // authTokens are for sending request to the backend
@@ -208,38 +209,41 @@ const SCTRForm = () => {
 
   return (
     <Form onSubmit={submitHandler}>
-      <Form.Group className="mb-3" controlId="unique_identifier">
-        <Form.Label>Identifier</Form.Label>
-        <Form.Control type="text" placeholder="Enter identifier" />
-      </Form.Group>
-
       <Form.Group className="mb-3">
-        <Form.Label>Identifier type</Form.Label>
+        <Form.Label>Identifier Type</Form.Label>
         <Form.Select aria-label="Select type" id="unique_identifier_type_str">
           <option value="SKU">SKU</option>
-          <option value="GNIT">GNIT</option>
+          <option value="GTIN">GTIN</option>
         </Form.Select>
       </Form.Group>
 
+      <Form.Group className="mb-3" controlId="unique_identifier">
+        <Form.Label>Identifier</Form.Label>
+        <Form.Control type="text" placeholder="Enter SKU or GTIN (unique identifier)" />
+      </Form.Group>
+
       <Form.Group className="mb-3" controlId="marketing_name">
-        <Form.Label>Marketing name</Form.Label>
-        <Form.Control type="text" placeholder="Enter marketing name" />
+        <Form.Label>Short Description</Form.Label>
+        <Form.Control type="text" placeholder="Enter short description" />
       </Form.Group>
 
       <p>COGS: {calculateCOGS()}%</p>
 
-      <Row>
+      <Row className='mt-4'>
         <Col className='ps-4'>
-          <p>Fraction COGS</p>
+          <p className="text-center">Fraction of COGS</p>
         </Col>
         <Col className='ps-4'>
-          <p>Marketing name</p>
+          <p className="text-center">Short Description</p>
         </Col>
         <Col className='ps-4'>
-          <p>Component type</p>
+          <p className="text-center">Component type (Company Name & External SKU)</p>
         </Col>
         <Col className='ps-4'>
-          <p>External SKU and Country of Origin</p>
+          <p className="text-center">Country of origin</p>
+        </Col>
+        <Col className='ps-4'>
+          <p className="text-center">Country flag</p>
         </Col>
       </Row>
 
@@ -259,7 +263,7 @@ const SCTRForm = () => {
             <Form.Group className="mb-3" controlId="marketing_name">
               <Form.Control
                 type="text"
-                placeholder="Enter marketing name"
+                placeholder="Enter short description"
                 value={inputField.marketing_name}
                 onChange={event => handleInputChange(index, event)}
               />
@@ -319,6 +323,21 @@ const SCTRForm = () => {
                 </>
                 : ' '
               }
+          </Col>
+          <Col className='d-flex align-items-center justify-content-center'>
+            { inputField.country_of_origin
+              ? <ReactCountryFlag
+                  countryCode={inputField.country_of_origin}
+                  svg
+                  style={{
+                    width: '6.6em',
+                    height: '5em',
+                    border: '1px solid #dee2e6'
+                  }}
+                  title={inputField.country_of_origin}
+                />
+              : ' '
+            }
           </Col>
           <Container>
             <Button onClick={() => handleAddFields()} className='me-2'>
