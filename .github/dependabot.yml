@@ -20,6 +20,9 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      patch:
+        update-types:
+          - "patch"
 
   # Maintain dependencies for pip
   - package-ecosystem: "pip"
@@ -33,6 +36,10 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    groups:
+      patch:
+        update-types:
+          - "patch"
     open-pull-requests-limit: 10
 
   # Maintain dependencies for GitHub Actions
@@ -66,6 +73,11 @@ updates:
       - "bakerkj"
     reviewers:
       - "bakerkj"
+    groups:
+      minor:
+        update-types:
+          - "minor"
+          - "patch"
     open-pull-requests-limit: 10
 
   # Maintain dependencies for docker
