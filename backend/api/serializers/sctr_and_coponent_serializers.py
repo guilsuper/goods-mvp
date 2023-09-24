@@ -1,19 +1,19 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module with serializers."""
+from api.models import Country
 from api.models import SCTR
 from api.models import SCTR_ID_TYPES
 from api.models import SCTR_STATES
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
 from api.serializers import CompanySerializer
-from django_countries.serializer_fields import CountryField
-from django_countries.serializers import CountryFieldMixin
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import ChoiceField
 from rest_framework.serializers import FloatField
 from rest_framework.serializers import IntegerField
 from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import PrimaryKeyRelatedField
 from rest_framework.serializers import ValidationError
 
 
@@ -41,7 +41,7 @@ class SCTRStateToString(ChoiceField):
         return SCTR_STATES(obj).name
 
 
-class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
+class SourceComponentSerializer(ModelSerializer):
     """Source Component create and get serializer."""
 
     id = IntegerField(read_only=True)
@@ -54,7 +54,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
     # To make it required
     fraction_cogs = FloatField(required=True)
     # To make it required
-    country_of_origin = CountryField(required=True)
+    country_of_origin = PrimaryKeyRelatedField(required=True, queryset=Country.objects.all())
     # To allow blank if MADE_IN_HOUSE
     # Additional validation in validate method
     external_sku = CharField(max_length=25, allow_blank=True)
@@ -99,7 +99,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
         return super().create(validated_data)
 
 
-class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
+class SourceComponentDraftSerializer(ModelSerializer):
     """Source Component 'create a draft' and update serializer."""
 
     id = IntegerField(read_only=True)
@@ -115,7 +115,7 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
         read_only=True
     )
     # To display a country full name instead of a code
-    country_of_origin = CountryField(required=False, allow_blank=True)
+    country_of_origin = PrimaryKeyRelatedField(required=False, queryset=Country.objects.all())
     # To allow these fields be blank
     external_sku = CharField(max_length=25, required=False, allow_blank=True)
     company_name = CharField(max_length=200, required=False, allow_blank=True)
