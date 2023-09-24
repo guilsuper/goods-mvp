@@ -1,6 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains SCTR and Administrator factories."""
 import factory
+from api.models import Country
 from api.models import SCTR_ID_TYPES
 from api.models import SCTR_STATES
 from api.models import SOURCE_COMPONENT_TYPE
@@ -108,7 +109,7 @@ class ComponentFactory(DjangoModelFactory):
     fraction_cogs = 100
     marketing_name = factory.Sequence(lambda n: str(n) * 8)
     component_type = SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED
-    country_of_origin = "USA"
+    country_of_origin = Country("US")
     external_sku = factory.Sequence(lambda n: int(str(n) * 8))
     parent_sctr = factory.SubFactory(SCTRFactory)
     company_name = factory.Sequence(lambda n: str(n) * 8)
