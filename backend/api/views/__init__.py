@@ -1,7 +1,6 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Contains all the views."""
 from api.views.company_views import CompanyUpdateRetrieveView
-from api.views.country_views import CountryView
 from api.views.sctr_views import ComponentCreateView
 from api.views.sctr_views import ComponentPatchRetrieveDeleteView
 from api.views.sctr_views import SCTRCompanyListView
@@ -43,6 +42,5 @@ __all__ = [
     "PMCreateView",
     "PMListView",
     "PMRetrieveUpdateDestroyView",
-    "SelfRetrieveUpdateDestroyView",
-    "CountryView"
+    "SelfRetrieveUpdateDestroyView"
 ]

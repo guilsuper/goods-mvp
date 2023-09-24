@@ -4,7 +4,6 @@ from api.views import ActivationView
 from api.views import CompanyUpdateRetrieveView
 from api.views import ComponentCreateView
 from api.views import ComponentPatchRetrieveDeleteView
-from api.views import CountryView
 from api.views import CreateAdministratorAndCompanyView
 from api.views import CreateAdministratorView
 from api.views import PMCreateView
@@ -112,12 +111,6 @@ urlpatterns = [
         "company/patch_retrieve/<slug:slug>/",
         CompanyUpdateRetrieveView.as_view(),
         name="company-patch-retrieve"
-    ),
-
-    path(
-        "country/list/",
-        CountryView.as_view(),
-        name="country-list"
     ),
 
     path("token/", TokenObtainPairView.as_view(), name="token-obtain-pair"),

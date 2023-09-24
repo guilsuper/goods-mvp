@@ -2,7 +2,6 @@
 """Contains all the views."""
 from api.serializers.company_serializers import CompanyRetrieveSerializer
 from api.serializers.company_serializers import CompanySerializer
-from api.serializers.country_serializers import CountrySerializer
 from api.serializers.sctr_and_coponent_serializers import SCTRCreateGetSerializer
 from api.serializers.sctr_and_coponent_serializers import SCTRDraftSerializer
 from api.serializers.sctr_and_coponent_serializers import SCTRPublishValidatorSerializer
@@ -24,5 +23,4 @@ __all__ = [
     "AdministratorSerializer",
     "GroupSerializer",
     "PMSerializer",
-    "CountrySerializer"
 ]
