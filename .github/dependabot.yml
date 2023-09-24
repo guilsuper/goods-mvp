@@ -96,7 +96,7 @@ updates:
 
   # Maintain dependencies for terraform
   - package-ecosystem: "terraform"
-    directory: "/backend"
+    directory: "/terraform"
     schedule:
       interval: "weekly"
     commit-message:
