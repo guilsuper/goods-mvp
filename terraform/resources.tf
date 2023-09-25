@@ -280,7 +280,7 @@ resource "random_password" "django_secret_key" {
 resource "google_secret_manager_secret" "secret_django_secret_key" {
   secret_id = "django-secret-key"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -304,7 +304,7 @@ resource "google_secret_manager_secret_iam_binding" "django_secret_key_account_b
 resource "google_secret_manager_secret" "secret_django_database_url" {
   secret_id = "django-database-url"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -329,7 +329,7 @@ resource "google_secret_manager_secret_iam_binding" "django_database_url_account
 resource "google_secret_manager_secret" "secret_django_database_password" {
   secret_id = "django-database-password"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -354,7 +354,7 @@ resource "google_secret_manager_secret_iam_binding" "django_database_password_ac
 resource "google_secret_manager_secret" "secret_django_gs_bucket_name" {
   secret_id = "django-gs-bucket-name"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -385,7 +385,7 @@ resource "random_password" "django_superuser_password" {
 resource "google_secret_manager_secret" "secret_django_superuser_password" {
   secret_id = "django-superuser-password"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -409,7 +409,7 @@ resource "google_secret_manager_secret_iam_binding" "django_superuser_password_s
 resource "google_secret_manager_secret" "secret_sendgrid_api_key" {
   secret_id = "sendgrid-api-key"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
