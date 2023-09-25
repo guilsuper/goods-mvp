@@ -18,7 +18,7 @@ djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.0
 exceptiongroup==1.1.3
 factory-boy==3.3.0
-Faker==19.6.1
+Faker==19.6.2
 filelock==3.12.4
 flake8==6.1.0
 flake8-docstrings==1.7.0
@@ -27,8 +27,8 @@ flake8-quotes==3.3.2
 google-api-core==2.11.1
 google-auth==2.23.0
 google-cloud-core==2.3.3
-google-cloud-secret-manager==2.16.3
-google-cloud-storage==2.10.0
+google-cloud-secret-manager==2.16.4
+google-cloud-storage==2.11.0
 google-crc32c==1.5.0
 google-resumable-media==2.6.0
 googleapis-common-protos==1.60.0
@@ -41,7 +41,7 @@ iniconfig==2.0.0
 mccabe==0.7.0
 nodeenv==1.8.0
 packaging==23.1
-phonenumbers==8.13.20
+phonenumbers==8.13.21
 platformdirs==3.10.0
 pluggy==1.3.0
 pre-commit==3.4.0
