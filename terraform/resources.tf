@@ -73,6 +73,10 @@ resource "google_compute_url_map" "url_map" {
       paths   = ["/api/*"]
       service = google_compute_backend_service.backend_service.self_link
     }
+    path_rule {
+      paths   = ["/media/*"]
+      service = google_compute_backend_bucket.media_files_site.self_link
+    }
   }
 }
 
@@ -269,6 +273,48 @@ resource "google_compute_backend_bucket" "static_site" {
   bucket_name = google_storage_bucket.google_storage_bucket_static_site.name
   enable_cdn  = false
 }
+
+#########################################################################################################################
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
+
+# for now ignore this tfsec warning
+# tfsec:ignore:google-storage-bucket-encryption-customer-key
+resource "google_storage_bucket" "media_files_site" {
+  name     = "fwc-media-files"
+  location = var.gcp_region
+
+
+  storage_class = "STANDARD"
+  force_destroy = true
+
+  uniform_bucket_level_access = true
+
+  cors {
+    origin          = ["https://${var.fqdn}"]
+    method          = ["GET", "HEAD", ] # "PUT", "POST", "DELETE"
+    response_header = ["*"]
+    max_age_seconds = 60
+  }
+}
+
+# grant read access to allUsers (ie the internet)
+resource "google_storage_bucket_iam_member" "media_member" {
+  bucket = google_storage_bucket.media_files_site.name
+  role   = "roles/storage.objectViewer"
+
+  # we intentionally want public access to this bucket
+  # tfsec:ignore:google-storage-no-public-access
+  member = "allUsers"
+}
+
+# this is what connects the load balancer to the buckets static content
+resource "google_compute_backend_bucket" "media_files_site" {
+  name        = "fwc-media-files"
+  description = "Contains media resources for app"
+  bucket_name = google_storage_bucket.media_files_site.name
+  enable_cdn  = false
+}
+
 
 #########################################################################################################################
 # create django secret key
