@@ -38,5 +38,6 @@ variable "gcp_service_list" {
     "artifactregistry.googleapis.com",
     "compute.googleapis.com",
     "clouddeploy.googleapis.com",
+    "cloudkms.googleapis.com",
   ]
 }

@@ -115,6 +115,12 @@ With all of the above in place the predeploy script:
    match the table layout expected by this particular version of the
    Django backend.
 
+## How to run terraform
+
+```bash
+GOOGLE_APPLICATION_CREDENTIALS=./credientials.json terraform plan
+```
+
 ## Notes
 
 - [Overview of Cloud Deploy](https://cloud.google.com/deploy/docs/overview#the_delivery_process)
