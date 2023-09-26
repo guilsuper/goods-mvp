@@ -7,6 +7,7 @@ from api.models import SCTR_STATES
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
 from api.serializers import CompanySerializer
+from api.serializers import CountrySerializer
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import ChoiceField
@@ -55,6 +56,7 @@ class SourceComponentSerializer(ModelSerializer):
     fraction_cogs = FloatField(required=True)
     # To make it required
     country_of_origin = PrimaryKeyRelatedField(required=True, queryset=Country.objects.all())
+    country_of_origin_info = CountrySerializer(source="country_of_origin", read_only=True)
     # To allow blank if MADE_IN_HOUSE
     # Additional validation in validate method
     external_sku = CharField(max_length=25, allow_blank=True)
@@ -64,7 +66,17 @@ class SourceComponentSerializer(ModelSerializer):
         """Metaclass for the SourceComponentSerializer."""
 
         model = SourceComponent
-        exclude = ("parent_sctr", )
+        # exclude = ("parent_sctr", )
+        fields = ["id",
+                  "marketing_name",
+                  "component_type_str",
+                  "component_type",
+                  "fraction_cogs",
+                  "country_of_origin",
+                  "country_of_origin_info",
+                  "external_sku",
+                  "company_name",
+                  ]
 
     def validate_fraction_cogs(self, value):
         """Check if greater than 0."""
