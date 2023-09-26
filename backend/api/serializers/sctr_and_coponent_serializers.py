@@ -66,17 +66,7 @@ class SourceComponentSerializer(ModelSerializer):
         """Metaclass for the SourceComponentSerializer."""
 
         model = SourceComponent
-        # exclude = ("parent_sctr", )
-        fields = ["id",
-                  "marketing_name",
-                  "component_type_str",
-                  "component_type",
-                  "fraction_cogs",
-                  "country_of_origin",
-                  "country_of_origin_info",
-                  "external_sku",
-                  "company_name",
-                  ]
+        exclude = ("parent_sctr", )
 
     def validate_fraction_cogs(self, value):
         """Check if greater than 0."""
