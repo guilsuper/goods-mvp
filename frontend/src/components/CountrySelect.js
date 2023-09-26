@@ -6,12 +6,11 @@ import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
 
-const CountrySelect = ({ id, onChange, value, placeholder }) => {
+const CountrySelect = ({ id, onChange, value }) => {
   CountrySelect.propTypes = {
     id: PropTypes.string,
     onChange: PropTypes.func,
-    value: PropTypes.string,
-    placeholder: PropTypes.string
+    value: PropTypes.string
   }
 
   // Are constant values that represents all countries
@@ -40,7 +39,6 @@ const CountrySelect = ({ id, onChange, value, placeholder }) => {
     <Form.Select
       aria-label="Select country"
       id={id}
-      placeholder={placeholder}
       onChange={onChange}
       value={value}
     >

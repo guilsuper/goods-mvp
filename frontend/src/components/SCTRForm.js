@@ -283,10 +283,11 @@ const SCTRForm = () => {
           </Col>
           <Col>
             <Form.Group className="mb-3">
-              <CountrySelect id={'country_of_origin'}
-                             value={inputField.country_of_origin}
-                             onChange={event => handleInputChange(index, event)}
-                             placeholder={'Enter country of origin'} />
+              <CountrySelect
+                id={'country_of_origin'}
+                value={inputField.country_of_origin}
+                onChange={event => handleInputChange(index, event)}
+              />
             </Form.Group>
               { inputField.component_type_str === 'EXTERNALLY_SOURCED'
                 ? <>
