@@ -20,14 +20,13 @@ class Migration(migrations.Migration):
         Country = apps.get_model("api", "Country")
 
         for pyc in list(countries):
-            country = Country(
+            Country.objects.create(
                 alpha_2 = pyc.alpha_2,
                 alpha_3 = pyc.alpha_3,
                 name = pyc.name,
                 official_name = pyc.official_name if hasattr(pyc, 'official_name') else pyc.name,
                 free = is_free_country(pyc.alpha_2)
             )
-            country.save()
 
     def delete_countries(apps, schema_editor):
         Country = apps.get_model("api", "Country")
