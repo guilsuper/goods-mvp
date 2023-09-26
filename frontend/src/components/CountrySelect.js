@@ -2,10 +2,9 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
-import countryList from 'react-select-country-list'
 
 const CountrySelect = ({ id, onChange, value, placeholder }) => {
   CountrySelect.propTypes = {
@@ -14,7 +13,28 @@ const CountrySelect = ({ id, onChange, value, placeholder }) => {
     value: PropTypes.string,
     placeholder: PropTypes.string
   }
-  const options = useMemo(() => countryList().getData(), [])
+
+  // Are constant values that represents all countries
+  const [countries, setCountries] = useState([])
+
+  useEffect(() => {
+    async function getCountries () {
+      let response = ''
+      try {
+        response = await fetch('/api/country/list/')
+
+        if (response.status === 200) {
+          const data = await response.json()
+          setCountries(data)
+        } else {
+          alert('Unexpected response from server')
+        }
+      } catch (error) {
+        alert('Server is not responding')
+      }
+    }
+    getCountries()
+  }, [setCountries])
 
   return (
     <Form.Select
@@ -24,9 +44,10 @@ const CountrySelect = ({ id, onChange, value, placeholder }) => {
       onChange={onChange}
       value={value}
     >
-      {options.map((option, i) => (
-        <option key={option.value} value={option.value}>{option.label}</option>
-      ))}
+      {countries.sort((a, b) => { return a.name > b.name ? 1 : (a.name === b.name ? 0 : -1) })
+        .map((option, i) => (
+        <option key={option.alpha_2} value={option.alpha_2}>{option.name}</option>
+        ))}
     </Form.Select>
   )
 }
