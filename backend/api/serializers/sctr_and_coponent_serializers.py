@@ -67,7 +67,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
         exclude = ("parent_sctr", )
 
     def validate_fraction_cogs(self, value):
-        """Check if greater than 0."""
+        """Validates the COGS, it should be greater than 0 for a published SCTR."""
         if value <= 0:
             raise ValidationError("Should be more then 0")
         return value
@@ -127,7 +127,7 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
         exclude = ("parent_sctr", )
 
     def validate_fraction_cogs(self, value):
-        """Check if greater than 0."""
+        """Validates the COGS, it should be greater or equal to 0 for a draft SCTR."""
         if value < 0:
             raise ValidationError("Should be more or equal to 0")
         return value
