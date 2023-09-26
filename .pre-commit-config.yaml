@@ -2,201 +2,143 @@ repos:
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.5.3
     hooks:
-    - id: remove-crlf
-    - id: forbid-tabs
+      - id: remove-crlf
+      - id: forbid-tabs
 
   - repo: https://github.com/iamthefij/docker-pre-commit
     rev: v3.0.1
     hooks:
-    - id: docker-compose-check
+      - id: docker-compose-check
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
     hooks:
-    - id: no-commit-to-branch
+      - id: no-commit-to-branch
 
-    - id: check-docstring-first
-      name: check docstring is first
-      description: checks a common error of defining a docstring after code.
-      entry: check-docstring-first
-      language: python
-      types: [python]
+      - id: check-docstring-first
 
-    - id: check-executables-have-shebangs
-      name: check that executables have shebangs
-      description: ensures that (non-binary) executables have a shebang.
-      entry: check-executables-have-shebangs
-      language: python
-      types: [text, executable]
-      stages: [commit, push, manual]
+      - id: check-executables-have-shebangs
 
-    - id: check-shebang-scripts-are-executable
-      name: check that scripts with shebangs are executable
-      description: ensures that (non-binary) files with a shebang are executable.
-      entry: check-shebang-scripts-are-executable
-      language: python
-      types: [text]
-      stages: [commit, push, manual]
+      - id: check-shebang-scripts-are-executable
 
-    - id: pretty-format-json
-      name: pretty format json
-      description: sets a standard for formatting json files.
-      entry: pretty-format-json
-      language: python
-      types: [json]
-      exclude: "(frontend/package-lock.json)"
-      args: [--autofix, --no-ensure-ascii, --no-sort-keys]
+      - id: pretty-format-json
+        exclude: "(frontend/package-lock.json)"
+        args: [--autofix, --no-ensure-ascii, --no-sort-keys]
 
-    - id: check-json
-      name: check json
-      description: checks json files for parseable syntax.
-      entry: check-json
-      language: python
-      types: [json]
+      - id: check-json
 
-    - id: check-merge-conflict
-      name: check for merge conflicts
-      description: checks for files that contain merge conflict strings.
-      entry: check-merge-conflict
-      language: python
-      types: [text]
+      - id: check-merge-conflict
 
-    - id: check-yaml
-      name: check yaml
-      description: checks yaml files for parseable syntax.
-      entry: check-yaml
-      language: python
-      types: [yaml]
+      - id: check-yaml
 
-    - id: end-of-file-fixer
-      name: fix end of files
-      description: ensures that a file is either empty, or ends with one newline.
-      entry: end-of-file-fixer
-      language: python
-      types: [text]
-      stages: [commit, push, manual]
+      - id: end-of-file-fixer
 
-    - id: mixed-line-ending
-      name: mixed line ending
-      description: replaces or checks mixed line ending.
-      entry: mixed-line-ending
-      language: python
-      types: [text]
-      args: [ --fix=lf ]
+      - id: mixed-line-ending
+        args: [ --fix=lf ]
 
-    - id: requirements-txt-fixer
-      name: sort requirements.txt
-      description: sorts entries in requirements.txt
-      entry: requirements-txt-fixer
-      language: python
-      files: (requirements|constraints).*\.txt$
+      - id: requirements-txt-fixer
 
-    - id: trailing-whitespace
-      name: trim trailing whitespace
-      description: trims trailing whitespace
-      entry: trailing-whitespace-fixer
-      language: python
-      types: [text]
+      - id: trailing-whitespace
 
-    - id: check-added-large-files
+      - id: check-added-large-files
 
   - repo: https://github.com/pre-commit/mirrors-csslint
     rev: v1.0.5
     hooks:
-    - id: csslint
+      - id: csslint
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.5.3
     hooks:
-    - name: Insert license in comments (.js|.css)
-      id: insert-license
-      files: \.(js|css)$
-      args:
-        - --use-current-year
-        - --comment-style
-        - /*| *| */
-    - name: Insert license in comments (.py)
-      id: insert-license
-      files: \.(py)$
-      exclude: "(backend/api/migrations/)"
-      args:
-        - --use-current-year
-        - --no-extra-eol
-    - name: Insert license in comments (.sh)
-      id: insert-license
-      files: \.(sh)$
-      args:
-        - --use-current-year
+      - name: Insert license in comments (.js|.css)
+        id: insert-license
+        files: \.(js|css)$
+        args:
+          - --use-current-year
+          - --comment-style
+          - /*| *| */
+      - name: Insert license in comments (.py)
+        id: insert-license
+        files: \.(py)$
+        exclude: "(backend/api/migrations/)"
+        args:
+          - --use-current-year
+          - --no-extra-eol
+      - name: Insert license in comments (.sh)
+        id: insert-license
+        files: \.(sh)$
+        args:
+          - --use-current-year
 
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.10.0
     hooks:
-    - id: reorder-python-imports
-      args: [ --py39-plus, ]
-      exclude: "(backend/api/migrations/)"
+      - id: reorder-python-imports
+        args: [ --py39-plus, ]
+        exclude: "(backend/api/migrations/)"
 
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.35.0
     hooks:
-    - id: markdownlint
-      args: [ --fix ]
+      - id: markdownlint
+        args: [ --fix ]
 
   - repo: https://github.com/sirwart/ripsecrets
     rev: v0.1.6
     hooks:
-    - id: ripsecrets
+      - id: ripsecrets
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0
     hooks:
-    - id: detect-secrets
-      exclude: frontend/package.lock.json
+      - id: detect-secrets
+        exclude: frontend/package.lock.json
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
     hooks:
-    - id: codespell
-      exclude: "(frontend/package-lock.json)"
+      - id: codespell
+        exclude: "(frontend/package-lock.json)"
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.26.3
     hooks:
-    - id: check-github-workflows
-    - id: check-dependabot
+      - id: check-github-workflows
+      - id: check-dependabot
 
   - repo: https://github.com/aquasecurity/tfsec.git
     rev: v1.28.1
     hooks:
-    - id: tfsec
+      - id: tfsec
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
-    - id: flake8
-      name: flake8
+      - id: flake8
+        name: flake8
 
-      # Flake doesn't ignore these folders by itself
-      exclude: "(migrations)/.*"
+        # Flake doesn't ignore these folders by itself
+        exclude: "(migrations)/.*"
 
-      additional_dependencies:
-      - flake8-quotes
+        additional_dependencies:
+          - flake8-quotes
 
   - repo: https://github.com/pre-commit/mirrors-eslint
     rev: v8.46.0
     hooks:
-    - id: eslint
-      additional_dependencies:
-      - eslint@8.0.1
-      - eslint-plugin-react@^7.33.1
-      - eslint-config-standard@^17.1.0
-      - eslint-plugin-import@^2.28.0
-      - eslint-plugin-jest@^25.3.0
-      - eslint-plugin-n@^16.0.1
-      - eslint-plugin-promise@^6.1.1
-      - jest@^29.6.4
-      args: [ --fix, --ignore-pattern, node_modules, ]
+      - id: eslint
+        additional_dependencies:
+          - eslint@8.50.0
+          - eslint-config-standard@^17.1.0
+          - eslint-plugin-import@^2.28.1
+          - eslint-plugin-jest@^27.4.0
+          - eslint-plugin-n@^16.1.0
+          - eslint-plugin-promise@^6.1.1
+          - eslint-plugin-react@^7.33.2
+          - jest@^29.6.4
+        args: [ --fix, --ignore-pattern, node_modules, ]
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.82.0
     hooks:
-    - id: terraform_fmt
+      - id: terraform_fmt
