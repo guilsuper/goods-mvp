@@ -2,6 +2,11 @@
 
 from django.db import migrations, models
 from pycountry import countries
+import free_world_countries
+
+def is_free_country(country_code : str):
+    return country_code in free_world_countries.free_world
+
 
 class Migration(migrations.Migration):
     atomic = True
@@ -20,7 +25,8 @@ class Migration(migrations.Migration):
                 alpha_3 = pyc.alpha_3,
                 name = pyc.name,
                 official_name = pyc.official_name if hasattr(pyc, 'official_name') else pyc.name,
-                free = True)
+                free = is_free_country(pyc.alpha_2)
+            )
             country.save()
 
     def delete_countries(apps, schema_editor):
