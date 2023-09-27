@@ -112,12 +112,13 @@ def sctr_create_published() -> Callable:
                 }
             ]
         }
-        sctr = requests.post(
+        response = requests.post(
             os.environ["BACKEND"] + "/api/sctr/create/",
             json=data,
             headers={"Authorization": f"Bearer {_client['tokens']['access']}"}
-        ).json()
-        return sctr
+        )
+        response.raise_for_status()
+        return response.json()
 
     return create
 
@@ -142,11 +143,12 @@ def sctr_create_draft() -> Callable:
                 }
             ]
         }
-        sctr = requests.post(
+        response = requests.post(
             os.environ["BACKEND"] + "/api/sctr/create_draft/",
             json=data,
             headers={"Authorization": f"Bearer {_client['tokens']['access']}"}
-        ).json()
-        return sctr
+        )
+        response.raise_for_status()
+        return response.json()
 
     return create
