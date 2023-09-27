@@ -2,7 +2,6 @@
 """Interface to our country judgments
 
 """
-
 from enum import Enum
 from typing import NamedTuple
 
@@ -20,4 +19,3 @@ class Country(NamedTuple):
     name: str
     user: str
     comment: str
-

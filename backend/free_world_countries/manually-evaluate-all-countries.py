@@ -26,10 +26,10 @@ import json
 import os
 from datetime import datetime
 
-import pycountry
-
 import _freedomhouse as _fh
-from _country_structs import Country, Status
+import pycountry
+from _country_structs import Country
+from _country_structs import Status
 from pkg_resources import resource_filename
 
 override_names = {
@@ -60,7 +60,7 @@ def automatic_default(date, user):
     recs = {}
     for country in pycountry.countries:
 
-        if (country.alpha_2 in _fh.free_iso or 
+        if (country.alpha_2 in _fh.free_iso or
             country.alpha_2 in _fh.partly_free_iso):
             status = Status.Free
         elif country.alpha_2 in _fh.not_free_iso:
@@ -116,10 +116,10 @@ if __name__ == "__main__":
     parser.add_argument("--date", default=datetime.utcnow().strftime("%Y-%m-%d"))
     parser.add_argument("--user", default=os.getlogin())
     args = parser.parse_args()
-    
+
     if args.automatic_default:
         automatic_default(args.date, args.user)
-    
+
     elif args.judge_only_partly:
         judge_only_partly(args.output_file_path, args.date, args.user)
 

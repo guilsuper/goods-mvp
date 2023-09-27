@@ -4,8 +4,8 @@
 """
 import csv
 
-from _country_structs import Country, Status
-
+from _country_structs import Country
+from _country_structs import Status
 from pkg_resources import resource_filename
 
 _statii = list(Status)
@@ -22,4 +22,3 @@ with open(fpath, "r", newline="") as i_fh:
 
         c = Country(*vals)
         countries[c.alpha_2] = c
-
