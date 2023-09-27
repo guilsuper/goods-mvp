@@ -4,11 +4,10 @@
 """
 import csv
 
-from _country_structs import Country
-from _country_structs import Status
 from pkg_resources import resource_filename
 
-_statii = list(Status)
+from ._country_structs import Country
+from ._country_structs import Status
 
 countries = {}
 
