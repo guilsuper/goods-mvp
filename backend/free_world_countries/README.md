@@ -26,6 +26,35 @@ Along the way, we made a few simplifying decisions.  See comments in
 We also needed to standardize the identifiers on country codes from
 ISO 3166.
 
+2023-09-24: the "partly free" list is murky.  For example, Pakistan
+and Turkey are listed as "partly free" by Freedom House.  However,
+established economic elite in these countries control exports such
+that buying from them tends to reinforce non-free practices.
+
+For example, I was just reading the FH report on Pakistan, and as a
+whole the countries exports are likely mostly controlled by the
+established wealthy families that reinforce non-free practices at the
+grassroots level, like indebted labor.  Therefore, as a whole the
+country should go on our not free list.
+
+However, I think there are likely some individual businesses that
+don’t do this.  So, here’s an idea.  If a company is operating such
+that buying from that company reinforces freedom amongst its
+employees, then the company can apply to get free world certified.
+Then, we can help them raise money from donors to sponsor the
+certification that that company is part of the free world even if the
+default for the country says not.
+
+Similarly, a company operating in the free world might be run by
+horrible people such that it gets kicked out of the free world…
+
+
+## The Format.... TODO: explain what we did with _country_structs...
+
+CN,N,v1.0,2023-09-27,China,jrf,
+US,F,v1.0,2023-09-27,United States,jrf,comment
+
+
 ## Data from FreedomHouse.org
 
 Publications are listed here: <https://freedomhouse.org/reports/publication-archives>
