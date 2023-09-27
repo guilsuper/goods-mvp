@@ -29,7 +29,6 @@ import _freedomhouse as _fh
 import pycountry
 from _country_structs import Country
 from _country_structs import Status
-from pkg_resources import resource_filename
 
 override_names = {
     "BO": "Bolivia",  # Plurinational State of
@@ -47,7 +46,7 @@ override_names = {
 }
 
 
-def automatic_default(date, user):
+def automatic_default(output_file_path, date, user):
     """Automatically generating output_file_path combining Freedom
     House's 'free' + 'partly free' to define our 'free'.
 
@@ -76,14 +75,13 @@ def automatic_default(date, user):
             name,
             user, comment)
 
-    fpath = resource_filename(__name__, "_country_list.csv")
-    with open(fpath, "w", newline="") as o_fh:
+    with open(output_file_path, "w", newline="") as o_fh:
         csv_writer = csv.writer(o_fh, quoting=csv.QUOTE_MINIMAL)
         for rec in recs.values():
             vals = list(rec)
             vals[1] = vals[1].value
             csv_writer.writerow(vals)
-    print(f"Done writing {len(recs)} lines to {fpath}")
+    print(f"Done writing {len(recs)} lines to {output_file_path}")
 
 
 def judge_only_partly(output_file_path, date, user):
@@ -115,7 +113,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.automatic_default:
-        automatic_default(args.date, args.user)
+        automatic_default(args.output_file_path, args.date, args.user)
 
     elif args.judge_only_partly:
         judge_only_partly(args.output_file_path, args.date, args.user)
