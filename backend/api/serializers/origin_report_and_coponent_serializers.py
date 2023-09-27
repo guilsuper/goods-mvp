@@ -1,8 +1,8 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module with serializers."""
-from api.models import SCTR
-from api.models import SCTR_ID_TYPES
-from api.models import SCTR_STATES
+from api.models import ORIGIN_REPORT_ID_TYPES
+from api.models import ORIGIN_REPORT_STATES
+from api.models import OriginReport
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
 from api.serializers import CompanySerializer
@@ -30,15 +30,15 @@ class UniqueIdentifierTypeToString(ChoiceField):
 
     def to_representation(self, obj):
         # Convert integer to string
-        return SCTR_ID_TYPES(obj).name
+        return ORIGIN_REPORT_ID_TYPES(obj).name
 
 
-class SCTRStateToString(ChoiceField):
+class OriginReportStateToString(ChoiceField):
     """ChoiceField that converts integer to string representation."""
 
     def to_representation(self, obj):
         # Convert integer to string
-        return SCTR_STATES(obj).name
+        return ORIGIN_REPORT_STATES(obj).name
 
 
 class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
@@ -64,10 +64,10 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
         """Metaclass for the SourceComponentSerializer."""
 
         model = SourceComponent
-        exclude = ("parent_sctr", )
+        exclude = ("parent_origin_report", )
 
     def validate_fraction_cogs(self, value):
-        """Validates the COGS, it should be greater than 0 for a published SCTR."""
+        """Validates the COGS, it should be greater than 0 for a published OriginReport."""
         if value <= 0:
             raise ValidationError("Should be more then 0")
         return value
@@ -75,7 +75,7 @@ class SourceComponentSerializer(CountryFieldMixin, ModelSerializer):
     def validate_component_type_str(self, value):
         """Custom validation to convert string component type to integer."""
         try:
-            # Map the string value to the corresponding integer value from SCTR_ID_TYPES
+            # Map the string value to the corresponding integer value from ORIGIN_REPORT_ID_TYPES
             return SOURCE_COMPONENT_TYPE[value.upper()]
         except KeyError:
             raise ValidationError("Invalid component_type")
@@ -124,10 +124,10 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
         """Metaclass for the SourceComponent draft Serializer."""
 
         model = SourceComponent
-        exclude = ("parent_sctr", )
+        exclude = ("parent_origin_report", )
 
     def validate_fraction_cogs(self, value):
-        """Validates the COGS, it should be greater or equal to 0 for a draft SCTR."""
+        """Validates the COGS, it should be greater or equal to 0 for a draft OriginReport."""
         if value < 0:
             raise ValidationError("Should be more or equal to 0")
         return value
@@ -135,7 +135,7 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
     def validate_component_type_str(self, value):
         """Custom validation to convert string component type to integer."""
         try:
-            # Map the string value to the corresponding integer value from SCTR_ID_TYPES
+            # Map the string value to the corresponding integer value from ORIGIN_REPORT_ID_TYPES
             return SOURCE_COMPONENT_TYPE[value.upper()]
         except KeyError:
             # Set default
@@ -152,8 +152,8 @@ class SourceComponentDraftSerializer(CountryFieldMixin, ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class SCTRCreateGetSerializer(ModelSerializer):
-    """SCTR 'create and publish' and get serilizer."""
+class OriginReportCreateGetSerializer(ModelSerializer):
+    """OriginReport 'create and publish' and get serilizer."""
 
     # To define a list of components in POST request
     components = SourceComponentSerializer(many=True)
@@ -166,18 +166,18 @@ class SCTRCreateGetSerializer(ModelSerializer):
     company = CompanySerializer(read_only=True)
     id = IntegerField(read_only=True)
     version = IntegerField(read_only=True)
-    state = SCTRStateToString(choices=SCTR_STATES.choices(), read_only=True)
+    state = OriginReportStateToString(choices=ORIGIN_REPORT_STATES.choices(), read_only=True)
     cogs = FloatField(read_only=True)
     unique_identifier_type = UniqueIdentifierTypeToString(
-        choices=SCTR_ID_TYPES,
+        choices=ORIGIN_REPORT_ID_TYPES,
         read_only=True
     )
     is_latest_version = BooleanField(read_only=True)
 
     class Meta:
-        """Metaclass for the SCTRCreateSerializer."""
+        """Metaclass for the OriginReportCreateSerializer."""
 
-        model = SCTR
+        model = OriginReport
         fields = (
 
             "unique_identifier_type_str",
@@ -198,8 +198,8 @@ class SCTRCreateGetSerializer(ModelSerializer):
     def validate_unique_identifier_type_str(self, value):
         """Custom validation to convert string identifier type to integer."""
         try:
-            # Map the string value to the corresponding integer value from SCTR_ID_TYPES
-            return SCTR_ID_TYPES[value.upper()]
+            # Map the string value to the corresponding integer value from ORIGIN_REPORT_ID_TYPES
+            return ORIGIN_REPORT_ID_TYPES[value.upper()]
         except KeyError:
             raise ValidationError("Invalid unique_identifier_type")
 
@@ -223,9 +223,9 @@ class SCTRCreateGetSerializer(ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        """Overwritten create method for setting up the SCTR info."""
+        """Overwritten create method for setting up the OriginReport info."""
         # Setup state
-        validated_data["state"] = SCTR_STATES.PUBLISHED
+        validated_data["state"] = ORIGIN_REPORT_STATES.PUBLISHED
         # Setup COGS (they were checked in validation method)
         validated_data["cogs"] = 100
         # Setup unique identifier field from string
@@ -239,26 +239,26 @@ class SCTRCreateGetSerializer(ModelSerializer):
         # Create components separately
         components = validated_data.pop("components")
 
-        sctr = SCTR.objects.create(**validated_data)
+        origin_report = OriginReport.objects.create(**validated_data)
         # Create each component
         for component in components:
             component["component_type"] = component.pop("component_type_str")
-            SourceComponent.objects.create(parent_sctr=sctr, **component)
+            SourceComponent.objects.create(parent_origin_report=origin_report, **component)
 
-        return sctr
+        return origin_report
 
 
-class SCTRDraftSerializer(ModelSerializer):
-    """SCTR creating draft serilizer."""
+class OriginReportDraftSerializer(ModelSerializer):
+    """OriginReport creating draft serilizer."""
 
     id = IntegerField(read_only=True)
     components = SourceComponentDraftSerializer(many=True)
     marketing_name = CharField(max_length=500, allow_blank=True, required=False)
 
     class Meta:
-        """Metaclass for the SCTRDraftSerializer."""
+        """Metaclass for the OriginReportDraftSerializer."""
 
-        model = SCTR
+        model = OriginReport
         fields = (
             "id",
             "unique_identifier_type",
@@ -268,9 +268,9 @@ class SCTRDraftSerializer(ModelSerializer):
         )
 
     def create(self, validated_data):
-        """Overwritten create method for setting up the SCTR info."""
+        """Overwritten create method for setting up the OriginReport info."""
         # Setup state
-        validated_data["state"] = SCTR_STATES.DRAFT
+        validated_data["state"] = ORIGIN_REPORT_STATES.DRAFT
         # Setup cogs, if no components -- set to 0
         validated_data["cogs"] = 0
         # Setup company
@@ -284,32 +284,32 @@ class SCTRDraftSerializer(ModelSerializer):
         if "components" in validated_data:
             components_data = validated_data.pop("components")
 
-        sctr = SCTR.objects.create(**validated_data)
+        origin_report = OriginReport.objects.create(**validated_data)
         # If there are components - update cogs and create components
         if components_data:
-            sctr.cogs = sum([
+            origin_report.cogs = sum([
                 component["fraction_cogs"]
                 for component in components_data
                 if "fraction_cogs" in component and component["fraction_cogs"]
             ])
             # To save COGS update
-            sctr.save()
+            origin_report.save()
             # Create each component
             for component in components_data:
                 if "component_type_str" in component:
                     component["component_type"] = component.pop("component_type_str")
-                SourceComponent.objects.create(parent_sctr=sctr, **component)
+                SourceComponent.objects.create(parent_origin_report=origin_report, **component)
 
-        return sctr
+        return origin_report
 
 
-class SCTRPublishValidatorSerializer(ModelSerializer):
-    """Validates the SCTR before moving it to the published state."""
+class OriginReportPublishValidatorSerializer(ModelSerializer):
+    """Validates the OriginReport before moving it to the published state."""
 
     class Meta:
-        """Meta class for SCTR serializer."""
+        """Meta class for OriginReport serializer."""
 
-        model = SCTR
+        model = OriginReport
         fields = (
             "unique_identifier",
             "marketing_name",

@@ -8,14 +8,14 @@ import { Col, Container, Form, Row, Button } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
 
-const CompanySCTR = () => {
-  const [sctrs, setSCTRs] = useState([])
+const CompanyOriginReport = () => {
+  const [originReports, setOriginReports] = useState([])
   const { user, authTokens } = useContext(AuthContext)
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function getSCTRs () {
+    async function getOriginReports () {
       const config = {
         method: 'GET',
         headers: {
@@ -26,7 +26,7 @@ const CompanySCTR = () => {
       }
       let response = ''
       try {
-        response = await fetch('/api/sctr/get_by_company/', config)
+        response = await fetch('/api/origin_report/get_by_company/', config)
       } catch (error) {
         alert('Server is not responding')
         return
@@ -34,13 +34,13 @@ const CompanySCTR = () => {
       const data = await response.json()
 
       if (response.status === 200) {
-        setSCTRs(data)
+        setOriginReports(data)
       } else {
         alert('Not authenticated or permission denied')
         navigate('/')
       }
     }
-    getSCTRs()
+    getOriginReports()
   }, [user])
 
   const submitHandler = async (event) => {
@@ -71,13 +71,13 @@ const CompanySCTR = () => {
     }
     let response = ''
     try {
-      response = await fetch('/api/sctr/get/' + query, config)
+      response = await fetch('/api/origin_report/get/' + query, config)
     } catch (error) {
       alert('Server is not responding')
       return
     }
     const result = await response.json()
-    setSCTRs(result)
+    setOriginReports(result)
   }
 
   return (
@@ -115,7 +115,7 @@ const CompanySCTR = () => {
               <Button
                 variant="secondary"
                 as={Link}
-                to="/account/sctr/create"
+                to="/account/origin_report/create"
                 className='ms-1'
               >Create</Button>
             </Form>
@@ -123,8 +123,8 @@ const CompanySCTR = () => {
         </Col>
         <Col>
           <Row className="justify-content-md-center">
-            {sctrs.map((sctr, index) => (
-              <ListItem key={index} sctr={sctr}/>
+            {originReports.map((originReport, index) => (
+              <ListItem key={index} originReport={originReport}/>
             ))}
           </Row>
         </Col>
@@ -133,4 +133,4 @@ const CompanySCTR = () => {
   )
 }
 
-export default CompanySCTR
+export default CompanyOriginReport

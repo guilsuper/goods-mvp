@@ -10,7 +10,7 @@ import countryList from 'react-select-country-list'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import ReactCountryFlag from 'react-country-flag'
 
-const SCTRForm = () => {
+const OriginReportForm = () => {
   // authTokens are for sending request to the backend
   const { authTokens } = useContext(AuthContext)
   // all possible countries list
@@ -27,15 +27,15 @@ const SCTRForm = () => {
   const [submitButton, setSubmitButton] = useState([{
     button: ''
   }])
-  // Are constant values that represents all existing published SCTRs
-  const [sctrs, setSCTRs] = useState([])
+  // Are constant values that represents all existing published OriginReports
+  const [originReports, setOriginReports] = useState([])
   // Will change depending on user's input in external_sku and company_name
-  const [availableSCTRs, setAvailableSCTR] = useState([])
+  const [availableOriginReports, setAvailableOriginReport] = useState([])
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function getSCTRs () {
+    async function getOriginReports () {
       const config = {
         method: 'GET',
         headers: {
@@ -45,7 +45,7 @@ const SCTRForm = () => {
       }
       let response = ''
       try {
-        response = await fetch('/api/sctr/get/', config)
+        response = await fetch('/api/origin_report/get/', config)
       } catch (error) {
         alert('Server is not responding')
         return
@@ -53,17 +53,17 @@ const SCTRForm = () => {
       const data = await response.json()
 
       if (response.status === 200) {
-        // Set all available SCTRs for a external sku field
-        setSCTRs(data)
+        // Set all available OriginReports for a external sku field
+        setOriginReports(data)
         // Set available choices that depends on external sku field and company name
-        setAvailableSCTR(data)
+        setAvailableOriginReport(data)
       } else {
         alert('Not authenticated or permission denied')
         navigate('/')
       }
     }
-    getSCTRs()
-  }, [setSCTRs])
+    getOriginReports()
+  }, [setOriginReports])
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -97,9 +97,9 @@ const SCTRForm = () => {
     let response = ''
     try {
       if (submitButton === 'draft') {
-        response = await fetch('/api/sctr/create_draft/', config)
+        response = await fetch('/api/origin_report/create_draft/', config)
       } else {
-        response = await fetch('/api/sctr/create/', config)
+        response = await fetch('/api/origin_report/create/', config)
       }
     } catch (error) {
       alert('Server is not working')
@@ -110,7 +110,7 @@ const SCTRForm = () => {
 
     if (response.status === 201) {
       alert('Successfully created')
-      navigate('/account/sctr')
+      navigate('/account/origin_report')
     } else if (response.status === 400) {
       let message = 'Invalid input data:'
       for (const invalidElement in result) {
@@ -165,14 +165,14 @@ const SCTRForm = () => {
     const values = [...inputFields]
     values[index].external_sku = text
 
-    setAvailableSCTR(sctrs.filter(sctr => sctr.unique_identifier === text))
+    setAvailableOriginReport(originReports.filter(originReport => originReport.unique_identifier === text))
     // When user deletes all characters
     if (!text) {
       // If company name is set
       if (values[index].company_name) {
-        setAvailableSCTR(sctrs.filter(sctr => sctr.company.name === values[index].company_name))
+        setAvailableOriginReport(originReports.filter(originReport => originReport.company.name === values[index].company_name))
       } else {
-        setAvailableSCTR(sctrs)
+        setAvailableOriginReport(originReports)
       }
     }
     setInputFields(values)
@@ -183,14 +183,14 @@ const SCTRForm = () => {
     const values = [...inputFields]
     values[index].company_name = text
 
-    setAvailableSCTR(sctrs.filter(sctr => sctr.company.name === text))
+    setAvailableOriginReport(originReports.filter(originReport => originReport.company.name === text))
     // When user deletes all characters
     if (!text) {
       // If external_sku is set
       if (values[index].external_sku) {
-        setAvailableSCTR(sctrs.filter(sctr => sctr.unique_identifier === values[index].external_sku))
+        setAvailableOriginReport(originReports.filter(originReport => originReport.unique_identifier === values[index].external_sku))
       } else {
-        setAvailableSCTR(sctrs)
+        setAvailableOriginReport(originReports)
       }
     }
     setInputFields(values)
@@ -306,7 +306,7 @@ const SCTRForm = () => {
                         onChange={(text, event) => handleCompanyNameChange(index, text[0], event)}
                         onInputChange={(text, event) => handleCompanyNameChange(index, text, event)}
                         // Get only unique values (company names) and cast to Array to use filter function
-                        options={Array.from(new Set(availableSCTRs.map(sctr => sctr.company.name)))}
+                        options={Array.from(new Set(availableOriginReports.map(originReport => originReport.company.name)))}
                         placeholder="Enter company name"
                       />
                     </Form.Group>
@@ -316,7 +316,7 @@ const SCTRForm = () => {
                         id="external_sku"
                         onChange={(text, event) => handleExternalSKUChange(index, text[0], event)}
                         onInputChange={(text, event) => handleExternalSKUChange(index, text, event)}
-                        options={availableSCTRs.map(sctr => sctr.unique_identifier)}
+                        options={availableOriginReports.map(originReport => originReport.unique_identifier)}
                         placeholder="Enter external sku"
                       />
                     </Form.Group>
@@ -360,4 +360,4 @@ const SCTRForm = () => {
   )
 }
 
-export default SCTRForm
+export default OriginReportForm
