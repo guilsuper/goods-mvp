@@ -8,7 +8,7 @@ class OriginReportFilter(django_filters.FilterSet):
     """FIlter for OriginReport objects."""
 
     class Meta:
-        """Metaclas of the OriginReportFilter."""
+        """Metaclass of the OriginReportFilter."""
 
         model = OriginReport
         fields = {
