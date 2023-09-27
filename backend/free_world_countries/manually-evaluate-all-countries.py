@@ -76,7 +76,7 @@ def automatic_default(output_file_path, date, user):
             user, comment)
 
     with open(output_file_path, "w", newline="") as o_fh:
-        csv_writer = csv.writer(o_fh, quoting=csv.QUOTE_MINIMAL)
+        csv_writer = csv.writer(o_fh, dialect="unix", quoting=csv.QUOTE_MINIMAL)
         for rec in recs.values():
             vals = list(rec)
             vals[1] = vals[1].value
