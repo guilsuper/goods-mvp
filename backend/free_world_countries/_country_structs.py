@@ -11,6 +11,7 @@ class Status(Enum):
     Free = 1
     Undetermined = 2
 
+
 class Country(NamedTuple):
     alpha_2: str
     status: Status

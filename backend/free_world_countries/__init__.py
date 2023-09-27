@@ -17,7 +17,6 @@ with open(fpath, "r", newline="") as i_fh:
     csv_reader = csv.reader(i_fh, quoting=csv.QUOTE_MINIMAL)
     for rec in csv_reader:
         vals = list(rec)
-        #vals[1] = _statii[int(vals[1])]
         vals[1] = Status(int(vals[1]))
 
         c = Country(*vals)

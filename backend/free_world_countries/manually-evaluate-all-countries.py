@@ -22,7 +22,6 @@ have their reports expire shortly after we publish an update.
 
 """
 import csv
-import json
 import os
 from datetime import datetime
 
@@ -59,9 +58,7 @@ def automatic_default(date, user):
 
     recs = {}
     for country in pycountry.countries:
-
-        if (country.alpha_2 in _fh.free_iso or
-            country.alpha_2 in _fh.partly_free_iso):
+        if country.alpha_2 in _fh.free_iso or country.alpha_2 in _fh.partly_free_iso:
             status = Status.Free
         elif country.alpha_2 in _fh.not_free_iso:
             status = Status.NotFree
@@ -94,14 +91,14 @@ def judge_only_partly(output_file_path, date, user):
     requires manual adjudication on all Partly Free.
 
     """
-    with open(output_file_name, "w") as o_fh:
+    with open(output_file_path, "w") as o_fh:
         for a2 in _fh.iso2score:
             if a2 in _fh.free_iso:
                 vote_worthy = 1
             elif a2 in _fh.not_free_iso:
                 vote_worthy = 0
             else:
-                print(f"{iso2name[a2]} is {iso2score[a2]}")
+                print(f"{_fh.iso2name[a2]} is {_fh.iso2score[a2]}")
             print(f"{a2},{vote_worthy},{date},{user}", file=o_fh)
 
 
@@ -123,6 +120,5 @@ if __name__ == "__main__":
     elif args.judge_only_partly:
         judge_only_partly(args.output_file_path, args.date, args.user)
 
-
     else:
-        print(f"Must set either --automatic-default or --judge-only-partly")
+        print("Must set either --automatic-default or --judge-only-partly")
