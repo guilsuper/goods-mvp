@@ -48,12 +48,10 @@ default for the country says not.
 Similarly, a company operating in the free world might be run by
 horrible people such that it gets kicked out of the free world…
 
-
-## The Format.... TODO: explain what we did with _country_structs...
+## The Format.... TODO: explain what we did with _country_structs
 
 CN,N,v1.0,2023-09-27,China,jrf,
 US,F,v1.0,2023-09-27,United States,jrf,comment
-
 
 ## Data from FreedomHouse.org
 
