@@ -196,7 +196,6 @@ class Country(models.Model):
     alpha_2 = models.CharField(max_length=2, primary_key=True)
     alpha_3 = models.CharField(max_length=3, unique=True)
     name = models.CharField(max_length=255, unique=True)
-    official_name = models.CharField(max_length=255, unique=True)
     free = models.BooleanField(null=False)
 
 

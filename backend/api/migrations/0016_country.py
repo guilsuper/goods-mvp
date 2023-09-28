@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("api", "0014_sourcecomponent_company_name"),
+        ("api", "0015_rename_sctr_originreport_and_more"),
     ]
 
     operations = [
@@ -19,7 +19,6 @@ class Migration(migrations.Migration):
                 ),
                 ("alpha_3", models.CharField(max_length=3, unique=True)),
                 ("name", models.CharField(max_length=255, unique=True)),
-                ("official_name", models.CharField(max_length=255, unique=True)),
                 ("free", models.BooleanField()),
             ],
         ),
