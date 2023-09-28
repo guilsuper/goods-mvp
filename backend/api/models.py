@@ -43,13 +43,13 @@ class ChoicesEnum(IntEnum):
 
 
 class ORIGIN_REPORT_ID_TYPES(ChoicesEnum):
-    """Allowed coices for OriginReport unique identifier types."""
+    """Allowed choices for OriginReport unique identifier types."""
     SKU = 1
     GNIT = 2
 
 
 class ORIGIN_REPORT_STATES(ChoicesEnum):
-    """Allowed coices for OriginReport states."""
+    """Allowed choices for OriginReport states."""
 
     DRAFT = 1
     PUBLISHED = 2
