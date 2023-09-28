@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sctr',
             name='unique_identifier_type',
-            field=models.IntegerField(choices=[(1, 'SKU'), (2, 'GNIT')], default=api.models.SCTR_ID_TYPES['SKU']),
+            field=models.IntegerField(choices=[(1, 'SKU'), (2, 'GNIT')], default=api.models.ORIGIN_REPORT_ID_TYPES['SKU']),
         ),
     ]

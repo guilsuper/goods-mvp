@@ -6,23 +6,23 @@ import React, { useState, useEffect, Fragment } from 'react'
 import ListItem from '../components/ListItem'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 
-const SCTRList = () => {
-  const [sctrs, setSCTRs] = useState([])
+const OriginReportList = () => {
+  const [originReports, setOriginReports] = useState([])
 
   useEffect(() => {
-    getSCTRs()
+    getOriginReports()
   }, [])
 
-  const getSCTRs = async () => {
+  const getOriginReports = async () => {
     let response = ''
     try {
-      response = await fetch('/api/sctr/get/')
+      response = await fetch('/api/origin_report/get/')
     } catch (error) {
       alert('Server is not responding')
       return
     }
     const data = await response.json()
-    setSCTRs(data)
+    setOriginReports(data)
   }
 
   const submitHandler = async (event) => {
@@ -53,13 +53,13 @@ const SCTRList = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/sctr/get/' + query, config)
+      response = await fetch('/api/origin_report/get/' + query, config)
     } catch (error) {
       alert('Server is not responding')
       return
     }
     const result = await response.json()
-    setSCTRs(result)
+    setOriginReports(result)
   }
 
   return (
@@ -96,8 +96,8 @@ const SCTRList = () => {
         </Col>
         <Col>
           <Row className="justify-content-md-center">
-            {sctrs.map((sctr, index) => (
-              <ListItem key={index} sctr={sctr}/>
+            {originReports.map((originReport, index) => (
+              <ListItem key={index} originReport={originReport}/>
             ))}
           </Row>
         </Col>
@@ -106,4 +106,4 @@ const SCTRList = () => {
   )
 }
 
-export default SCTRList
+export default OriginReportList

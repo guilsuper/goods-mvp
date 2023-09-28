@@ -9,7 +9,7 @@ import React from 'react'
 
 import './App.css'
 import Header from './components/Header'
-import SCTRList from './pages/SCTRList'
+import OriginReportList from './pages/OriginReportList'
 import Home from './pages/Home'
 import About from './pages/About'
 import Terms from './pages/Terms'
@@ -21,15 +21,15 @@ import AccountInfo from './pages/AccountInfo'
 import { AuthProvider } from './context/AuthContext'
 import EditAccountForm from './components/EditAccountForm'
 import ActivatePage from './pages/ActivatePage'
-import CompanySCTR from './pages/CompanySCTR'
+import CompanyOriginReport from './pages/CompanyOriginReport'
 import CompanyPM from './pages/CompanyPM'
 import PMAccountInfo from './pages/PMAccountInfo'
-import SCTRInfo from './pages/SCTRInfo'
+import OriginReportInfo from './pages/OriginReportInfo'
 import EditPMForm from './components/EditPMForm'
-import EditSCTRForm from './components/EditSCTRForm'
+import EditOriginReportForm from './components/EditOriginReportForm'
 import CompanyInfo from './pages/CompanyInfo'
 import EditCompanyForm from './components/EditCompanyForm'
-import SCTRCreate from './pages/SCTRCreate'
+import OriginReportCreate from './pages/OriginReportCreate'
 
 function App () {
   return (
@@ -39,8 +39,8 @@ function App () {
           <Header/>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/sctr" element={<SCTRList />} />
-            <Route path="/sctr/:sctrIdentifier" element={<SCTRInfo />} />
+            <Route path="/origin_report" element={<OriginReportList />} />
+            <Route path="/origin_report/:originReportIdentifier" element={<OriginReportInfo />} />
             <Route path="/about" element={<About />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/sign-up" element={<SignUp />} />
@@ -48,9 +48,9 @@ function App () {
             <Route path="/activated/:uidb64/:token" element={<ActivatePage />} />
             <Route exact path="/account" element={<PrivateRoute/>}>
               <Route exact path="/account/info" element={<AccountInfo />}/>
-              <Route exact path="/account/sctr" element={<CompanySCTR />}/>
-              <Route exact path="/account/sctr/create" element={<SCTRCreate />}/>
-              <Route exact path="/account/sctr/edit/:sctrIdentifier" element={<EditSCTRForm />}/>
+              <Route exact path="/account/origin_report" element={<CompanyOriginReport />}/>
+              <Route exact path="/account/origin_report/create" element={<OriginReportCreate />}/>
+              <Route exact path="/account/origin_report/edit/:originReportIdentifier" element={<EditOriginReportForm />}/>
               <Route exact path="/account/edit" element={<EditAccountForm />}/>
               <Route exact path="/account/pm" element={<CompanyPM />}/>
               <Route exact path="/account/pm/edit/:pmEmail" element={<EditPMForm />}/>

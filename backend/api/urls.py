@@ -6,18 +6,18 @@ from api.views import ComponentCreateView
 from api.views import ComponentPatchRetrieveDeleteView
 from api.views import CreateAdministratorAndCompanyView
 from api.views import CreateAdministratorView
+from api.views import OriginReportCompanyListView
+from api.views import OriginReportCreateDraftView
+from api.views import OriginReportCreateView
+from api.views import OriginReportMoveToDraftView
+from api.views import OriginReportMoveToPublishedView
+from api.views import OriginReportPublishedListView
+from api.views import OriginReportRetrieveDestroyView
+from api.views import OriginReportSwitchVisibilityView
+from api.views import OriginReportUpdateView
 from api.views import PMCreateView
 from api.views import PMListView
 from api.views import PMRetrieveUpdateDestroyView
-from api.views import SCTRCompanyListView
-from api.views import SCTRCreateDraftView
-from api.views import SCTRCreateView
-from api.views import SCTRMoveToDraftView
-from api.views import SCTRMoveToPublishedView
-from api.views import SCTRPublishedListView
-from api.views import SCTRRetrieveDestroyView
-from api.views import SCTRSwitchVisibilityView
-from api.views import SCTRUpdateView
 from api.views import SelfRetrieveUpdateDestroyView
 from api.views import Smoke
 from django.urls import path
@@ -30,41 +30,43 @@ urlpatterns = [
     path("", Smoke.as_view(), name="smoke"),
 
     path(
-        "sctr/create/",
-        SCTRCreateView.as_view(),
-        name="sctr-create"
+        "origin_report/create/",
+        OriginReportCreateView.as_view(),
+        name="origin-report-create"
     ),
     path(
-        "sctr/create_draft/",
-        SCTRCreateDraftView.as_view(),
-        name="sctr-create-draft"
+        "origin_report/create_draft/",
+        OriginReportCreateDraftView.as_view(),
+        name="origin-report-create-draft"
     ),
-    path("sctr/get/", SCTRPublishedListView.as_view(), name="sctr-get"),
-    path("sctr/get_by_company/", SCTRCompanyListView.as_view(), name="sctr-get-company"),
+    path("origin_report/get/", OriginReportPublishedListView.as_view(), name="origin-report-get"),
+    path("origin_report/get_by_company/",
+         OriginReportCompanyListView.as_view(),
+         name="origin-report-get-company"),
     path(
-        "sctr/delete_retrieve/<int:id>/",
-        SCTRRetrieveDestroyView.as_view(),
-        name="sctr-delete-retrieve"
-    ),
-    path(
-        "sctr/patch/<int:id>/",
-        SCTRUpdateView.as_view(),
-        name="sctr-patch"
+        "origin_report/delete_retrieve/<int:id>/",
+        OriginReportRetrieveDestroyView.as_view(),
+        name="origin-report-delete-retrieve"
     ),
     path(
-        "sctr/to_draft/<int:id>/",
-        SCTRMoveToDraftView.as_view(),
-        name="sctr-to-draft"
+        "origin_report/patch/<int:id>/",
+        OriginReportUpdateView.as_view(),
+        name="origin-report-patch"
     ),
     path(
-        "sctr/to_published/<int:id>/",
-        SCTRMoveToPublishedView.as_view(),
-        name="sctr-to-published"
+        "origin_report/to_draft/<int:id>/",
+        OriginReportMoveToDraftView.as_view(),
+        name="origin-report-to-draft"
     ),
     path(
-        "sctr/switch_visibility/<int:id>/",
-        SCTRSwitchVisibilityView.as_view(),
-        name="sctr-switch-visibility"
+        "origin_report/to_published/<int:id>/",
+        OriginReportMoveToPublishedView.as_view(),
+        name="origin-report-to-published"
+    ),
+    path(
+        "origin_report/switch_visibility/<int:id>/",
+        OriginReportSwitchVisibilityView.as_view(),
+        name="origin-report-switch-visibility"
     ),
 
     path(

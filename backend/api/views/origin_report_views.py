@@ -1,16 +1,16 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""API SCTR-related views module."""
-from api.filter import SCTRFilter
-from api.models import SCTR
-from api.models import SCTR_STATES
+"""API OriginReport-related views module."""
+from api.filter import OriginReportFilter
+from api.models import ORIGIN_REPORT_STATES
+from api.models import OriginReport
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
 from api.permissions import IsComponentOwner
-from api.permissions import IsSCTROwner
+from api.permissions import IsOriginReportOwner
 from api.permissions import ReadOnly
-from api.serializers import SCTRCreateGetSerializer
-from api.serializers import SCTRDraftSerializer
-from api.serializers import SCTRPublishValidatorSerializer
+from api.serializers import OriginReportCreateGetSerializer
+from api.serializers import OriginReportDraftSerializer
+from api.serializers import OriginReportPublishValidatorSerializer
 from api.serializers import SourceComponentDraftSerializer
 from api.serializers import SourceComponentSerializer
 from django.db.models import Sum
@@ -26,13 +26,13 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 
-class SCTRCreateView(CreateAPIView):
-    """SCTR creation.
+class OriginReportCreateView(CreateAPIView):
+    """OriginReport creation.
 
-    To create an SCTR instance you need to provide fill all fields.
+    To create an OriginReport instance you need to provide fill all fields.
     """
 
-    serializer_class = SCTRCreateGetSerializer
+    serializer_class = OriginReportCreateGetSerializer
     permission_classes = [IsAuthenticated, ]
 
     def perform_create(self, serializer):
@@ -45,14 +45,14 @@ class SCTRCreateView(CreateAPIView):
         return Response(serialized_data, status=status.HTTP_201_CREATED)
 
 
-class SCTRCreateDraftView(CreateAPIView):
-    """SCTR creation with draft state.
+class OriginReportCreateDraftView(CreateAPIView):
+    """OriginReport creation with draft state.
 
-    SCTR will have state DRAFT
+    OriginReport will have state DRAFT
     Doesn't require all fields to be filled
     """
 
-    serializer_class = SCTRDraftSerializer
+    serializer_class = OriginReportDraftSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
@@ -65,53 +65,54 @@ class SCTRCreateDraftView(CreateAPIView):
         return Response(serialized_data, status=status.HTTP_201_CREATED)
 
 
-class SCTRPublishedListView(ListAPIView):
-    """Gets published SCTRs only and provides filtering."""
+class OriginReportPublishedListView(ListAPIView):
+    """Gets published OriginReports only and provides filtering."""
 
-    serializer_class = SCTRCreateGetSerializer
-    queryset = SCTR.objects.filter(state=SCTR_STATES.PUBLISHED, is_latest_version=True)
-    filterset_class = SCTRFilter
+    serializer_class = OriginReportCreateGetSerializer
+    queryset = OriginReport.objects.filter(state=ORIGIN_REPORT_STATES.PUBLISHED,
+                                           is_latest_version=True)
+    filterset_class = OriginReportFilter
 
 
-class SCTRSwitchVisibilityView(UpdateAPIView):
-    """Switches SCTR visibility."""
+class OriginReportSwitchVisibilityView(UpdateAPIView):
+    """Switches OriginReport visibility."""
 
-    permission_classes = [IsAuthenticated, IsSCTROwner]
+    permission_classes = [IsAuthenticated, IsOriginReportOwner]
     lookup_field = "id"
-    queryset = SCTR.objects.exclude(state=SCTR_STATES.DRAFT)
+    queryset = OriginReport.objects.exclude(state=ORIGIN_REPORT_STATES.DRAFT)
 
     def update(self, request, id):
-        """Switches SCTR visibility."""
-        sctr = self.get_object()
+        """Switches OriginReport visibility."""
+        origin_report = self.get_object()
 
-        if sctr.state == SCTR_STATES.PUBLISHED:
-            # Should set a is_latest_version to another SCTR
+        if origin_report.state == ORIGIN_REPORT_STATES.PUBLISHED:
+            # Should set a is_latest_version to another OriginReport
             # Get previous version if exists
-            previous = SCTR.objects.filter(
-                unique_identifier=sctr.unique_identifier,
-                state=SCTR_STATES.PUBLISHED
+            previous = OriginReport.objects.filter(
+                unique_identifier=origin_report.unique_identifier,
+                state=ORIGIN_REPORT_STATES.PUBLISHED
             ).order_by("-version")
-            # If has published SCTRs set last as latest version
+            # If has published OriginReports set last as latest version
             if len(previous) > 1:
                 instance = previous[1]
                 instance.is_latest_version = True
                 instance.save()
 
-            sctr.state = SCTR_STATES.HIDDEN
-            sctr.is_latest_version = False
+            origin_report.state = ORIGIN_REPORT_STATES.HIDDEN
+            origin_report.is_latest_version = False
         else:
-            # is_latest_version should be updated in current SCTR
-            current = SCTR.objects.filter(
-                unique_identifier=sctr.unique_identifier,
-                state=SCTR_STATES.PUBLISHED
+            # is_latest_version should be updated in current OriginReport
+            current = OriginReport.objects.filter(
+                unique_identifier=origin_report.unique_identifier,
+                state=ORIGIN_REPORT_STATES.PUBLISHED
             ).order_by("-version")
             if current:
-                if sctr.version > current[0].version:
-                    sctr.is_latest_version = True
+                if origin_report.version > current[0].version:
+                    origin_report.is_latest_version = True
                     current[0].is_latest_version = False
                     current[0].save()
-            sctr.state = SCTR_STATES.PUBLISHED
-        sctr.save()
+            origin_report.state = ORIGIN_REPORT_STATES.PUBLISHED
+        origin_report.save()
 
         return Response(
             {"message": "Successfully switch visibility"},
@@ -119,36 +120,36 @@ class SCTRSwitchVisibilityView(UpdateAPIView):
         )
 
 
-class SCTRCompanyListView(ListAPIView):
-    """Gets all user's company SCTRs and provides filtering."""
+class OriginReportCompanyListView(ListAPIView):
+    """Gets all user's company OriginReports and provides filtering."""
 
     permission_classes = [IsAuthenticated]
-    serializer_class = SCTRCreateGetSerializer
-    filterset_class = SCTRFilter
+    serializer_class = OriginReportCreateGetSerializer
+    filterset_class = OriginReportFilter
 
     def get_queryset(self):
-        """Gets all SCTRs that are related to the user's company."""
-        return SCTR.objects.filter(
+        """Gets all OriginReports that are related to the user's company."""
+        return OriginReport.objects.filter(
             company=self.request.user.company
         )
 
 
-class SCTRRetrieveDestroyView(RetrieveDestroyAPIView):
-    """View has get and delete methods for SCTR model."""
+class OriginReportRetrieveDestroyView(RetrieveDestroyAPIView):
+    """View has get and delete methods for OriginReport model."""
 
-    permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsSCTROwner]
+    permission_classes = [IsAuthenticatedOrReadOnly, ReadOnly | IsOriginReportOwner]
     lookup_field = "id"
-    serializer_class = SCTRCreateGetSerializer
+    serializer_class = OriginReportCreateGetSerializer
 
     def delete(self, request, id):
         instance = self.get_object()
-        # Only published SCTR can have this as True
+        # Only published OriginReport can have this as True
         if instance.is_latest_version:
-            new_latest = SCTR.objects.filter(
+            new_latest = OriginReport.objects.filter(
                 unique_identifier=instance.unique_identifier,
-                state=SCTR_STATES.PUBLISHED
+                state=ORIGIN_REPORT_STATES.PUBLISHED
             ).order_by("-version")
-            # If more then 1 published or hidden sctrs
+            # If more then 1 published or hidden origin_reports
             if len(new_latest) > 1:
                 obj = new_latest[1]
                 obj.is_latest_version = True
@@ -159,51 +160,51 @@ class SCTRRetrieveDestroyView(RetrieveDestroyAPIView):
 
     def get_queryset(self):
         """Queryset based on user's authentication."""
-        # Not authenticated users can access only published SCTRs
-        # Authenticated users can access published and own SCTRs
-        published = SCTR.objects.filter(state=SCTR_STATES.PUBLISHED)
+        # Not authenticated users can access only published OriginReports
+        # Authenticated users can access published and own OriginReports
+        published = OriginReport.objects.filter(state=ORIGIN_REPORT_STATES.PUBLISHED)
 
         if self.request.user.is_authenticated:
-            own = SCTR.objects.filter(company=self.request.user.company)
+            own = OriginReport.objects.filter(company=self.request.user.company)
             return published | own
         else:
             return published
 
 
-class SCTRUpdateView(UpdateAPIView):
-    """View has patch method for SCTR model."""
+class OriginReportUpdateView(UpdateAPIView):
+    """View has patch method for OriginReport model."""
 
-    permission_classes = [IsAuthenticated, IsSCTROwner]
+    permission_classes = [IsAuthenticated, IsOriginReportOwner]
     lookup_field = "id"
-    serializer_class = SCTRDraftSerializer
-    queryset = SCTR.objects.filter(state=SCTR_STATES.DRAFT)
+    serializer_class = OriginReportDraftSerializer
+    queryset = OriginReport.objects.filter(state=ORIGIN_REPORT_STATES.DRAFT)
 
 
-class SCTRMoveToDraftView(UpdateAPIView):
-    """View for moving SCTR to draft state."""
+class OriginReportMoveToDraftView(UpdateAPIView):
+    """View for moving OriginReport to draft state."""
 
-    permission_classes = [IsAuthenticated, IsSCTROwner]
+    permission_classes = [IsAuthenticated, IsOriginReportOwner]
     lookup_field = "id"
-    queryset = SCTR.objects.exclude(state=SCTR_STATES.DRAFT)
+    queryset = OriginReport.objects.exclude(state=ORIGIN_REPORT_STATES.DRAFT)
 
     def patch(self, request, id):
         """Creates an instance copy with version += 1 and state = Draft."""
         instance = self.get_object()
-        components = SourceComponent.objects.filter(parent_sctr=instance)
+        components = SourceComponent.objects.filter(parent_origin_report=instance)
 
-        # Makes a copy of the SCTR with different version of the same SCTR
+        # Makes a copy of the OriginReport with different version of the same OriginReport
         # Also make a copy of each component
         instance.id = None
 
         # Not yet published, so it doesn't have the latest version
         # This will be changed when draft is moved to published state
         instance.is_latest_version = False
-        instance.state = SCTR_STATES.DRAFT
+        instance.state = ORIGIN_REPORT_STATES.DRAFT
         instance.save()
 
         for component in components:
             component.id = None
-            component.parent_sctr = instance
+            component.parent_origin_report = instance
             component.save()
 
         return Response(
@@ -212,17 +213,17 @@ class SCTRMoveToDraftView(UpdateAPIView):
         )
 
 
-class SCTRMoveToPublishedView(UpdateAPIView):
-    """View for moving SCTR to publish state."""
+class OriginReportMoveToPublishedView(UpdateAPIView):
+    """View for moving OriginReport to publish state."""
 
-    permission_classes = [IsAuthenticated, IsSCTROwner]
+    permission_classes = [IsAuthenticated, IsOriginReportOwner]
     lookup_field = "id"
-    queryset = SCTR.objects.exclude(state=SCTR_STATES.PUBLISHED)
+    queryset = OriginReport.objects.exclude(state=ORIGIN_REPORT_STATES.PUBLISHED)
 
     def patch(self, request, id):
         """Validates and moves instance to published state."""
-        sctr = self.get_object()
-        components = SourceComponent.objects.filter(parent_sctr=sctr).values(
+        origin_report = self.get_object()
+        components = SourceComponent.objects.filter(parent_origin_report=origin_report).values(
             "marketing_name",
             "fraction_cogs",
             "component_type",
@@ -235,10 +236,11 @@ class SCTRMoveToPublishedView(UpdateAPIView):
         if components.aggregate(Sum("fraction_cogs"))["fraction_cogs__sum"] != 100:
             return Response(status=400, data={"message": "COGS should be 100%"})
 
-        sctr_serialized = SCTRPublishValidatorSerializer(data=sctr.__dict__)
+        origin_report_serialized = \
+            OriginReportPublishValidatorSerializer(data=origin_report.__dict__)
 
-        if not sctr_serialized.is_valid():
-            return Response(status=400, data=sctr_serialized.errors)
+        if not origin_report_serialized.is_valid():
+            return Response(status=400, data=origin_report_serialized.errors)
 
         # Transform components to list of dicts
         # And change component_type to component_type_str
@@ -254,41 +256,41 @@ class SCTRMoveToPublishedView(UpdateAPIView):
         if not components_serialized.is_valid():
             return Response(status=400, data=components_serialized.errors)
 
-        # Set previous SCTR is_latest_version to False
+        # Set previous OriginReport is_latest_version to False
         # If it exists, it's only 1 instance
-        old_sctr = SCTR.objects.filter(
-            unique_identifier=sctr.unique_identifier,
+        old_origin_report = OriginReport.objects.filter(
+            unique_identifier=origin_report.unique_identifier,
             is_latest_version=True
         )
-        if old_sctr:
-            old_sctr[0].is_latest_version = False
-            old_sctr[0].save()
+        if old_origin_report:
+            old_origin_report[0].is_latest_version = False
+            old_origin_report[0].save()
 
-        sctr.state = SCTR_STATES.PUBLISHED
-        sctr.is_latest_version = True
-        # Real latest version number is in SCTR that are published or hidden
-        old_sctr = SCTR.objects.filter(
-            unique_identifier=sctr.unique_identifier,
-            state__in=[SCTR_STATES.PUBLISHED, SCTR_STATES.HIDDEN]
+        origin_report.state = ORIGIN_REPORT_STATES.PUBLISHED
+        origin_report.is_latest_version = True
+        # Real latest version number is in OriginReport that are published or hidden
+        old_origin_report = OriginReport.objects.filter(
+            unique_identifier=origin_report.unique_identifier,
+            state__in=[ORIGIN_REPORT_STATES.PUBLISHED, ORIGIN_REPORT_STATES.HIDDEN]
         ).order_by("-version")
-        # If found -- version is changed according to old_sctr with the highest version
-        if old_sctr:
-            sctr.version = old_sctr[0].version + 1
+        # If found -- version is changed according to old_origin_report with the highest version
+        if old_origin_report:
+            origin_report.version = old_origin_report[0].version + 1
         else:
-            sctr.version += 1
+            origin_report.version += 1
 
-        sctr.save()
+        origin_report.save()
         return Response(status=200, data={"message": "Instance was moved to the published state"})
 
 
 class ComponentCreateView(CreateAPIView):
     """View for component creation."""
 
-    permission_classes = [IsAuthenticated, IsSCTROwner]
+    permission_classes = [IsAuthenticated, IsOriginReportOwner]
     serializer_class = SourceComponentSerializer
 
     def post(self, request, id):
-        """Creates empty component and attaches it to sctr."""
+        """Creates empty component and attaches it to origin_report."""
         data = {
             "fraction_cogs": 0,
             "marketing_name": "",
@@ -297,13 +299,13 @@ class ComponentCreateView(CreateAPIView):
                     SOURCE_COMPONENT_TYPE.MADE_IN_HOUSE
                 ),
         }
-        sctr = get_object_or_404(SCTR, id=id)
+        origin_report = get_object_or_404(OriginReport, id=id)
         component = SourceComponentDraftSerializer(data=data)
 
         if not component.is_valid():
             return Response(component.errors, status=400)
 
-        component.validated_data["parent_sctr"] = sctr
+        component.validated_data["parent_origin_report"] = origin_report
         component.validated_data["country_of_origin"] = ""
         component.validated_data["external_sku"] = ""
 

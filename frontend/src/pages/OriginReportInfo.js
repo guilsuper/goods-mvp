@@ -10,15 +10,15 @@ import { toReadable } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
 import countryList from 'react-select-country-list'
 
-const SCTRInfo = () => {
+const OriginReportInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
-  const { sctrIdentifier } = useParams()
-  const [sctr, setSCTR] = useState([])
+  const { originReportIdentifier } = useParams()
+  const [originReport, setOriginReport] = useState([])
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    async function getSCTRInfo () {
+    async function getOriginReportInfo () {
       const config = {
         method: 'GET',
         headers: {
@@ -32,7 +32,7 @@ const SCTRInfo = () => {
       }
       let response = ''
       try {
-        response = await fetch('/api/sctr/delete_retrieve/' + sctrIdentifier + '/', config)
+        response = await fetch('/api/origin_report/delete_retrieve/' + originReportIdentifier + '/', config)
       } catch (error) {
         alert('Server is not working')
         return
@@ -44,22 +44,22 @@ const SCTRInfo = () => {
         alert('Action not allowed')
         navigate('/')
       } else {
-        setSCTR(result)
+        setOriginReport(result)
       }
     }
-    getSCTRInfo()
-  }, [navigate, sctrIdentifier])
+    getOriginReportInfo()
+  }, [navigate, originReportIdentifier])
 
   const isOwner = (user) => {
     // If not authorized
     if (!user) {
       return false
     }
-    return (user.company.name === sctr.company.name)
+    return (user.company.name === originReport.company.name)
   }
 
-  const deleteSCTR = async (event) => {
-    if (!window.confirm('Are you sure you want to permanently delete this SCTR?')) {
+  const deleteOriginReport = async (event) => {
+    if (!window.confirm('Are you sure you want to permanently delete this OriginReport?')) {
       return
     }
 
@@ -74,7 +74,7 @@ const SCTRInfo = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/sctr/delete_retrieve/' + sctrIdentifier + '/', config)
+      response = await fetch('/api/origin_report/delete_retrieve/' + originReportIdentifier + '/', config)
     } catch (error) {
       alert('Server is not working')
       return
@@ -82,7 +82,7 @@ const SCTRInfo = () => {
 
     if (response.status === 204) {
       alert('Successfully deleted')
-      navigate('/account/sctr')
+      navigate('/account/origin_report')
     } else {
       alert("Wasn't deleted or permission denied")
     }
@@ -100,7 +100,7 @@ const SCTRInfo = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/sctr/to_draft/' + sctrIdentifier + '/', config)
+      response = await fetch('/api/origin_report/to_draft/' + originReportIdentifier + '/', config)
     } catch (error) {
       alert('Server is not working')
       return
@@ -108,21 +108,21 @@ const SCTRInfo = () => {
 
     if (response.status === 200) {
       alert('Successfully moved')
-      navigate('/account/sctr')
+      navigate('/account/origin_report')
     } else {
       alert("Wasn't moved or permission denied")
     }
   }
 
-  // If SCTR company wasn't loaded yet
-  // When page renders, sctr.company is undefined
-  // And it is impossible to get sctr.company.name for example
-  if (!sctr.company) {
+  // If OriginReport company wasn't loaded yet
+  // When page renders, originReport.company is undefined
+  // And it is impossible to get originReport.company.name for example
+  if (!originReport.company) {
     return
   }
 
   const calculateCOGS = () => {
-    const sum = sctr.components.reduce(function (prev, current) {
+    const sum = originReport.components.reduce(function (prev, current) {
       return prev + +current.fraction_cogs
     }, 0)
     // If NaN
@@ -144,7 +144,7 @@ const SCTRInfo = () => {
 
     let response = ''
     try {
-      response = await fetch('/api/sctr/switch_visibility/' + sctrIdentifier + '/', config)
+      response = await fetch('/api/origin_report/switch_visibility/' + originReportIdentifier + '/', config)
     } catch (error) {
       alert('Server is not working')
       return
@@ -163,23 +163,23 @@ const SCTRInfo = () => {
       <h3 className='text-center'>Origin Report</h3>
       <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
         <Row className='text-secondary'><p>Identifier Type</p></Row>
-        <Row><p>{sctr.unique_identifier_type}</p></Row>
+        <Row><p>{originReport.unique_identifier_type}</p></Row>
 
         <Row className='text-secondary'><p>Identifier</p></Row>
-        <Row><p>{sctr.unique_identifier}</p></Row>
+        <Row><p>{originReport.unique_identifier}</p></Row>
 
         <Row className='text-secondary'><p>Short Description</p></Row>
-        <Row><p>{sctr.marketing_name}</p></Row>
+        <Row><p>{originReport.marketing_name}</p></Row>
 
         {
             isOwner(user)
               ? <>
               <Row className='text-secondary'><p>Is latest version</p></Row>
-              <Row><p>{sctr.is_latest_version ? 'True' : 'False'}</p></Row>
+              <Row><p>{originReport.is_latest_version ? 'True' : 'False'}</p></Row>
               <Row className='text-secondary'><p>State</p></Row>
-              <Row><p>{toReadable(sctr.state)}</p></Row>
+              <Row><p>{toReadable(originReport.state)}</p></Row>
               <Row className='text-secondary'><p>Version</p></Row>
-              <Row><p>{sctr.version}</p></Row>
+              <Row><p>{originReport.version}</p></Row>
             </>
               : ' '
         }
@@ -204,7 +204,7 @@ const SCTRInfo = () => {
           </Col>
         </Row>
 
-        {sctr.components.map((component, index) => (
+        {originReport.components.map((component, index) => (
         <Row key={`${component}~${index}`} className='mb-3 pt-2 ps-4 border rounded'>
           <Col><p>{component.fraction_cogs}</p></Col>
 
@@ -237,12 +237,12 @@ const SCTRInfo = () => {
             ? <Col className='w-25 mt-4'>
             <Row className='mb-3'>
               {
-                sctr.state === 'DRAFT'
+                originReport.state === 'DRAFT'
                   ? <>
                     <Button
                       variant='primary'
                       as={Link}
-                      to={'/account/sctr/edit/' + sctr.id}
+                      to={'/account/origin_report/edit/' + originReport.id}
                     >Edit</Button>
                   </>
                   : <>
@@ -252,14 +252,14 @@ const SCTRInfo = () => {
             </Row>
 
             <Row>
-              <Button variant='danger' onClick={deleteSCTR}>Delete SCTR</Button>
+              <Button variant='danger' onClick={deleteOriginReport}>Delete OriginReport</Button>
             </Row>
 
             {
-              sctr.state !== 'DRAFT'
+              originReport.state !== 'DRAFT'
                 ? <Row className='mt-3'>
                 {
-                  sctr.state === 'HIDDEN'
+                  originReport.state === 'HIDDEN'
                     ? <>
                       <Button variant='secondary' onClick={switchVisibility}>Unhide</Button>
                     </>
@@ -280,4 +280,4 @@ const SCTRInfo = () => {
   )
 }
 
-export default SCTRInfo
+export default OriginReportInfo

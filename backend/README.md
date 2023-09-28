@@ -131,7 +131,7 @@ gcloud auth application-default login
 
 ```bash
 psql -U pguser -h /cloudsql/fwc-alpha-website:us-east1:postgres-main-instance -d postgres
-postgres=> select * from api_sctr;
+postgres=> select * from api_origin_report;
  id | uid | uit | marketing_name | version | state | cogs | company_id | is_latest_version
 ----+-----+-----+----------------+---------+-------+------+------------+-------------------
   4 | ABC666 |   1 | ABC BadHammer  |       1 |     1 |  100 |          3 | f
