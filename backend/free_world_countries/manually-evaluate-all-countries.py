@@ -1,8 +1,5 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Command-line tool for generating country_list.csv.txt
-
-manually adjudicating each country in ISO to
-generate a new CSV file.
+"""Command-line tool for generating _country_list.csv
 
 2023-09-24: The current strategy is as follows.  Following the pattern
 of existing NGOs that make these kinds of lists, we will generate a
@@ -12,13 +9,20 @@ now, so we're operating on data from 2022.  We're late in the year
 now, so in the future, hopefully, by this time of year we'd have
 published the updated list.  If a country changes, then companies have
 a year to react to the change.  If a country changes from not-free to
-free, then companies importing form that country can update their
+free, then companies importing from that country can update their
 records to get the benefit.
 
 If a country goes from free to not-free, then companies importing from
 that country should get an *extra* year of grace period before their
 report gets converted.  This requires some tinkers for companies that
 have their reports expire shortly after we publish an update.
+
+2023-09-27: wrote automatic_default, which uses simple rules to
+generate _country_list.csv so it can be read by __init__.py
+
+Next, we should finish building out functions like `judge_only_partly`
+that give this file its name which will enable manually adjudicating
+countries from the ISO list to generate a new CSV file.
 
 """
 import csv

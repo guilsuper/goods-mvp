@@ -48,10 +48,27 @@ default for the country says not.
 Similarly, a company operating in the free world might be run by
 horrible people such that it gets kicked out of the free world…
 
-## The Format.... TODO: explain what we did with _country_structs
+## The Format
+
+At first, we thought that we should make a CSV like this:
 
 CN,N,v1.0,2023-09-27,China,jrf,
 US,F,v1.0,2023-09-27,United States,jrf,comment
+AX,U,v1.0,2023-09-27,Åland Islands,jrf,automatic FH F+PF --> F
+
+where "N" and "F" mean NotFree and Free.  Then we added "U" for
+Undetermined...
+
+This is the format of _country_list.csv which has fixed-width fields
+first, for easy reading.  It also has the en-us country name string.
+i18n will have to make other files for other language-locales.
+
+but then we realized that it was hard to ensure that everyone would
+read this correctly, so we made the __init__.py load this CSV.
+
+And in the process, we defined _country_structs.py to use Enum and
+NamedTuple, so now the second column is 0=NotFree, 1=Free,
+2=Undetermined.
 
 ## Data from FreedomHouse.org
 
