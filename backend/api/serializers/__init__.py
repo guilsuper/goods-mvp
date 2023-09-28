@@ -2,6 +2,7 @@
 """Contains all the views."""
 from api.serializers.company_serializers import CompanyRetrieveSerializer
 from api.serializers.company_serializers import CompanySerializer
+from api.serializers.country_serializers import CountrySerializer
 from api.serializers.origin_report_and_coponent_serializers import OriginReportCreateGetSerializer
 from api.serializers.origin_report_and_coponent_serializers import OriginReportDraftSerializer
 from api.serializers.origin_report_and_coponent_serializers \
@@ -24,4 +25,5 @@ __all__ = [
     "AdministratorSerializer",
     "GroupSerializer",
     "PMSerializer",
+    "CountrySerializer"
 ]

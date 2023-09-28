@@ -99,7 +99,7 @@ def origin_report_create_published() -> Callable:
                     "marketing_name": "why",
                     "component_type_str": "EXTERNALLY_SOURCED",
                     "external_sku": "aaaaa",
-                    "country_of_origin": "USA",
+                    "country_of_origin": "US",
                     "company_name": "Mojang"
                 },
                 {
@@ -107,7 +107,7 @@ def origin_report_create_published() -> Callable:
                     "marketing_name": "why1",
                     "component_type_str": "MADE_IN_HOUSE",
                     "external_sku": "aaaaa1",
-                    "country_of_origin": "China",
+                    "country_of_origin": "CH",
                     "company_name": "Alabama"
                 }
             ]
@@ -141,7 +141,7 @@ def origin_report_create_draft() -> Callable:
                     "marketing_name": "why",
                     "component_type_str": "EXTERNALLY_SOURCED",
                     "external_sku": "aaaaa",
-                    "country_of_origin": "USA",
+                    "country_of_origin": "US",
                     "company_name": "Mojang"
                 }
             ]

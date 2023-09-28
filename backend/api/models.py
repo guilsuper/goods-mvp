@@ -9,7 +9,6 @@ from django.core.validators import MinValueValidator
 from django.core.validators import RegexValidator
 from django.db import models
 from django.template.defaultfilters import slugify
-from django_countries.fields import CountryField
 
 
 full_domain_validator = RegexValidator(
@@ -191,6 +190,15 @@ class OriginReport(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
+class Country(models.Model):
+    """Country."""
+
+    alpha_2 = models.CharField(max_length=2, primary_key=True)
+    alpha_3 = models.CharField(max_length=3, unique=True)
+    name = models.CharField(max_length=255, unique=True)
+    free = models.BooleanField(null=False)
+
+
 class SourceComponent(models.Model):
     """OriginReport source components model."""
 
@@ -206,7 +214,7 @@ class SourceComponent(models.Model):
 
     # On of this fields will be set according to the type
     # This check is applied in the serializer
-    country_of_origin = CountryField(null=True)
+    country_of_origin = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     external_sku = models.CharField(max_length=25, null=True)
 
     # If externally sourced, should store company name

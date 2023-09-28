@@ -8,7 +8,6 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import { toReadable } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
-import countryList from 'react-select-country-list'
 
 const OriginReportInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
@@ -216,7 +215,7 @@ const OriginReportInfo = () => {
             <Row><p>{component.external_sku}</p></Row>
           </Col>
 
-          <Col><p>{countryList().getLabel(component.country_of_origin)}</p></Col>
+          <Col><p>{component.country_of_origin_info.name}</p></Col>
           <Col className='d-flex align-items-center justify-content-center'>
             <ReactCountryFlag
               countryCode={component.country_of_origin}
@@ -226,7 +225,7 @@ const OriginReportInfo = () => {
                 height: '5em',
                 border: '1px solid #dee2e6'
               }}
-              title={component.country_of_origin}
+              title={component.country_of_origin_info.name}
             />
           </Col>
         </Row>

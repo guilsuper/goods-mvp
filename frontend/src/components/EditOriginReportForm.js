@@ -2,12 +2,12 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useEffect, useState, useMemo } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Button, Form, Container, Col, Row } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
-import countryList from 'react-select-country-list'
+import CountrySelect from './CountrySelect'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import ReactCountryFlag from 'react-country-flag'
 
@@ -38,8 +38,6 @@ const EditOriginReportForm = () => {
   const [originReports, setOriginReports] = useState([])
   // Will change depending on user's input in external_sku and company_name
   const [availableOriginReports, setAvailableOriginReport] = useState([])
-
-  const options = useMemo(() => countryList().getData(), [])
 
   // Get data about originReport
   useEffect(() => {
@@ -460,15 +458,11 @@ const EditOriginReportForm = () => {
             </Col>
             <Col>
               <Form.Group className="mb-3">
-                <Form.Select
-                  id="country_of_origin"
-                  onChange={event => handleInputChange(index, event)}
+                <CountrySelect
+                  id={'country_of_origin'}
                   value={inputField.country_of_origin}
-                >
-                  {options.map((option, i) => (
-                    <option key={option.value} value={option.value}>{option.label}</option>
-                  ))}
-                </Form.Select>
+                  onChange={event => handleInputChange(index, event)}
+                />
               </Form.Group>
               { inputField.component_type_str === 'EXTERNALLY_SOURCED'
                 ? <>

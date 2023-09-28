@@ -57,9 +57,13 @@ def test_flag_origin_report_create_page(
     # Find a select element with country code AG and click on it
     # The flag should be displayed after
     country_code = "AG"
-    driver.find_element(
-        By.XPATH, f"//select[@id='country_of_origin']/option[@value='{country_code}']"
-    ).click()
+    country_option = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (By.XPATH,
+             f"//select[@id='country_of_origin']/option[@value='{country_code}']"))
+    )
+    assert country_option
+    country_option.click()
 
     img_src = "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/" \
               f"{country_code.lower()}.svg"

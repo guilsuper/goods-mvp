@@ -2,11 +2,11 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useState, useMemo, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { Button, Form, Container, Row, Col } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router'
-import countryList from 'react-select-country-list'
+import CountrySelect from './CountrySelect'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import ReactCountryFlag from 'react-country-flag'
 
@@ -14,7 +14,6 @@ const OriginReportForm = () => {
   // authTokens are for sending request to the backend
   const { authTokens } = useContext(AuthContext)
   // all possible countries list
-  const options = useMemo(() => countryList().getData(), [])
   const [inputFields, setInputFields] = useState([{
     fraction_cogs: 0,
     marketing_name: '',
@@ -284,18 +283,11 @@ const OriginReportForm = () => {
           </Col>
           <Col>
             <Form.Group className="mb-3">
-              <Form.Select
-                aria-label="Select country"
-                id="country_of_origin"
+              <CountrySelect
+                id={'country_of_origin'}
                 value={inputField.country_of_origin}
-                placeholder="Enter country of origin"
                 onChange={event => handleInputChange(index, event)}
-              >
-                <option>Select country</option>
-                {options.map((option, i) => (
-                  <option key={option.value} value={option.value}>{option.label}</option>
-                ))}
-              </Form.Select>
+              />
             </Form.Group>
               { inputField.component_type_str === 'EXTERNALLY_SOURCED'
                 ? <>
