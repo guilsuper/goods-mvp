@@ -32,41 +32,41 @@ urlpatterns = [
     path(
         "origin_report/create/",
         OriginReportCreateView.as_view(),
-        name="origin_report-create"
+        name="origin-report-create"
     ),
     path(
         "origin_report/create_draft/",
         OriginReportCreateDraftView.as_view(),
-        name="origin_report-create-draft"
+        name="origin-report-create-draft"
     ),
-    path("origin_report/get/", OriginReportPublishedListView.as_view(), name="origin_report-get"),
+    path("origin_report/get/", OriginReportPublishedListView.as_view(), name="origin-report-get"),
     path("origin_report/get_by_company/",
          OriginReportCompanyListView.as_view(),
-         name="origin_report-get-company"),
+         name="origin-report-get-company"),
     path(
         "origin_report/delete_retrieve/<int:id>/",
         OriginReportRetrieveDestroyView.as_view(),
-        name="origin_report-delete-retrieve"
+        name="origin-report-delete-retrieve"
     ),
     path(
         "origin_report/patch/<int:id>/",
         OriginReportUpdateView.as_view(),
-        name="origin_report-patch"
+        name="origin-report-patch"
     ),
     path(
         "origin_report/to_draft/<int:id>/",
         OriginReportMoveToDraftView.as_view(),
-        name="origin_report-to-draft"
+        name="origin-report-to-draft"
     ),
     path(
         "origin_report/to_published/<int:id>/",
         OriginReportMoveToPublishedView.as_view(),
-        name="origin_report-to-published"
+        name="origin-report-to-published"
     ),
     path(
         "origin_report/switch_visibility/<int:id>/",
         OriginReportSwitchVisibilityView.as_view(),
-        name="origin_report-switch-visibility"
+        name="origin-report-switch-visibility"
     ),
 
     path(

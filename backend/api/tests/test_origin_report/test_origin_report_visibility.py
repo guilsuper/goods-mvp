@@ -1,7 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains test for the following url names.
 
-origin_report-switch-visibility
+origin-report-switch-visibility
 """
 import pytest
 from api.models import ORIGIN_REPORT_STATES
@@ -43,7 +43,7 @@ def test_origin_report_change_visibility_same_company(
     auth_header, user, origin_report_state,
     new_state, status_code
 ):
-    """Tests origin_report-switch-visibility url."""
+    """Tests origin-report-switch-visibility url."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
     # If parameter is not empty, replace it with actual data
@@ -57,7 +57,7 @@ def test_origin_report_change_visibility_same_company(
 
     response = client.put(
         reverse(
-            "origin_report-switch-visibility",
+            "origin-report-switch-visibility",
             kwargs={
                 "id": origin_report.id
             }
@@ -104,7 +104,7 @@ def test_origin_report_change_visibility_different_company(
     auth_header, user,
     origin_report_state, status_code
 ):
-    """Tests origin_report-switch-visibility url."""
+    """Tests origin-report-switch-visibility url."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
     # If parameter is not empty, replace it with actual data
@@ -118,7 +118,7 @@ def test_origin_report_change_visibility_different_company(
 
     response = client.put(
         reverse(
-            "origin_report-switch-visibility",
+            "origin-report-switch-visibility",
             kwargs={
                 "id": origin_report.id
             }

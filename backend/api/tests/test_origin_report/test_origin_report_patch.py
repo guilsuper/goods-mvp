@@ -1,7 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains test for the following url names.
 
-origin_report-patch
+origin-report-patch
 """
 import pytest
 from api.models import ORIGIN_REPORT_STATES
@@ -50,7 +50,7 @@ def test_origin_report_update_same_company(
 
     response = client.patch(
         reverse(
-            "origin_report-patch",
+            "origin-report-patch",
             kwargs={"id": origin_report.id}
         ),
         data=data,
@@ -107,7 +107,7 @@ def test_origin_report_update_different_company(
 
     response = client.patch(
         reverse(
-            "origin_report-patch",
+            "origin-report-patch",
             kwargs={"id": origin_report.id}
         ),
         data=data,

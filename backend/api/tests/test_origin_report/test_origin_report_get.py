@@ -1,9 +1,9 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains test for the following url names.
 
-origin_report-get
-origin_report-get-company
-origin_report-delete-retrieve
+origin-report-get
+origin-report-get-company
+origin-report-delete-retrieve
 """
 import pytest
 from api.models import ORIGIN_REPORT_STATES
@@ -13,10 +13,10 @@ from django.urls import reverse
 
 @pytest.mark.django_db()
 def test_origin_report_get(client, origin_report, origin_report_hidden, origin_report_draft):
-    """Tests origin_report-get."""
+    """Tests origin-report-get."""
     # Try to get OriginReports as unauthorized user
     # Returns all visible OriginReports
-    response = client.get(reverse("origin_report-get"))
+    response = client.get(reverse("origin-report-get"))
 
     assert response.status_code == 200
     # Check if OriginReports were initialized
@@ -48,7 +48,7 @@ def test_origin_report_get_by_company(
     origin_report, user, status_code,
     is_same_company, count
 ):
-    """Tests OriginReport origin_report-get-company."""
+    """Tests OriginReport origin-report-get-company."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
     # If parameter is not empty, replace it with actual data
@@ -61,7 +61,7 @@ def test_origin_report_get_by_company(
         credentials = auth_header(user)
 
     response = client.get(
-        reverse("origin_report-get-company"),
+        reverse("origin-report-get-company"),
         **credentials
     )
 
@@ -108,7 +108,7 @@ def test_origin_report_get_single(
     origin_report, user, status_code,
     is_same_company, origin_report_state
 ):
-    """Tests OriginReport origin_report-delete-retrieve."""
+    """Tests OriginReport origin-report-delete-retrieve."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
     # set OriginReport state
@@ -125,7 +125,7 @@ def test_origin_report_get_single(
 
     response = client.get(
         reverse(
-            "origin_report-delete-retrieve",
+            "origin-report-delete-retrieve",
             kwargs={"id": origin_report.id}
         ),
         **credentials

@@ -1,8 +1,8 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains test for the following url names.
 
-origin_report-create
-origin_report-create-draft
+origin-report-create
+origin-report-create-draft
 """
 import pytest
 from api.models import OriginReport
@@ -46,7 +46,7 @@ def test_origin_report_create_and_publish(
     auth_header, user, origin_report_info,
     status_code, origin_report_created
 ):
-    """Tests origin_report-create url."""
+    """Tests origin-report-create url."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
     # If parameter is not empty, replace it with actual data
@@ -61,7 +61,7 @@ def test_origin_report_create_and_publish(
         origin_report_info = request.getfixturevalue(origin_report_info)
 
     response = client.post(
-        reverse("origin_report-create"),
+        reverse("origin-report-create"),
         data=origin_report_info,
         content_type="application/json",
         **credentials
@@ -116,7 +116,7 @@ def test_origin_report_create_draft(
     auth_header, user, origin_report_info,
     status_code, origin_report_created
 ):
-    """Tests origin_report-create-draft url."""
+    """Tests origin-report-create-draft url."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
     # If parameter is not empty, replace it with actual data
@@ -131,7 +131,7 @@ def test_origin_report_create_draft(
         origin_report_info = request.getfixturevalue(origin_report_info)
 
     response = client.post(
-        reverse("origin_report-create-draft"),
+        reverse("origin-report-create-draft"),
         data=origin_report_info,
         content_type="application/json",
         **credentials

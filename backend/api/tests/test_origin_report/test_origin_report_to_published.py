@@ -1,7 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains test for the following url names.
 
-origin_report-to-publish
+origin-report-to-publish
 """
 import pytest
 from api.models import ORIGIN_REPORT_STATES
@@ -38,7 +38,7 @@ def test_origin_report_move_to_publish(
     auth_header, user, is_same_company,
     status_code, is_correct_origin_report
 ):
-    """Tests origin_report-to-published url."""
+    """Tests origin-report-to-published url."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
 
@@ -60,7 +60,7 @@ def test_origin_report_move_to_publish(
         credentials = auth_header(user)
 
     response = client.patch(
-        reverse("origin_report-to-published", kwargs={"id": origin_report.id}),
+        reverse("origin-report-to-published", kwargs={"id": origin_report.id}),
         **credentials
     )
 

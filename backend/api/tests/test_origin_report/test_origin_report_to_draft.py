@@ -1,7 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains test for the following url names.
 
-origin_report-to-draft
+origin-report-to-draft
 """
 import pytest
 from api.models import ORIGIN_REPORT_STATES
@@ -32,7 +32,7 @@ def test_origin_report_move_to_draft(
     auth_header, user, is_same_company,
     status_code, draft_created
 ):
-    """Tests origin_report-to-draft url."""
+    """Tests origin-report-to-draft url."""
     # credentials must be a dict to pass them to the post request
     credentials = dict()
     # If parameter is not empty, replace it with actual data
@@ -45,7 +45,7 @@ def test_origin_report_move_to_draft(
         credentials = auth_header(user)
 
     response = client.patch(
-        reverse("origin_report-to-draft", kwargs={"id": origin_report.id}),
+        reverse("origin-report-to-draft", kwargs={"id": origin_report.id}),
         **credentials
     )
 
