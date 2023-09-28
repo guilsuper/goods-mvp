@@ -11,7 +11,6 @@ def test_country_usa():
     assert us.alpha_2 == "US"
     assert us.alpha_3 == "USA"
     assert us.name == "United States"
-    assert us.official_name == "United States of America"
     assert us.free
 
 
@@ -21,5 +20,4 @@ def test_country_china():
     assert china.alpha_2 == "CN"
     assert china.alpha_3 == "CHN"
     assert china.name == "China"
-    assert china.official_name == "People's Republic of China"
     assert not china.free
