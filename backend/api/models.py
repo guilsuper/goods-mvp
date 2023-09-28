@@ -41,14 +41,14 @@ class ChoicesEnum(IntEnum):
         return None
 
 
-class SCTR_ID_TYPES(ChoicesEnum):
-    """Allowed coices for SCTR unique identifier types."""
+class ORIGIN_REPORT_ID_TYPES(ChoicesEnum):
+    """Allowed choices for OriginReport unique identifier types."""
     SKU = 1
     GNIT = 2
 
 
-class SCTR_STATES(ChoicesEnum):
-    """Allowed coices for SCTR states."""
+class ORIGIN_REPORT_STATES(ChoicesEnum):
+    """Allowed choices for OriginReport states."""
 
     DRAFT = 1
     PUBLISHED = 2
@@ -152,16 +152,16 @@ class Administrator(AbstractUser):
         group.user_set.add(self)
 
 
-class SCTR(models.Model):
-    """SCTR model."""
+class OriginReport(models.Model):
+    """OriginReport model."""
 
     # According to the public information
     # SKU length is usually not more then 25 characters
     # GNIT length is 13
     unique_identifier = models.CharField(max_length=25)
     unique_identifier_type = models.IntegerField(
-        choices=SCTR_ID_TYPES.choices(),
-        default=SCTR_ID_TYPES.SKU
+        choices=ORIGIN_REPORT_ID_TYPES.choices(),
+        default=ORIGIN_REPORT_ID_TYPES.SKU
     )
     marketing_name = models.CharField(
         max_length=500,
@@ -174,8 +174,8 @@ class SCTR(models.Model):
         ]
     )
     state = models.IntegerField(
-        default=SCTR_STATES.DRAFT,
-        choices=SCTR_STATES.choices()
+        default=ORIGIN_REPORT_STATES.DRAFT,
+        choices=ORIGIN_REPORT_STATES.choices()
     )
 
     cogs = models.FloatField(
@@ -201,7 +201,7 @@ class Country(models.Model):
 
 
 class SourceComponent(models.Model):
-    """SCTR source components model."""
+    """OriginReport source components model."""
 
     fraction_cogs = models.FloatField(
         blank=True,
@@ -223,4 +223,6 @@ class SourceComponent(models.Model):
     # in case it isn't in our DB and should be saved
     company_name = models.CharField(max_length=200, null=True)
 
-    parent_sctr = models.ForeignKey(SCTR, related_name="components", on_delete=models.CASCADE)
+    parent_origin_report = models.ForeignKey(OriginReport,
+                                             related_name="components",
+                                             on_delete=models.CASCADE)

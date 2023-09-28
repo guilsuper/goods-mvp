@@ -8,34 +8,34 @@ import { Col, Row, Image } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { toReadable } from '../utils/Utilities'
 
-const ListItem = ({ sctr }) => {
+const ListItem = ({ originReport }) => {
   ListItem.propTypes = {
-    sctr: PropTypes.object
+    originReport: PropTypes.object
   }
-  // If the SCTR wasn't loaded yet
-  if (!sctr.state) {
+  // If the OriginReport wasn't loaded yet
+  if (!originReport.state) {
     return
   }
 
-  // Renders sctr object as a column that contains 4 rows.
+  // Renders originReport object as a column that contains 4 rows.
   return (
     <Col
       xs={3}
       className="border m-3 p-4 rounded"
-      as={Link} to={'/sctr/' + sctr.id}
+      as={Link} to={'/origin_report/' + originReport.id}
       style={{ color: 'inherit', textDecoration: 'inherit' }}
     >
       <Row>
         <Image src="/FreeWorldCertified-logo-192.png"/>
       </Row>
       <Row>
-        {'Identifier: ' + sctr.unique_identifier}
+        {'Identifier: ' + originReport.unique_identifier}
       </Row>
       <Row>
-        {'Name: ' + sctr.marketing_name}
+        {'Name: ' + originReport.marketing_name}
       </Row>
       <Row>
-        {'State: ' + toReadable(sctr.state)}
+        {'State: ' + toReadable(originReport.state)}
       </Row>
     </Col>
   )

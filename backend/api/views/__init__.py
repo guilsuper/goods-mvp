@@ -2,17 +2,17 @@
 """Contains all the views."""
 from api.views.company_views import CompanyUpdateRetrieveView
 from api.views.country_views import CountryView
-from api.views.sctr_views import ComponentCreateView
-from api.views.sctr_views import ComponentPatchRetrieveDeleteView
-from api.views.sctr_views import SCTRCompanyListView
-from api.views.sctr_views import SCTRCreateDraftView
-from api.views.sctr_views import SCTRCreateView
-from api.views.sctr_views import SCTRMoveToDraftView
-from api.views.sctr_views import SCTRMoveToPublishedView
-from api.views.sctr_views import SCTRPublishedListView
-from api.views.sctr_views import SCTRRetrieveDestroyView
-from api.views.sctr_views import SCTRSwitchVisibilityView
-from api.views.sctr_views import SCTRUpdateView
+from api.views.origin_report_views import ComponentCreateView
+from api.views.origin_report_views import ComponentPatchRetrieveDeleteView
+from api.views.origin_report_views import OriginReportCompanyListView
+from api.views.origin_report_views import OriginReportCreateDraftView
+from api.views.origin_report_views import OriginReportCreateView
+from api.views.origin_report_views import OriginReportMoveToDraftView
+from api.views.origin_report_views import OriginReportMoveToPublishedView
+from api.views.origin_report_views import OriginReportPublishedListView
+from api.views.origin_report_views import OriginReportRetrieveDestroyView
+from api.views.origin_report_views import OriginReportSwitchVisibilityView
+from api.views.origin_report_views import OriginReportUpdateView
 from api.views.smoke_views import Smoke
 from api.views.users_views import ActivationView
 from api.views.users_views import CreateAdministratorAndCompanyView
@@ -27,15 +27,15 @@ __all__ = [
     "CompanyUpdateRetrieveView",
     "ComponentCreateView",
     "ComponentPatchRetrieveDeleteView",
-    "SCTRCreateDraftView",
-    "SCTRCreateView",
-    "SCTRPublishedListView",
-    "SCTRRetrieveDestroyView",
-    "SCTRSwitchVisibilityView",
-    "SCTRUpdateView",
-    "SCTRCompanyListView",
-    "SCTRMoveToDraftView",
-    "SCTRMoveToPublishedView",
+    "OriginReportCreateDraftView",
+    "OriginReportCreateView",
+    "OriginReportPublishedListView",
+    "OriginReportRetrieveDestroyView",
+    "OriginReportSwitchVisibilityView",
+    "OriginReportUpdateView",
+    "OriginReportCompanyListView",
+    "OriginReportMoveToDraftView",
+    "OriginReportMoveToPublishedView",
     "Smoke",
     "ActivationView",
     "CreateAdministratorAndCompanyView",
