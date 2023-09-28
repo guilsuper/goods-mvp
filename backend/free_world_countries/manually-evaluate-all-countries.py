@@ -39,10 +39,10 @@ override_names = {
     "CD": "Democratic Republic of Congo",  # The Democratic Republic of the
     "FM": "Micronesia",  # Federated States of
     "IR": "Iran",  # Islamic Republic of
-    "KR": "Korea",  # Republic of
+    "KR": "South Korea",  # Republic of
     "LA": "Laos",  # Lao People's Democratic Republic
     "MD": "Moldova",   # Republic of
-    "KP": "Korea",  # Democratic People's Republic of
+    "KP": "North Korea",  # Democratic People's Republic of
     "SY": "Syria",  # Syrian Arab Republic
     "TW": "Taiwan",  # not part of China!
     "TZ": "Tanzania",  # United Republic of
