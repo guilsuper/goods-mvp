@@ -7,10 +7,6 @@
  * @param  {string} countryName  country name of the desired report
  * @return {string}              country report link
  */
-export function freedomHouseCountryReportURL (countryName) {
-  const urlFriendlyCountryName = countryName.toLowerCase()
-    .replaceAll(' ', '-')
-    .replaceAll("'", '')
-    .replaceAll('.', '')
-  return 'https://freedomhouse.org/country/' + urlFriendlyCountryName + '/freedom-world/2023'
+export function freedomHouseCountryReportURL (countryName, freedomHouseURLCountryName) {
+  return 'https://freedomhouse.org/country/' + freedomHouseURLCountryName + '/freedom-world/2023'
 }

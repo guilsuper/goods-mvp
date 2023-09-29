@@ -20,3 +20,8 @@ class Country(NamedTuple):
     name: str
     user: str
     comment: str
+
+
+class FreedomHouseCountryNameURLFragment(NamedTuple):
+    alpha_2: str
+    fragment: str
