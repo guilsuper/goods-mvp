@@ -1,5 +1,6 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Checks if the qrcode is displayed on the SCTR page, and it has embedded the correct link."""
+"""Checks if the qrcode is displayed on the Origin Report page,and it
+has embedded the correct link."""
 import os
 from typing import Callable
 
@@ -11,24 +12,26 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 
-def test_flag_sctr_info_page(
+def test_flag_origin_report_info_page(
     driver: webdriver.Chrome,
-    sctr_create_published: Callable,
+    origin_report_create_published: Callable,
     client: dict
 ):
-    """Checks if the qr code is displayed in the SCTR page with the correct link."""
-    sctr = sctr_create_published()
+    """Checks if the qr code is displayed in the OriginReport page with the correct link."""
+    origin_report = origin_report_create_published()
 
-    driver.get(os.environ["FRONTEND"] + "/sctr")
+    driver.get(os.environ["FRONTEND"] + "/origin_report")
 
-    sctr_item = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f"//a[@href='/sctr/{sctr['id']}']"))
+    origin_report_item = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (By.XPATH, f"//a[@href='/origin_report/{origin_report['id']}']")
+        )
     )
-    assert sctr_item
+    assert origin_report_item
 
-    # After click on a listed SCTR -- should redirect to SCTR page
-    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(sctr_item)).click()
-    assert driver.current_url == os.environ["FRONTEND"] + f"/sctr/{sctr['id']}"
+    # After click on a listed OriginReport -- should redirect to OriginReport page
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(origin_report_item)).click()
+    assert driver.current_url == os.environ["FRONTEND"] + f"/origin_report/{origin_report['id']}"
 
     # ensure that the QR Code is present
     qrcode_present = WebDriverWait(driver, 10).until(
@@ -48,4 +51,4 @@ def test_flag_sctr_info_page(
     qrcode_url, bbox, straight_qrcode = detector.detectAndDecode(img)
 
     # ensure extracted url matches expected url
-    assert os.environ["FRONTEND"] + f"/sctr/{sctr['id']}" == qrcode_url
+    assert os.environ["FRONTEND"] + f"/origin_report/{origin_report['id']}" == qrcode_url
