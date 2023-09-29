@@ -280,7 +280,7 @@ resource "random_password" "django_secret_key" {
 resource "google_secret_manager_secret" "secret_django_secret_key" {
   secret_id = "django-secret-key"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -304,7 +304,7 @@ resource "google_secret_manager_secret_iam_binding" "django_secret_key_account_b
 resource "google_secret_manager_secret" "secret_django_database_url" {
   secret_id = "django-database-url"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -329,7 +329,7 @@ resource "google_secret_manager_secret_iam_binding" "django_database_url_account
 resource "google_secret_manager_secret" "secret_django_database_password" {
   secret_id = "django-database-password"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -354,7 +354,7 @@ resource "google_secret_manager_secret_iam_binding" "django_database_password_ac
 resource "google_secret_manager_secret" "secret_django_gs_bucket_name" {
   secret_id = "django-gs-bucket-name"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -385,7 +385,7 @@ resource "random_password" "django_superuser_password" {
 resource "google_secret_manager_secret" "secret_django_superuser_password" {
   secret_id = "django-superuser-password"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -409,7 +409,7 @@ resource "google_secret_manager_secret_iam_binding" "django_superuser_password_s
 resource "google_secret_manager_secret" "secret_sendgrid_api_key" {
   secret_id = "sendgrid-api-key"
   replication {
-    automatic = true
+    auto {}
   }
 }
 
@@ -737,5 +737,51 @@ resource "google_service_account_iam_binding" "default_execution_service_account
 
   members = [
     "serviceAccount:${google_service_account.github_actions_service_account.email}"
+  ]
+}
+
+#########################################################################################################################
+# https://cloud.google.com/docs/terraform/resource-management/store-state
+# Terraform state storage bucket
+resource "random_id" "terraform_state_bucket_prefix" {
+  byte_length = 8
+}
+
+resource "google_kms_key_ring" "terraform_state" {
+  name     = "${random_id.terraform_state_bucket_prefix.hex}-bucket-tfstate"
+  location = var.gcp_region
+}
+
+resource "google_kms_crypto_key" "terraform_state_bucket" {
+  name            = "test-terraform-state-bucket"
+  key_ring        = google_kms_key_ring.terraform_state.id
+  rotation_period = "86400s"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
+resource "google_project_iam_member" "service_account" {
+  project = var.gcp_project_id
+  role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+  member  = "serviceAccount:service-${data.google_project.project.number}@gs-project-accounts.iam.gserviceaccount.com"
+}
+
+resource "google_storage_bucket" "terraform_state_bucket" {
+  name                        = "${random_id.terraform_state_bucket_prefix.hex}-bucket-tfstate"
+  force_destroy               = false
+  location                    = var.gcp_region
+  storage_class               = "STANDARD"
+  uniform_bucket_level_access = true
+
+  versioning {
+    enabled = true
+  }
+  encryption {
+    default_kms_key_name = google_kms_crypto_key.terraform_state_bucket.id
+  }
+  depends_on = [
+    google_project_iam_member.service_account
   ]
 }

@@ -1,8 +1,9 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Module contains SCTR and Administrator factories."""
+"""Module contains OriginReport and Administrator factories."""
 import factory
-from api.models import SCTR_ID_TYPES
-from api.models import SCTR_STATES
+from api.models import Country
+from api.models import ORIGIN_REPORT_ID_TYPES
+from api.models import ORIGIN_REPORT_STATES
 from api.models import SOURCE_COMPONENT_TYPE
 from django.contrib.auth.models import Group
 from factory.django import DjangoModelFactory
@@ -78,19 +79,19 @@ class AdministratorFactory(DjangoModelFactory):
                 self.groups.add(group)
 
 
-class SCTRFactory(DjangoModelFactory):
-    """SCTR factory."""
+class OriginReportFactory(DjangoModelFactory):
+    """OriginReport factory."""
 
     class Meta:
-        """SCTR factory model and fields."""
+        """OriginReport factory model and fields."""
 
-        model = "api.SCTR"
+        model = "api.OriginReport"
 
     unique_identifier = factory.Sequence(lambda n: str(n) * 8)
-    unique_identifier_type = SCTR_ID_TYPES.SKU
+    unique_identifier_type = ORIGIN_REPORT_ID_TYPES.SKU
     marketing_name = factory.Sequence(lambda n: str(n) * 8)
     version = 1
-    state = SCTR_STATES.PUBLISHED
+    state = ORIGIN_REPORT_STATES.PUBLISHED
     cogs = 100
     is_latest_version = True
 
@@ -108,7 +109,7 @@ class ComponentFactory(DjangoModelFactory):
     fraction_cogs = 100
     marketing_name = factory.Sequence(lambda n: str(n) * 8)
     component_type = SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED
-    country_of_origin = "USA"
+    country_of_origin = Country("US")
     external_sku = factory.Sequence(lambda n: int(str(n) * 8))
-    parent_sctr = factory.SubFactory(SCTRFactory)
+    parent_origin_report = factory.SubFactory(OriginReportFactory)
     company_name = factory.Sequence(lambda n: str(n) * 8)

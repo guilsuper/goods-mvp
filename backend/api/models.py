@@ -9,7 +9,6 @@ from django.core.validators import MinValueValidator
 from django.core.validators import RegexValidator
 from django.db import models
 from django.template.defaultfilters import slugify
-from django_countries.fields import CountryField
 
 
 full_domain_validator = RegexValidator(
@@ -42,14 +41,14 @@ class ChoicesEnum(IntEnum):
         return None
 
 
-class SCTR_ID_TYPES(ChoicesEnum):
-    """Allowed coices for SCTR unique identifier types."""
+class ORIGIN_REPORT_ID_TYPES(ChoicesEnum):
+    """Allowed choices for OriginReport unique identifier types."""
     SKU = 1
     GNIT = 2
 
 
-class SCTR_STATES(ChoicesEnum):
-    """Allowed coices for SCTR states."""
+class ORIGIN_REPORT_STATES(ChoicesEnum):
+    """Allowed choices for OriginReport states."""
 
     DRAFT = 1
     PUBLISHED = 2
@@ -153,16 +152,16 @@ class Administrator(AbstractUser):
         group.user_set.add(self)
 
 
-class SCTR(models.Model):
-    """SCTR model."""
+class OriginReport(models.Model):
+    """OriginReport model."""
 
     # According to the public information
     # SKU length is usually not more then 25 characters
     # GNIT length is 13
     unique_identifier = models.CharField(max_length=25)
     unique_identifier_type = models.IntegerField(
-        choices=SCTR_ID_TYPES.choices(),
-        default=SCTR_ID_TYPES.SKU
+        choices=ORIGIN_REPORT_ID_TYPES.choices(),
+        default=ORIGIN_REPORT_ID_TYPES.SKU
     )
     marketing_name = models.CharField(
         max_length=500,
@@ -175,8 +174,8 @@ class SCTR(models.Model):
         ]
     )
     state = models.IntegerField(
-        default=SCTR_STATES.DRAFT,
-        choices=SCTR_STATES.choices()
+        default=ORIGIN_REPORT_STATES.DRAFT,
+        choices=ORIGIN_REPORT_STATES.choices()
     )
 
     cogs = models.FloatField(
@@ -191,8 +190,17 @@ class SCTR(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 
+class Country(models.Model):
+    """Country."""
+
+    alpha_2 = models.CharField(max_length=2, primary_key=True)
+    alpha_3 = models.CharField(max_length=3, unique=True)
+    name = models.CharField(max_length=255, unique=True)
+    free = models.BooleanField(null=False)
+
+
 class SourceComponent(models.Model):
-    """SCTR source components model."""
+    """OriginReport source components model."""
 
     fraction_cogs = models.FloatField(
         blank=True,
@@ -206,7 +214,7 @@ class SourceComponent(models.Model):
 
     # On of this fields will be set according to the type
     # This check is applied in the serializer
-    country_of_origin = CountryField(null=True)
+    country_of_origin = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
     external_sku = models.CharField(max_length=25, null=True)
 
     # If externally sourced, should store company name
@@ -214,4 +222,6 @@ class SourceComponent(models.Model):
     # in case it isn't in our DB and should be saved
     company_name = models.CharField(max_length=200, null=True)
 
-    parent_sctr = models.ForeignKey(SCTR, related_name="components", on_delete=models.CASCADE)
+    parent_origin_report = models.ForeignKey(OriginReport,
+                                             related_name="components",
+                                             on_delete=models.CASCADE)

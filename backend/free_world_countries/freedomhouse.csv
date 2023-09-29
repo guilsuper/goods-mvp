@@ -1,0 +1,210 @@
+Abkhazia,Eurasia,t,PF,39
+Afghanistan,Asia,c,NF,8
+Albania,Europe,c,PF,67
+Algeria,Africa,c,NF,32
+Andorra,Europe,c,F,93
+Angola,Africa,c,NF,28
+Antigua and Barbuda,Americas,c,F,85
+Argentina,Americas,c,F,85
+Armenia,Eurasia,c,PF,54
+Australia,Asia,c,F,95
+Austria,Europe,c,F,93
+Azerbaijan,Eurasia,c,NF,9
+Bahamas,Americas,c,F,91
+Bahrain,Middle East,c,NF,12
+Bangladesh,Asia,c,PF,40
+Barbados,Americas,c,F,94
+Belarus,Eurasia,c,NF,8
+Belgium,Europe,c,F,96
+Belize,Americas,c,F,87
+Benin,Africa,c,PF,59
+Bhutan,Asia,c,PF,61
+Bolivia,Americas,c,PF,66
+Bosnia and Herzegovina,Europe,c,PF,52
+Botswana,Africa,c,F,72
+Brazil,Americas,c,F,72
+Brunei,Asia,c,NF,28
+Bulgaria,Europe,c,F,79
+Burkina Faso,Africa,c,NF,30
+Burundi,Africa,c,NF,14
+Cabo Verde,Africa,c,F,92
+Cambodia,Asia,c,NF,24
+Cameroon,Africa,c,NF,15
+Canada,Americas,c,F,98
+Central African Republic,Africa,c,NF,7
+Chad,Africa,c,NF,15
+Chile,Americas,c,F,94
+China,Asia,c,NF,9
+Colombia,Americas,c,F,70
+Comoros,Africa,c,PF,42
+Congo (Brazzaville),Africa,c,NF,17
+Congo (Kinshasa),Africa,c,NF,19
+Costa Rica,Americas,c,F,91
+Cote d'Ivoire,Africa,c,PF,49
+Crimea,Eurasia,t,NF,4
+Croatia,Europe,c,F,84
+Cuba,Americas,c,NF,12
+Cyprus,Europe,c,F,92
+Czech Republic,Europe,c,F,92
+Denmark,Europe,c,F,97
+Djibouti,Africa,c,NF,24
+Dominica,Americas,c,F,93
+Dominican Republic,Americas,c,PF,68
+Eastern Donbas,Eurasia,t,NF,3
+Ecuador,Americas,c,F,70
+Egypt,Africa,c,NF,18
+El Salvador,Americas,c,PF,56
+Equatorial Guinea,Africa,c,NF,5
+Eritrea,Africa,c,NF,3
+Estonia,Europe,c,F,94
+Eswatini,Africa,c,NF,17
+Ethiopia,Africa,c,NF,21
+Fiji,Asia,c,PF,59
+Finland,Europe,c,F,100
+France,Europe,c,F,89
+Gabon,Africa,c,NF,20
+Gaza Strip,Middle East,t,NF,11
+Georgia,Eurasia,c,PF,58
+Germany,Europe,c,F,94
+Ghana,Africa,c,F,80
+Greece,Europe,c,F,86
+Grenada,Americas,c,F,89
+Guatemala,Americas,c,PF,49
+Guinea,Africa,c,NF,30
+Guinea-Bissau,Africa,c,PF,43
+Guyana,Americas,c,F,73
+Haiti,Americas,c,NF,31
+Honduras,Americas,c,PF,48
+Hong Kong,Asia,t,PF,42
+Hungary,Europe,c,PF,66
+Iceland,Europe,c,F,94
+India,Asia,c,PF,66
+Indian Kashmir,Asia,t,NF,27
+Indonesia,Asia,c,PF,58
+Iran,Middle East,c,NF,12
+Iraq,Middle East,c,NF,29
+Ireland,Europe,c,F,97
+Israel,Middle East,c,F,77
+Italy,Europe,c,F,90
+Jamaica,Americas,c,F,80
+Japan,Asia,c,F,96
+Jordan,Middle East,c,NF,33
+Kazakhstan,Eurasia,c,NF,23
+Kenya,Africa,c,PF,52
+Kiribati,Asia,c,F,91
+Kosovo,Europe,c,PF,60
+Kuwait,Middle East,c,PF,37
+Kyrgyzstan,Eurasia,c,NF,27
+Laos,Asia,c,NF,13
+Latvia,Europe,c,F,88
+Lebanon,Middle East,c,PF,43
+Lesotho,Africa,c,F,66
+Liberia,Africa,c,PF,60
+Libya,Africa,c,NF,10
+Liechtenstein,Europe,c,F,90
+Lithuania,Europe,c,F,89
+Luxembourg,Europe,c,F,97
+Madagascar,Africa,c,PF,61
+Malawi,Africa,c,PF,66
+Malaysia,Asia,c,PF,53
+Maldives,Asia,c,PF,41
+Mali,Africa,c,NF,29
+Malta,Europe,c,F,89
+Marshall Islands,Asia,c,F,93
+Mauritania,Africa,c,PF,36
+Mauritius,Africa,c,F,85
+Mexico,Americas,c,PF,60
+Micronesia,Asia,c,F,92
+Moldova,Eurasia,c,PF,62
+Monaco,Europe,c,F,84
+Mongolia,Asia,c,F,84
+Montenegro,Europe,c,PF,67
+Morocco,Africa,c,PF,37
+Mozambique,Africa,c,PF,45
+Myanmar,Asia,c,NF,9
+Nagorno-Karabakh,Eurasia,t,PF,37
+Namibia,Africa,c,F,77
+Nauru,Asia,c,F,77
+Nepal,Asia,c,PF,58
+Netherlands,Europe,c,F,97
+New Zealand,Asia,c,F,99
+Nicaragua,Americas,c,NF,19
+Niger,Africa,c,PF,51
+Nigeria,Africa,c,PF,43
+North Korea,Asia,c,NF,3
+North Macedonia,Europe,c,PF,68
+Northern Cyprus,Europe,t,F,76
+Norway,Europe,c,F,100
+Oman,Middle East,c,NF,24
+Pakistan,Asia,c,PF,37
+Pakistani Kashmir,Asia,t,NF,29
+Palau,Asia,c,F,92
+Panama,Americas,c,F,83
+Papua New Guinea,Asia,c,PF,61
+Paraguay,Americas,c,PF,65
+Peru,Americas,c,PF,70
+Philippines,Asia,c,PF,58
+Poland,Europe,c,F,81
+Portugal,Europe,c,F,96
+Qatar,Middle East,c,NF,25
+Romania,Europe,c,F,83
+Russia,Eurasia,c,NF,16
+Rwanda,Africa,c,NF,23
+Samoa,Asia,c,F,83
+San Marino,Europe,c,F,97
+Sao Tome and Principe,Africa,c,F,84
+Saudi Arabia,Middle East,c,NF,8
+Senegal,Africa,c,PF,68
+Serbia,Europe,c,PF,60
+Seychelles,Africa,c,F,79
+Sierra Leone,Africa,c,PF,63
+Singapore,Asia,c,PF,47
+Slovakia,Europe,c,F,90
+Slovenia,Europe,c,F,95
+Solomon Islands,Asia,c,F,76
+Somalia,Africa,c,NF,8
+Somaliland,Africa,t,PF,44
+South Africa,Africa,c,F,79
+South Korea,Asia,c,F,83
+South Ossetia,Eurasia,t,NF,12
+South Sudan,Africa,c,NF,1
+Spain,Europe,c,F,90
+Sri Lanka,Asia,c,PF,54
+St. Kitts and Nevis,Americas,c,F,89
+St. Lucia,Americas,c,F,92
+St. Vincent and the Grenadines,Americas,c,F,91
+Sudan,Africa,c,NF,10
+Suriname,Americas,c,F,79
+Sweden,Europe,c,F,100
+Switzerland,Europe,c,F,96
+Syria,Middle East,c,NF,1
+Taiwan,Asia,c,F,94
+Tajikistan,Eurasia,c,NF,7
+Tanzania,Africa,c,PF,36
+Thailand,Asia,c,NF,30
+The Gambia,Africa,c,PF,48
+Tibet,Asia,t,NF,1
+Timor-Leste,Asia,c,F,72
+Togo,Africa,c,PF,42
+Tonga,Asia,c,F,81
+Transnistria,Eurasia,t,NF,18
+Trinidad and Tobago,Americas,c,F,82
+Tunisia,Africa,c,PF,56
+Turkey,Europe,c,NF,32
+Turkmenistan,Eurasia,c,NF,2
+Tuvalu,Asia,c,F,93
+Uganda,Africa,c,NF,35
+Ukraine,Eurasia,c,PF,50
+United Arab Emirates,Middle East,c,NF,18
+United Kingdom,Europe,c,F,93
+United States,Americas,c,F,83
+Uruguay,Americas,c,F,96
+Uzbekistan,Eurasia,c,NF,12
+Vanuatu,Asia,c,F,82
+Venezuela,Americas,c,NF,15
+Vietnam,Asia,c,NF,19
+West Bank,Middle East,t,NF,22
+Western Sahara,Africa,t,NF,4
+Yemen,Middle East,c,NF,9
+Zambia,Africa,c,PF,54
+Zimbabwe,Africa,c,NF,28

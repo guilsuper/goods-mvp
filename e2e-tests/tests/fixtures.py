@@ -85,10 +85,10 @@ def signed_in_client(driver: webdriver.Chrome) -> dict:
 
 
 @pytest.fixture
-def sctr_create_published() -> Callable:
-    """Returns a function to configure SCTR creation using a request to the backend."""
+def origin_report_create_published() -> Callable:
+    """Returns a function to configure OriginReport creation using a request to the backend."""
     def create() -> dict:
-        """Creates an SCTR and returns dict with SCTR info."""
+        """Creates an OriginReport and returns dict with OriginReport info."""
         data = {
             "unique_identifier_type_str": "SKU",
             "unique_identifier": "1aa24a211232aa",
@@ -99,7 +99,7 @@ def sctr_create_published() -> Callable:
                     "marketing_name": "why",
                     "component_type_str": "EXTERNALLY_SOURCED",
                     "external_sku": "aaaaa",
-                    "country_of_origin": "USA",
+                    "country_of_origin": "US",
                     "company_name": "Mojang"
                 },
                 {
@@ -107,26 +107,30 @@ def sctr_create_published() -> Callable:
                     "marketing_name": "why1",
                     "component_type_str": "MADE_IN_HOUSE",
                     "external_sku": "aaaaa1",
-                    "country_of_origin": "China",
+                    "country_of_origin": "CH",
                     "company_name": "Alabama"
                 }
             ]
         }
-        sctr = requests.post(
-            os.environ["BACKEND"] + "/api/sctr/create/",
+        response = requests.post(
+            os.environ["BACKEND"] + "/api/origin_report/create/",
             json=data,
             headers={"Authorization": f"Bearer {_client['tokens']['access']}"}
-        ).json()
-        return sctr
+        )
+        response.raise_for_status()
+        return response.json()
 
     return create
 
 
 @pytest.fixture
-def sctr_create_draft() -> Callable:
-    """Returns a function to configure SCTR draft creation using a request to the backend."""
+def origin_report_create_draft() -> Callable:
+    """Returns a function to configure OriginReport draft creation using a
+    request to the backend.
+    """
+
     def create() -> dict:
-        """Creates an SCTR draft and returns dict with SCTR info."""
+        """Creates an OriginReport draft and returns dict with OriginReport info."""
         data = {
             "unique_identifier_type_str": "SKU",
             "unique_identifier": "1aa24a211232aa",
@@ -137,16 +141,17 @@ def sctr_create_draft() -> Callable:
                     "marketing_name": "why",
                     "component_type_str": "EXTERNALLY_SOURCED",
                     "external_sku": "aaaaa",
-                    "country_of_origin": "USA",
+                    "country_of_origin": "US",
                     "company_name": "Mojang"
                 }
             ]
         }
-        sctr = requests.post(
-            os.environ["BACKEND"] + "/api/sctr/create_draft/",
+        response = requests.post(
+            os.environ["BACKEND"] + "/api/origin_report/create_draft/",
             json=data,
             headers={"Authorization": f"Bearer {_client['tokens']['access']}"}
-        ).json()
-        return sctr
+        )
+        response.raise_for_status()
+        return response.json()
 
     return create
