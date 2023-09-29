@@ -47,7 +47,7 @@ class SourceComponentSerializer(ModelSerializer):
 
     id = IntegerField(read_only=True)
     # To make it required
-    marketing_name = CharField(required=True, max_length=500)
+    short_description = CharField(required=True, max_length=500)
     # To make component type readable for frontend developers
     component_type_str = CharField(max_length=18, write_only=True)
     # Transforms component_type to string in the response
@@ -160,7 +160,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
     # To define a list of components in POST request
     components = SourceComponentSerializer(many=True)
     # To make this field required
-    marketing_name = CharField(max_length=500)
+    short_description = CharField(max_length=500)
     # To make unique_identifier_type as string
     unique_identifier_type_str = CharField(max_length=4, write_only=True)
 
@@ -184,7 +184,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
 
             "unique_identifier_type_str",
             "unique_identifier",
-            "marketing_name",
+            "short_description",
             "components",
 
             # Read only
@@ -255,7 +255,7 @@ class OriginReportDraftSerializer(ModelSerializer):
 
     id = IntegerField(read_only=True)
     components = SourceComponentDraftSerializer(many=True)
-    marketing_name = CharField(max_length=500, allow_blank=True, required=False)
+    short_description = CharField(max_length=500, allow_blank=True, required=False)
 
     class Meta:
         """Metaclass for the OriginReportDraftSerializer."""
@@ -265,7 +265,7 @@ class OriginReportDraftSerializer(ModelSerializer):
             "id",
             "unique_identifier_type",
             "unique_identifier",
-            "marketing_name",
+            "short_description",
             "components"
         )
 
@@ -314,7 +314,7 @@ class OriginReportPublishValidatorSerializer(ModelSerializer):
         model = OriginReport
         fields = (
             "unique_identifier",
-            "marketing_name",
+            "short_description",
             "unique_identifier_type",
         )
 

@@ -89,7 +89,7 @@ class OriginReportFactory(DjangoModelFactory):
 
     unique_identifier = factory.Sequence(lambda n: str(n) * 8)
     unique_identifier_type = ORIGIN_REPORT_ID_TYPES.SKU
-    marketing_name = factory.Sequence(lambda n: str(n) * 8)
+    short_description = factory.Sequence(lambda n: str(n) * 8)
     version = 1
     state = ORIGIN_REPORT_STATES.PUBLISHED
     cogs = 100
@@ -107,7 +107,7 @@ class ComponentFactory(DjangoModelFactory):
         model = "api.SourceComponent"
 
     fraction_cogs = 100
-    marketing_name = factory.Sequence(lambda n: str(n) * 8)
+    short_description = factory.Sequence(lambda n: str(n) * 8)
     component_type = SOURCE_COMPONENT_TYPE.EXTERNALLY_SOURCED
     country_of_origin = Country("US")
     external_sku = factory.Sequence(lambda n: int(str(n) * 8))

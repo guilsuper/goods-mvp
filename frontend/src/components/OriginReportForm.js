@@ -16,7 +16,7 @@ const OriginReportForm = () => {
   // all possible countries list
   const [inputFields, setInputFields] = useState([{
     fraction_cogs: 0,
-    marketing_name: '',
+    short_description: '',
     component_type_str: 'EXTERNALLY_SOURCED',
     external_sku: '',
     country_of_origin: '',
@@ -76,8 +76,8 @@ const OriginReportForm = () => {
       unique_identifier_type_str:
         event.target.unique_identifier_type_str.value,
 
-      marketing_name:
-        event.target.marketing_name[0].value
+      short_description:
+        event.target.short_description[0].value
     }
 
     data.components = inputFields
@@ -137,7 +137,7 @@ const OriginReportForm = () => {
     const values = [...inputFields]
     values.push({
       fraction_cogs: 0,
-      marketing_name: '',
+      short_description: '',
       component_type_str: 'EXTERNALLY_SOURCED',
       external_sku: '',
       country_of_origin: '',
@@ -221,7 +221,7 @@ const OriginReportForm = () => {
         <Form.Control type="text" placeholder="Enter SKU or GTIN (unique identifier)" />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="marketing_name">
+      <Form.Group className="mb-3" controlId="short_description">
         <Form.Label>Short Description</Form.Label>
         <Form.Control type="text" placeholder="Enter short description" />
       </Form.Group>
@@ -259,11 +259,11 @@ const OriginReportForm = () => {
             </Form.Group>
           </Col>
           <Col>
-            <Form.Group className="mb-3" controlId="marketing_name">
+            <Form.Group className="mb-3" controlId="short_description">
               <Form.Control
                 type="text"
                 placeholder="Enter short description"
-                value={inputField.marketing_name}
+                value={inputField.short_description}
                 onChange={event => handleInputChange(index, event)}
               />
             </Form.Group>
