@@ -107,7 +107,7 @@ def origin_report_create_published() -> Callable:
                     "marketing_name": "why1",
                     "component_type_str": "MADE_IN_HOUSE",
                     "external_sku": "aaaaa1",
-                    "country_of_origin": "CN",
+                    "country_of_origin": "CN",  # China
                     "company_name": "Alabama"
                 }
             ]
