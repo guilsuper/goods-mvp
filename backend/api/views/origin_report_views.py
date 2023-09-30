@@ -224,7 +224,7 @@ class OriginReportMoveToPublishedView(UpdateAPIView):
         """Validates and moves instance to published state."""
         origin_report = self.get_object()
         components = SourceComponent.objects.filter(parent_origin_report=origin_report).values(
-            "marketing_name",
+            "short_description",
             "fraction_cogs",
             "component_type",
             "external_sku",
@@ -293,7 +293,7 @@ class ComponentCreateView(CreateAPIView):
         """Creates empty component and attaches it to origin_report."""
         data = {
             "fraction_cogs": 0,
-            "marketing_name": "",
+            "short_description": "",
             "component_type_str":
                 SOURCE_COMPONENT_TYPE.name_from_integer(
                     SOURCE_COMPONENT_TYPE.MADE_IN_HOUSE

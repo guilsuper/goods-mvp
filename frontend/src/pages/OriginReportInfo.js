@@ -9,11 +9,14 @@ import AuthContext from '../context/AuthContext'
 import { toReadable } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
 import { freedomHouseCountryReportURL } from '../utils/FreedomHouse'
+import GetQRCode from '../components/QRCode'
 
 const OriginReportInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
   const { originReportIdentifier } = useParams()
   const [originReport, setOriginReport] = useState([])
+
+  const qrcodeURL = window.location.href
 
   const navigate = useNavigate()
 
@@ -169,7 +172,7 @@ const OriginReportInfo = () => {
         <Row><p>{originReport.unique_identifier}</p></Row>
 
         <Row className='text-secondary'><p>Short Description</p></Row>
-        <Row><p>{originReport.marketing_name}</p></Row>
+        <Row><p>{originReport.short_description}</p></Row>
 
         {
             isOwner(user)
@@ -183,7 +186,14 @@ const OriginReportInfo = () => {
             </>
               : ' '
         }
-
+        {
+          originReport.state === 'PUBLISHED'
+            ? <>
+                <Row className='text-secondary'><p>QR Code</p></Row>
+                <Row><GetQRCode path={qrcodeURL} /></Row>
+              </>
+            : ' '
+        }
         <p className='text-secondary'>COGS: {calculateCOGS()}%</p>
 
         <Row className='mt-4'>
@@ -208,7 +218,7 @@ const OriginReportInfo = () => {
         <Row key={`${component}~${index}`} className='mb-3 pt-2 ps-4 border rounded'>
           <Col><p>{component.fraction_cogs}</p></Col>
 
-          <Col><p>{component.marketing_name}</p></Col>
+          <Col><p>{component.short_description}</p></Col>
 
           <Col>
             <Row><p>{toReadable(component.component_type)}</p></Row>

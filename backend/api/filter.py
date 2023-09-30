@@ -13,7 +13,7 @@ class OriginReportFilter(django_filters.FilterSet):
         model = OriginReport
         fields = {
             "unique_identifier": ["icontains"],
-            "marketing_name": ["icontains"],
+            "short_description": ["icontains"],
 
             "cogs": ["gte", "lte"],
 
