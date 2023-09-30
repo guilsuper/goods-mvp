@@ -32,7 +32,7 @@ const ListItem = ({ originReport }) => {
         {'Identifier: ' + originReport.unique_identifier}
       </Row>
       <Row>
-        {'Name: ' + originReport.marketing_name}
+        {'Name: ' + originReport.short_description}
       </Row>
       <Row>
         {'State: ' + toReadable(originReport.state)}

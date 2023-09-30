@@ -27,7 +27,7 @@ const EditOriginReportForm = () => {
   const [inputFields, setInputFields] = useState([{
     id: 0,
     fraction_cogs: 0,
-    marketing_name: '',
+    short_description: '',
     component_type_str: '',
     external_sku: '',
     country_of_origin: '',
@@ -74,7 +74,7 @@ const EditOriginReportForm = () => {
           data.push({
             id: result.components[index].id,
             fraction_cogs: result.components[index].fraction_cogs,
-            marketing_name: result.components[index].marketing_name,
+            short_description: result.components[index].short_description,
             component_type_str: result.components[index].component_type,
             external_sku: result.components[index].external_sku,
             country_of_origin: result.components[index].country_of_origin,
@@ -133,10 +133,10 @@ const EditOriginReportForm = () => {
           ? event.target.unique_identifier_type_str.value
           : originReport.unique_identifier_type,
 
-      marketing_name:
-        event.target.marketing_name[0].value
-          ? event.target.marketing_name[0].value
-          : originReport.marketing_name
+      short_description:
+        event.target.short_description[0].value
+          ? event.target.short_description[0].value
+          : originReport.short_description
     }
 
     // Config for move to publish request
@@ -274,7 +274,7 @@ const EditOriginReportForm = () => {
     values.push({
       id: result.id,
       fraction_cogs: result.fraction_cogs,
-      marketing_name: result.marketing_name,
+      short_description: result.short_description,
       component_type_str: result.component_type,
       external_sku: result.external_sku,
       country_of_origin: result.country_of_origin,
@@ -396,9 +396,9 @@ const EditOriginReportForm = () => {
           <Form.Control type="text" placeholder={originReport.unique_identifier} />
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="marketing_name">
+        <Form.Group className="mb-3" controlId="short_description">
           <Form.Label>Short description</Form.Label>
-          <Form.Control type="text" placeholder={originReport.marketing_name} />
+          <Form.Control type="text" placeholder={originReport.short_description} />
         </Form.Group>
 
         <p>COGS: {calculateCOGS()}%</p>
@@ -434,11 +434,11 @@ const EditOriginReportForm = () => {
               </Form.Group>
             </Col>
             <Col>
-              <Form.Group className="mb-3" controlId="marketing_name">
+              <Form.Group className="mb-3" controlId="short_description">
                 <Form.Control
                   type="text"
-                  placeholder={inputField.marketing_name}
-                  value={inputField.marketing_name}
+                  placeholder={inputField.short_description}
+                  value={inputField.short_description}
                   onChange={event => handleInputChange(index, event)}
                 />
               </Form.Group>

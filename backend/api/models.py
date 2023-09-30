@@ -163,7 +163,7 @@ class OriginReport(models.Model):
         choices=ORIGIN_REPORT_ID_TYPES.choices(),
         default=ORIGIN_REPORT_ID_TYPES.SKU
     )
-    marketing_name = models.CharField(
+    short_description = models.CharField(
         max_length=500,
         null=True)
 
@@ -206,7 +206,7 @@ class SourceComponent(models.Model):
         blank=True,
         null=True
     )
-    marketing_name = models.CharField(max_length=500, null=True, blank=True)
+    short_description = models.CharField(max_length=500, null=True, blank=True)
     component_type = models.IntegerField(
         choices=SOURCE_COMPONENT_TYPE.choices(),
         null=True

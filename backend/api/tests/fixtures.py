@@ -103,11 +103,11 @@ def origin_report_dict():
     obj = {
         "unique_identifier_type_str": "SKU",
         "unique_identifier": "1aa24a211232aa",
-        "marketing_name": "aaaa",
+        "short_description": "aaaa",
         "components": [
             {
                 "fraction_cogs": 99,
-                "marketing_name": "why",
+                "short_description": "why",
                 "component_type_str": "EXTERNALLY_SOURCED",
                 "external_sku": "aaaaa",
                 "country_of_origin": "US",
@@ -115,7 +115,7 @@ def origin_report_dict():
             },
             {
                 "fraction_cogs": 1,
-                "marketing_name": "why1",
+                "short_description": "why1",
                 "component_type_str": "MADE_IN_HOUSE",
                 "external_sku": "aaaaa1",
                 "country_of_origin": "CH",
@@ -139,7 +139,7 @@ def origin_report_invalid_dict():
                 "fraction_cogs": 0,
             },
             {
-                "marketing_name": "why1",
+                "short_description": "why1",
             }
         ]
     }
