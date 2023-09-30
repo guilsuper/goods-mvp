@@ -47,7 +47,7 @@ def test_origin_report_move_to_publish(
     origin_report.save()
     # Set incorrect origin_report data
     if not is_correct_origin_report:
-        origin_report.marketing_name = ""
+        origin_report.short_description = ""
         origin_report.save()
 
     # If parameter is not empty, replace it with actual data

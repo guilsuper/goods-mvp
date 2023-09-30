@@ -15,19 +15,19 @@ from django.urls import reverse
         # Try to update as unauthorized user
         # The user is not allowed to update it
         (None, dict(), 401),
-        (None, {"marketing_name": "aaaaa"}, 401),
+        (None, {"short_description": "aaaaa"}, 401),
         # Try to update a OriginReport as an admin with no specified fields
         # The request will be successful, but without any changes
         ("admin", dict(), 200),
         # Try to update a OriginReport as an admin with specified fields
         # Changes will be applied
-        ("admin", {"marketing_name": "aaaaa"}, 200),
+        ("admin", {"short_description": "aaaaa"}, 200),
         # Try to update a OriginReport as a PM with no specified fields
         # The request will be successful, but without any changes
         ("pm", dict(), 200),
         # Try to update a OriginReport as a PM with specified fields
         # Changes will be applied
-        ("pm", {"marketing_name": "aaaaa"}, 200)
+        ("pm", {"short_description": "aaaaa"}, 200)
     ]
 )
 def test_origin_report_update_same_company(
@@ -60,10 +60,10 @@ def test_origin_report_update_same_company(
 
     assert response.status_code == status_code
     # Ensure data was changed
-    if "marketing_name" in data and user:
+    if "short_description" in data and user:
         assert OriginReport.objects.get(
             id=origin_report.id
-        ).marketing_name == data["marketing_name"]
+        ).short_description == data["short_description"]
 
 
 @pytest.mark.django_db()
@@ -72,19 +72,19 @@ def test_origin_report_update_same_company(
         # Try to update as unauthorized user
         # The user is not allowed to update it
         (None, dict(), 401),
-        (None, {"marketing_name": "aaaaa"}, 401),
+        (None, {"short_description": "aaaaa"}, 401),
         # Try to update a OriginReport as an admin with no specified fields
         # The user is not allowed to update it
         ("admin", dict(), 403),
         # Try to update a OriginReport as an admin with specified fields
         # The user is not allowed to update it
-        ("admin", {"marketing_name": "aaaaa"}, 403),
+        ("admin", {"short_description": "aaaaa"}, 403),
         # Try to update a OriginReport as a PM with no specified fields
         # The user is not allowed to update it
         ("pm", dict(), 403),
         # Try to update a OriginReport as a PM with specified fields
         # The user is not allowed to update it
-        ("pm", {"marketing_name": "aaaaa"}, 403)
+        ("pm", {"short_description": "aaaaa"}, 403)
     ]
 )
 def test_origin_report_update_different_company(
@@ -118,7 +118,7 @@ def test_origin_report_update_different_company(
     assert response.status_code == status_code
     # If data and user were specified
     # Ensure data wasn't changed
-    if "marketing_name" in data and user:
+    if "short_description" in data and user:
         assert OriginReport.objects.get(
             id=origin_report.id
-        ).marketing_name != data["marketing_name"]
+        ).short_description != data["short_description"]

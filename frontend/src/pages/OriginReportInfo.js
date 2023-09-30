@@ -168,7 +168,7 @@ const OriginReportInfo = () => {
         <Row><p>{originReport.unique_identifier}</p></Row>
 
         <Row className='text-secondary'><p>Short Description</p></Row>
-        <Row><p>{originReport.marketing_name}</p></Row>
+        <Row><p>{originReport.short_description}</p></Row>
 
         {
             isOwner(user)
@@ -207,7 +207,7 @@ const OriginReportInfo = () => {
         <Row key={`${component}~${index}`} className='mb-3 pt-2 ps-4 border rounded'>
           <Col><p>{component.fraction_cogs}</p></Col>
 
-          <Col><p>{component.marketing_name}</p></Col>
+          <Col><p>{component.short_description}</p></Col>
 
           <Col>
             <Row><p>{toReadable(component.component_type)}</p></Row>

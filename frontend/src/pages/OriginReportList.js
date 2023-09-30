@@ -77,7 +77,7 @@ const OriginReportList = () => {
                   <Form.Control type="text" placeholder="SKU" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="marketing_name__icontains">
+                <Form.Group className="mb-3" controlId="short_description__icontains">
                   <Form.Label>Short description...</Form.Label>
                   <Form.Control type="text" placeholder="short description" />
                 </Form.Group>
