@@ -1,0 +1,17 @@
+{
+  "navigation": {
+    "profile_settings": "Profileinstellungen",
+    "sign_in": "Anmelden",
+    "sign_out": "Abmelden",
+    "sign_up": "Melden Sie sich an",
+    "home": "Heim",
+    "about": "Um",
+    "origin_reports": "Ursprungsberichte",
+    "our_origin_reports": "Unsere Herkunftsberichte",
+    "create_product_owner": "Produktbesitzer erstellen"
+  },
+  "home": {
+    "value": "Transparenz in der Lieferkette schafft Mehrwert.",
+    "description": "Dokumentieren Sie die globalen Quellen Ihres Produkts in FreeWorldCertified.org, damit Ihre Kunden wissen, wie ihr Geld für die Freiheit stimmt."
+  }
+}

@@ -4,14 +4,15 @@
 
 import React from 'react'
 import Container from 'react-bootstrap/Container'
+import { useTranslation } from 'react-i18next'
 
 const Home = () => {
+  const { t } = useTranslation()
   return (
     <Container className="align-items-center">
       <Container>
-        <h3 className="text-center">Supply chain transparency creates value.</h3>
-          <p style={{ textAlign: 'justify' }}>Document your product&apos;s global sources in FreeWorldCertified.org, so your customers know how their money is voting for freedom.
-        </p>
+        <h3 className="text-center">{ t('home.value') }</h3>
+        <p style={{ textAlign: 'justify' }}>{ t('home.description') } </p>
       </Container>
     </Container>
   )

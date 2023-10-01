@@ -6,9 +6,17 @@ import React, { useContext, useState } from 'react'
 import { Navbar, Nav, NavLink, Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
+import { useTranslation } from 'react-i18next'
+
+const lngs = {
+  en: { nativeName: 'English' },
+  de: { nativeName: 'Deutsch' }
+}
 
 const Header = () => {
   const { authTokens, logoutUser, user } = useContext(AuthContext)
+
+  const { t, i18n } = useTranslation()
 
   const [isToggle, setToggle] = useState(false)
 
@@ -24,8 +32,8 @@ const Header = () => {
     if (authTokens === null) {
       return (
         <ButtonGroup className="me-3">
-          <Button variant="dark" as={Link} to="/sign-in">Sign-in</Button>
-          <Button variant="primary" as={Link} to="/sign-up">Sign-up</Button>
+          <Button variant="dark" as={Link} to="/sign-in">{ t('navigation.sign_in') }</Button>
+          <Button variant="primary" as={Link} to="/sign-up">{ t('navigation.sign_up') }</Button>
         </ButtonGroup>
       )
     } else {
@@ -37,8 +45,22 @@ const Header = () => {
           align={isToggle ? 'start' : 'end'}
           className="me-3"
         >
-          <Dropdown.Item eventKey="accountInfo" href="/account/info">Profile settings</Dropdown.Item>
-          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>Signout</Dropdown.Item>
+          <Dropdown.Item eventKey="accountInfo" href="/account/info">{ t('navigation.profile_settings') }</Dropdown.Item>
+          <Dropdown.Divider />
+          {
+            Object.keys(lngs).map((lng) => (
+              <Dropdown.Item key={lng}
+                             eventKey="changeLang{lng}"
+                             onClick={ () => i18n.changeLanguage(lng) }
+                             active={ i18n.resolvedLanguage === lng }
+              >
+                { lngs[lng].nativeName }
+              </Dropdown.Item>
+            ))
+          }
+          <Dropdown.Divider />
+          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>{ t('navigation.sign_out') }</Dropdown.Item>
+
         </DropdownButton>
       )
     }
@@ -65,13 +87,13 @@ const Header = () => {
       />
       <Navbar.Collapse id="navbarScroll">
         <Nav>
-          <NavLink eventKey="home" as={Link} to="/">Home</NavLink>
-          <NavLink eventKey="originReport" as={Link} to="/origin_report">Origin Reports</NavLink>
-          <NavLink eventKey="about" as={Link} to="/about">About</NavLink>
-          {user ? <NavLink eventKey="ourOriginReport" as={Link} to="/account/origin_report">Our Origin Reports</NavLink> : ' '}
+          <NavLink eventKey="home" as={Link} to="/">{ t('navigation.home') }</NavLink>
+          <NavLink eventKey="originReport" as={Link} to="/origin_report">{ t('navigation.origin_reports') }</NavLink>
+          <NavLink eventKey="about" as={Link} to="/about">{ t('navigation.about') }</NavLink>
+          {user ? <NavLink eventKey="ourOriginReport" as={Link} to="/account/origin_report">{ t('navigation.our_origin_reports') }</NavLink> : ' '}
           { user && isAdmin()
             ? <NavLink eventKey="accountPM" as={Link} to="/account/pm">
-            Create Product Owner
+                { t('navigation.create_product_owner') }
           </NavLink>
             : ' '}
         </Nav>
