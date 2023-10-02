@@ -60,7 +60,7 @@ def init_client() -> dict:
     regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
     link = os.environ["BACKEND"] + regex.search(text).group(1).replace(
         "/activated", "/api/activate"
-    )
+    ) + "/"
     requests.get(link)
 
     user["tokens"] = requests.post(
