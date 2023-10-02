@@ -1,9 +1,4 @@
-FROM selenium/standalone-chrome
-
-# Docker fails with permission denied without it
-USER root
-RUN apt-get update
-RUN apt-get install -y python3-pip
+FROM python:3
 
 COPY ./requirements.txt /e2e-tests/
 RUN pip install -r /e2e-tests/requirements.txt
