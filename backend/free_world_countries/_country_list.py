@@ -3,10 +3,9 @@
 """
 import csv
 
+from free_world_countries._country_structs import Country
+from free_world_countries._country_structs import Status
 from pkg_resources import resource_filename
-
-from ._country_structs import Country
-from ._country_structs import Status
 
 countries = {}
 

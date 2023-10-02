@@ -3,9 +3,8 @@
 """
 import csv
 
+from free_world_countries._country_structs import FreedomHouseCountryNameURLFragment
 from pkg_resources import resource_filename
-
-from ._country_structs import FreedomHouseCountryNameURLFragment
 
 freedom_house_country_name_url_framents = {}
 

@@ -2,12 +2,17 @@
 """Command-line tool for generating _freedomhouse_country_name_url_fragment_list.csv"""
 import csv
 import re
+import sys
+from pathlib import Path
 
 import requests
-from _country_list import countries
-from _country_structs import FreedomHouseCountryNameURLFragment
-from _country_structs import Status
-from _freedomhouse import iso2name
+
+#####################################################################
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from free_world_countries._country_list import countries  # noqa: E402
+from free_world_countries._country_structs import FreedomHouseCountryNameURLFragment  # noqa: E402
+from free_world_countries._country_structs import Status  # noqa: E402
+from free_world_countries._freedomhouse import iso2name  # noqa: E402
 
 override_fragments = {
     "CD": "democratic-republic-congo",

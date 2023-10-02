@@ -27,12 +27,17 @@ countries from the ISO list to generate a new CSV file.
 """
 import csv
 import os
+import sys
 from datetime import datetime
+from pathlib import Path
 
-import _freedomhouse as _fh
 import pycountry
-from _country_structs import Country
-from _country_structs import Status
+
+#####################################################################
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+import free_world_countries._freedomhouse as _fh  # noqa: E402
+from free_world_countries._country_structs import Country  # noqa: E402
+from free_world_countries._country_structs import Status  # noqa: E402
 
 override_names = {
     "BO": "Bolivia",  # Plurinational State of
