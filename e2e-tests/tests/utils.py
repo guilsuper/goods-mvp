@@ -71,3 +71,13 @@ def init_client() -> dict:
         }
     ).json()
     return user
+
+
+def get_country_data() -> dict():
+    response = requests.get(os.environ["BACKEND"] + "/api/country/list/")
+    response.raise_for_status()
+    country_list = response.json()
+    country_map = {}
+    for country in country_list:
+        country_map[country["alpha_2"]] = country
+    return country_map
