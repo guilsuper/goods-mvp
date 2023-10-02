@@ -134,7 +134,7 @@ jobs:
         uses: docker/bake-action@v4
         with:
           files: |
-            docker-compose.test.yml
+            docker-compose.test.yaml
           push: false
           load: true
           set: |
