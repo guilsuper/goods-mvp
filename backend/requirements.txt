@@ -2,7 +2,7 @@ asgiref==3.7.2
 cachetools==5.3.1
 certifi==2023.7.22
 cfgv==3.4.0
-charset-normalizer==3.2.0
+charset-normalizer==3.3.0
 colorama==0.4.6
 coverage==7.3.1
 distlib==0.3.7
