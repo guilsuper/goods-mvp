@@ -27,7 +27,11 @@ def driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
-    driver = webdriver.Chrome(options=options)
+    if "SELENIUM_HOST" in os.environ:
+        driver = webdriver.Remote(command_executor=os.environ["SELENIUM_HOST"],
+                                  options=options)
+    else:
+        driver = webdriver.Chrome(options=options)
     yield driver
     driver.quit()
 
