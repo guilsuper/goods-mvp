@@ -8,6 +8,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import { toReadable } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
+import { freedomHouseCountryReportURL } from '../utils/FreedomHouse'
 import GetQRCode from '../components/QRCode'
 
 const OriginReportInfo = () => {
@@ -225,7 +226,13 @@ const OriginReportInfo = () => {
             <Row><p>{component.external_sku}</p></Row>
           </Col>
 
-          <Col><p>{component.country_of_origin_info.name}</p></Col>
+          <Col>
+            <p>
+              <a href={freedomHouseCountryReportURL(component.country_of_origin_info.name, component.country_of_origin_info.freedom_house_url_name)}>
+                {component.country_of_origin_info.name}
+              </a>
+            </p>
+          </Col>
           <Col className='d-flex align-items-center justify-content-center'>
             <ReactCountryFlag
               countryCode={component.country_of_origin}

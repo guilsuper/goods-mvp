@@ -38,73 +38,73 @@ jobs:
       id-token: 'write'
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - id: 'auth'
-      name: 'Authenticate to Google Cloud'
-      uses: 'google-github-actions/auth@v1'
-      with:
-        token_format: 'access_token'
-        workload_identity_provider: "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}"
-        service_account: "${{ secrets.GCP_SERVICE_ACCOUNT }}"
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}"
+          service_account: "${{ secrets.GCP_SERVICE_ACCOUNT }}"
 
-    - name: 'Set up Cloud SDK'
-      uses: 'google-github-actions/setup-gcloud@v1'
-      with:
-        project_id: '${{ env.PROJECT_ID }}'
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+        with:
+          project_id: '${{ env.PROJECT_ID }}'
 
-    - name: 'Authenticate Docker to Artifact Registry'
-      run: |-
-       gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
+      - name: 'Authenticate Docker to Artifact Registry'
+        run: |-
+          gcloud auth configure-docker ${{ env.GAR_LOCATION }}-docker.pkg.dev
 
-    - name: Use Node.js 16
-      uses: actions/setup-node@v3
-      with:
-        node-version: "16"
-        cache: "npm"
-        cache-dependency-path: frontend/package-lock.json
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
 
-    - name: Install
-      working-directory: ./frontend
-      run: |
-        npm clean-install
+      - name: Install
+        working-directory: ./frontend
+        run: |
+          npm clean-install
 
-    - name: Build
-      working-directory: ./frontend
-      run: |
-        npm run build --if-present
+      - name: Build
+        working-directory: ./frontend
+        run: |
+          npm run build --if-present
 
-    - name: Copy frontend artifacts into backend/
-      run: |
-        mkdir -v backend/website_root/
-        cp -rv frontend/build/* backend/website_root
+      - name: Copy frontend artifacts into backend/
+        run: |
+          mkdir -v backend/website_root/
+          cp -rv frontend/build/* backend/website_root
 
-    - name: 'Build and Push Container to Artifact Registry'
-      run: |-
-        docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}" backend/
-        docker tag "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}" "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:latest"
-        docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}"
-        docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:latest"
+      - name: 'Build and Push Container to Artifact Registry'
+        run: |-
+          docker build -t "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}" backend/
+          docker tag "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}" "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:latest"
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}"
+          docker push "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:latest"
 
-    - name: Render templatized config manifests
-      run: |-
-        export GCLOUD_PROJECT="${{ env.GCLOUD_PROJECT }}"
-        export LOCATION="${{ env.GAR_LOCATION }}"
-        export FQDN="${{ env.FQDN }}"
-        for template in $(ls config/*.template.yaml); do envsubst < ${template} > ${template%%.*}.yaml ; done
+      - name: Render templatized config manifests
+        run: |-
+          export GCLOUD_PROJECT="${{ env.GCLOUD_PROJECT }}"
+          export LOCATION="${{ env.GAR_LOCATION }}"
+          export FQDN="${{ env.FQDN }}"
+          for template in $(ls config/*.template.yaml); do envsubst < ${template} > ${template%%.*}.yaml ; done
 
-    - name: Create release name
-      run: |-
-        echo "RELEASE_NAME=fwc-${GITHUB_SHA::7}-${GITHUB_RUN_NUMBER}" >> ${GITHUB_ENV}
+      - name: Create release name
+        run: |-
+          echo "RELEASE_NAME=fwc-${GITHUB_SHA::7}-${GITHUB_RUN_NUMBER}" >> ${GITHUB_ENV}
 
-    - name: 'Create Cloud Deploy Backend Release'
-      uses: 'google-github-actions/create-cloud-deploy-release@v0'
-      with:
-        delivery_pipeline: fwc-backend
-        name: '${{ env.RELEASE_NAME }}'
-        region: '${{ env.GAR_LOCATION }}'
-        description: '${{ env.GITHUB_COMMIT_MSG }}'
-        skaffold_file: 'config/backend-skaffold.yaml'
-        images: |-
-          backend=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}
+      - name: 'Create Cloud Deploy Backend Release'
+        uses: 'google-github-actions/create-cloud-deploy-release@v0'
+        with:
+          delivery_pipeline: fwc-backend
+          name: '${{ env.RELEASE_NAME }}'
+          region: '${{ env.GAR_LOCATION }}'
+          description: '${{ env.GITHUB_COMMIT_MSG }}'
+          skaffold_file: 'config/backend-skaffold.yaml'
+          images: |-
+            backend=${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.GCLOUD_PROJECT }}/fwc/${{ env.BACKEND_APP }}:${{ github.sha }}
