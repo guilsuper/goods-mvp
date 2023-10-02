@@ -15,7 +15,7 @@ const ActivatePage = () => {
     async function activate () {
       let response = ''
       try {
-        response = await fetch('/api/activate/' + uidb64 + '/' + token)
+        response = await fetch('/api/activate/' + uidb64 + '/' + token + '/')
       } catch (error) {
         alert('Server is not responding')
         return
