@@ -123,13 +123,29 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Checkout
         uses: actions/checkout@v4
 
-      - uses: isbang/compose-action@v1.5.1
+
+      - name: Build
+        uses: docker/bake-action@v4
         with:
-          compose-file: "./docker-compose.test.yaml"
-          up-flags: "--abort-on-container-exit --exit-code-from=e2e-tests"
+          files: |
+            docker-compose.test.yml
+          push: false
+          load: true
+          set: |
+            *.cache-from=type=gha
+            *.cache-to=type=gha
+
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Test
+        run: docker compose up --abort-on-container-exit --exit-code-from=e2e-tests
 
       - name: Upload Test Results
         if: always()
