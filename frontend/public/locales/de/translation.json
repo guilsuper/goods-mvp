@@ -1,14 +1,17 @@
 {
-  "navigation": {
-    "profile_settings": "Profileinstellungen",
-    "sign_in": "Anmelden",
-    "sign_out": "Abmelden",
-    "sign_up": "Melden Sie sich an",
-    "home": "Heim",
+  "common": {
+    "sign-in": "Anmelden",
+    "sign-out": "Abmelden",
+    "sign-up": "Melden Sie sich an",
     "about": "Um",
-    "origin_reports": "Ursprungsberichte",
-    "our_origin_reports": "Unsere Herkunftsberichte",
-    "create_product_owner": "Produktbesitzer erstellen"
+    "origin-report_one": "Ursprungsbericht",
+    "origin-report_other": "Ursprungsberichte"
+  },
+  "navigation": {
+    "profile-settings": "Profileinstellungen",
+    "home": "Heim",
+    "our-origin-reports": "Unsere Herkunftsberichte",
+    "create-product-owner": "Produktbesitzer erstellen"
   },
   "home": {
     "value": "Transparenz in der Lieferkette schafft Mehrwert.",

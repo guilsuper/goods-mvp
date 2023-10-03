@@ -1,14 +1,17 @@
 {
-  "navigation": {
-    "profile_settings": "Profile Settings",
-    "sign_in": "Sign-in",
-    "sign_out": "Sign-out",
-    "sign_up": "Sign-up",
-    "home": "Home",
+  "common": {
+    "sign-in": "Sign In",
+    "sign-out": "Sign Out",
+    "sign-up": "Sign Up",
     "about": "About",
-    "origin_reports": "Origin Reports",
-    "our_origin_reports": "Our Origin Reports",
-    "create_product_owner": "Create Product Owner"
+    "origin-report_one": "Origin Report",
+    "origin-report_other": "Origin Reports"
+  },
+  "navigation": {
+    "profile-settings": "Profile Settings",
+    "home": "Home",
+    "our-origin-reports": "Our Origin Reports",
+    "create-product-owner": "Create Product Owner"
   },
   "home": {
     "value": "Supply chain transparency creates value.",

@@ -32,8 +32,8 @@ const Header = () => {
     if (authTokens === null) {
       return (
         <ButtonGroup className="me-3">
-          <Button variant="dark" as={Link} to="/sign-in">{ t('navigation.sign_in') }</Button>
-          <Button variant="primary" as={Link} to="/sign-up">{ t('navigation.sign_up') }</Button>
+          <Button variant="dark" as={Link} to="/sign-in">{ t('common.sign-in') }</Button>
+          <Button variant="primary" as={Link} to="/sign-up">{ t('common.sign-up') }</Button>
         </ButtonGroup>
       )
     } else {
@@ -45,7 +45,7 @@ const Header = () => {
           align={isToggle ? 'start' : 'end'}
           className="me-3"
         >
-          <Dropdown.Item eventKey="accountInfo" href="/account/info">{ t('navigation.profile_settings') }</Dropdown.Item>
+          <Dropdown.Item eventKey="accountInfo" href="/account/info">{ t('navigation.profile-settings') }</Dropdown.Item>
           <Dropdown.Divider />
           {
             Object.keys(lngs).map((lng) => (
@@ -59,7 +59,7 @@ const Header = () => {
             ))
           }
           <Dropdown.Divider />
-          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>{ t('navigation.sign_out') }</Dropdown.Item>
+          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>{ t('common.sign-out') }</Dropdown.Item>
 
         </DropdownButton>
       )
@@ -88,12 +88,12 @@ const Header = () => {
       <Navbar.Collapse id="navbarScroll">
         <Nav>
           <NavLink eventKey="home" as={Link} to="/">{ t('navigation.home') }</NavLink>
-          <NavLink eventKey="originReport" as={Link} to="/origin_report">{ t('navigation.origin_reports') }</NavLink>
-          <NavLink eventKey="about" as={Link} to="/about">{ t('navigation.about') }</NavLink>
-          {user ? <NavLink eventKey="ourOriginReport" as={Link} to="/account/origin_report">{ t('navigation.our_origin_reports') }</NavLink> : ' '}
+          <NavLink eventKey="originReport" as={Link} to="/origin_report">{ t('common.origin-report_other') }</NavLink>
+          <NavLink eventKey="about" as={Link} to="/about">{ t('common.about') }</NavLink>
+          {user ? <NavLink eventKey="ourOriginReport" as={Link} to="/account/origin_report">{ t('navigation.our-origin-reports') }</NavLink> : ' '}
           { user && isAdmin()
             ? <NavLink eventKey="accountPM" as={Link} to="/account/pm">
-                { t('navigation.create_product_owner') }
+                { t('navigation.create-product-owner') }
           </NavLink>
             : ' '}
         </Nav>
