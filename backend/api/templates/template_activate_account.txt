@@ -3,5 +3,5 @@ Greetings,
 
 Please follow this link to activate your account:
 
-<a href="{{frontend_url}}/activated/{{uid}}/{{token}}">{{frontend_url}}/activated/{{uid}}/{{token}}</a>
+{{frontend_url}}/activated/{{uid}}/{{token}}
 {% endautoescape %}

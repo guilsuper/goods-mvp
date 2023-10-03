@@ -9,7 +9,16 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import ClickTracking
+from sendgrid.helpers.mail import From
+from sendgrid.helpers.mail import HtmlContent
 from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import OpenTracking
+from sendgrid.helpers.mail import PlainTextContent
+from sendgrid.helpers.mail import Subject
+from sendgrid.helpers.mail import SubscriptionTracking
+from sendgrid.helpers.mail import To
+from sendgrid.helpers.mail import TrackingSettings
 
 logger = logging.getLogger(__name__)
 
@@ -26,34 +35,57 @@ def send_activation_email(user_id: int) -> bool:
     Note:
         Extracts the send grid api key from the environment variable SENDGRID_API_KEY
         For testing the sendgrid host can be overridden with SENDGRID_HOST
+
+    Upstream Documentation:
+        https://docs.sendgrid.com/api-reference/mail-send/mail-send
     """
 
-    sendgrid_host = os.environ.get("SENDGRID_HOST", None)
-    if sendgrid_host:
-        sg = SendGridAPIClient(host=sendgrid_host)
-    else:
-        sg = SendGridAPIClient()
-        sendgrid_host = "<sendgrid-default>"  # only used for logging below
+    try:
 
-    admin = Administrator.objects.get(id=user_id)
+        sendgrid_host = os.environ.get("SENDGRID_HOST", None)
+        if sendgrid_host:
+            sg = SendGridAPIClient(host=sendgrid_host)
+        else:
+            sg = SendGridAPIClient()
+            sendgrid_host = "<sendgrid-default>"  # only used for logging below
 
-    subject = "Activate your account."
-    message = render_to_string(
-        "template_activate_account.html",
-        {
+        admin = Administrator.objects.get(id=user_id)
+
+        template_params = {
             "frontend_url": os.environ["FRONTEND_HOST"],
             "uid": urlsafe_base64_encode(force_bytes(admin.pk)),
             "token": account_activation_token.make_token(admin),
         }
-    )
 
-    mail = Mail(
-        from_email="support@freeworldcertified.org",
-        to_emails=[admin.email],
-        subject=subject,
-        html_content=message)
+        txt_message = render_to_string(
+            "template_activate_account.txt",
+            template_params
+        )
+        html_message = render_to_string(
+            "template_activate_account.html",
+            template_params
+        )
 
-    try:
+        mail = Mail(
+            from_email=From(email="support@freeworldcertified.org",
+                            name="Free World Certified Support"),
+            to_emails=To(admin.email),
+            subject=Subject("Activate your account."),
+            plain_text_content=PlainTextContent(txt_message),
+            html_content=HtmlContent(html_message)
+        )
+
+        mail.tracking_settings = TrackingSettings(
+            click_tracking=ClickTracking(
+                enable=False,
+                enable_text=False
+            ),
+            open_tracking=OpenTracking(
+                enable=False,
+            ),
+            subscription_tracking=SubscriptionTracking(False)
+        )
+
         response = sg.send(mail)
 
         if response.status_code >= 200 and response.status_code < 300:
