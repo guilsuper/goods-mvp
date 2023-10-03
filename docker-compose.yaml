@@ -59,18 +59,17 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    command: ["npm", "start"]
-    volumes:
-      - ./frontend:/front
+      dockerfile: Dockerfile-nginx
     ports:
-      - "3000:3000"
-    stdin_open:
-      true
-    depends_on:
-      - backend
+      - '3000:3000'
+    volumes:
+      - ./e2e-tests/nginx/templates:/etc/nginx/templates
+    environment:
+      - BACKEND_HOST=http://backend:8000
     networks:
       - prod-net
+    depends_on:
+      - backend
 
 networks:
   prod-net:
