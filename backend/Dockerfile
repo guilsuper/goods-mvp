@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.11
 
 # PYTHONDONTWRITEBYTECODE optimizes the python execution.
 # PYTHONUNBUFFERED to see the Django logs in the console.
