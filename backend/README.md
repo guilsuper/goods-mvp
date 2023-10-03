@@ -1,6 +1,6 @@
-# Product MVP backend
+# Product backend
 
-The backend for the product mvp.
+The backend for the product.
 
 ## Installation
 
