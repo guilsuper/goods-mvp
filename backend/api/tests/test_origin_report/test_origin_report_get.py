@@ -82,7 +82,7 @@ def test_origin_report_get_by_company(
         (None, 404, True, "DRAFT"),
         (None, 200, False, "PUBLISHED"),
         # Admins in the same company as a OriginReport can get all the OriginReports
-        # can get OriginReports despide its state
+        # can get OriginReports despite its state
         ("admin", 200, True, "HIDDEN"),
         ("admin", 200, True, "DRAFT"),
         ("admin", 200, True, "PUBLISHED"),
@@ -92,7 +92,7 @@ def test_origin_report_get_by_company(
         ("admin", 404, False, "DRAFT"),
         ("admin", 200, False, "PUBLISHED"),
         # PMs in the same company as a OriginReport
-        # can get OriginReports despide its state
+        # can get OriginReports despite its state
         ("pm", 200, True, "HIDDEN"),
         ("pm", 200, True, "DRAFT"),
         ("pm", 200, True, "PUBLISHED"),
