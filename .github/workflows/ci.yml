@@ -19,124 +19,140 @@ jobs:
   pre-commit:
     runs-on: ubuntu-22.04
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.11
-        cache: 'pip'
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+          cache: 'pip'
 
-    - name: "Setup .env"
-      working-directory: ./backend
-      run: |
-        echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
-        echo 'FRONTEND_HOST="http://localhost"' >> .env
+      - name: "Setup .env"
+        working-directory: ./backend
+        run: |
+          echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
+          echo 'FRONTEND_HOST="http://localhost"' >> .env
 
-    - name: Run pre-commit
-      uses: pre-commit/action@v3.0.0
-      env:
-        SKIP: no-commit-to-branch
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
+        env:
+          SKIP: no-commit-to-branch
 
   #########################################################################
   backend-build-and-tests:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.11
-        cache: 'pip'
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+          cache: 'pip'
 
-    - name: Install Dependencies
-      working-directory: ./backend
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install Dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: "Setup .env"
-      working-directory: ./backend
-      run: |
-        echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
-        echo 'DEBUG="True"' >> .env
-        echo 'FRONTEND_HOST="http://localhost"' >> .env
+      - name: "Setup .env"
+        working-directory: ./backend
+        run: |
+          echo 'SECRET_KEY="SECRET_KEY_FOR_TESTING"' >> .env
+          echo 'DEBUG="True"' >> .env
+          echo 'FRONTEND_HOST="http://localhost"' >> .env
 
-    - name: Run Tests
-      run: |
-        pytest --junitxml=./test-results/pytest.xml --cov --cov-report=xml:./coverage-results/pytest-coverage-report.xml ./backend
+      - name: Run Tests
+        run: |
+          pytest --junitxml=./test-results/pytest.xml --cov --cov-report=xml:./coverage-results/pytest-coverage-report.xml ./backend
 
-    - name: Upload Backend Test Results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: |
-          test-results/
-          coverage-results/
+      - name: Upload Backend Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: |
+            test-results/
+            coverage-results/
 
   #########################################################################
   frontend-build-and-tests:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Use Node.js 16
-      uses: actions/setup-node@v3
-      with:
-        node-version: "16"
-        cache: "npm"
-        cache-dependency-path: frontend/package-lock.json
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
 
-    - name: Install
-      working-directory: ./frontend
-      run: |
-        npm clean-install
+      - name: Install
+        working-directory: ./frontend
+        run: |
+          npm clean-install
 
-    - name: Build
-      working-directory: ./frontend
-      run: |
-        npm run build --if-present
+      - name: Build
+        working-directory: ./frontend
+        run: |
+          npm run build --if-present
 
-    - name: Run Frontend Tests
-      working-directory: ./frontend
-      run: |
-        npm run test-ci
+      - name: Run Frontend Tests
+        working-directory: ./frontend
+        run: |
+          npm run test-ci
 
-    - name: Upload Test Results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: |
-          test-results/
-          coverage-results/
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: |
+            test-results/
+            coverage-results/
 
   #########################################################################
   e2e-tests:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    - uses: isbang/compose-action@v1.5.1
-      with:
-        compose-file: "./docker-compose.test.yaml"
-        up-flags: "--abort-on-container-exit --exit-code-from=e2e-tests"
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Upload Test Results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: test-results
+
+      - name: Build
+        uses: docker/bake-action@v4
+        with:
+          files: |
+            docker-compose.test.yaml
+          push: false
+          load: true
+          set: |
+            *.cache-from=type=gha
+            *.cache-to=type=gha
+
+      - name: Expose GitHub Runtime
+        uses: crazy-max/ghaction-github-runtime@v3
+
+      - name: Test
+        run: docker compose -f ./docker-compose.test.yaml up --abort-on-container-exit --exit-code-from=e2e-tests
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results
 
   #########################################################################
   publish-tests:
@@ -153,35 +169,35 @@ jobs:
     if: always()
 
     steps:
-    - name: Download Artifacts
-      uses: actions/download-artifact@v3
-      with:
-        name: test-results
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: test-results
 
-    - name: Publish Test Results
-      id: test-results
-      uses: EnricoMi/publish-unit-test-result-action@v2
-      with:
-        files: |
-          test-results/**/*.xml
-          test-results/**/*.trx
-          test-results/**/*.json
+      - name: Publish Test Results
+        id: test-results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: |
+            test-results/**/*.xml
+            test-results/**/*.trx
+            test-results/**/*.json
 
-    - name: Generate Code Coverage Report
-      uses: irongut/CodeCoverageSummary@v1.3.0
-      with:
-        filename: "coverage-results/pytest-coverage-report.xml,coverage-results/cobertura-coverage.xml"
-        badge: false
-        fail_below_min: false
-        format: markdown
-        hide_complexity: true
-        indicators: true
-        output: both
-        thresholds: '50 75'
+      - name: Generate Code Coverage Report
+        uses: irongut/CodeCoverageSummary@v1.3.0
+        with:
+          filename: "coverage-results/pytest-coverage-report.xml,coverage-results/cobertura-coverage.xml"
+          badge: false
+          fail_below_min: false
+          format: markdown
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: '50 75'
 
-    - name: Add Coverage PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event_name == 'pull_request'
-      with:
-        recreate: true
-        path: code-coverage-results.md
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: code-coverage-results.md

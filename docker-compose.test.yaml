@@ -10,7 +10,10 @@ services:
       - FRONTEND=http://frontend:3000
       - BACKEND=http://backend:8000
       - SENDGRID_HOST=http://sendgrid-mock:3000
+      - SELENIUM_HOST=http://selenium-chrome:4444
     depends_on:
+      selenium-chrome:
+        condition: service_healthy
       backend:
         condition: service_healthy
       frontend:
@@ -19,6 +22,19 @@ services:
         condition: service_healthy
     networks:
       - prod-net
+
+  selenium-chrome:
+    image: selenium/standalone-chrome
+    networks:
+      - prod-net
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/bin/check-grid.sh --host 0.0.0.0 --port 4444"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
 
   db-test:
     image: postgres
@@ -93,30 +109,23 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
-    command: ["npm", "start"]
-    volumes:
-      - ./frontend:/front
+      dockerfile: Dockerfile-nginx
     ports:
-      - "3000:3000"
-    stdin_open:
-      true
+      - '3000:3000'
+    volumes:
+      - ./e2e-tests/nginx/templates:/etc/nginx/templates
     environment:
-      # React variable to ignore Host header
-      # Any selenium requests to the frontend without it
-      # Cause the "Invalid host header" error
-      # This feature is acceptable for testing and development
-      - DANGEROUSLY_DISABLE_HOST_CHECK=true
+      - BACKEND_HOST=http://backend:8000
+    networks:
+      - prod-net
     depends_on:
       backend:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 5s
-      timeout: 10s
-      retries: 5
-    networks:
-      - prod-net
+      test: ["CMD", "service", "nginx", "status"]
+      interval: 1s
+      timeout: 2s
+      retries: 10
 
 networks:
   prod-net:

@@ -5,8 +5,8 @@ from api.tests.factories.factories import AdministratorFactory
 from api.tests.factories.factories import CompanyFactory
 from api.tests.factories.factories import ComponentFactory
 from api.tests.factories.factories import GroupFactory
-from api.tests.factories.factories import SCTR_STATES
-from api.tests.factories.factories import SCTRFactory
+from api.tests.factories.factories import ORIGIN_REPORT_STATES
+from api.tests.factories.factories import OriginReportFactory
 from django.test import Client
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -17,32 +17,32 @@ def client():
 
 
 @pytest.fixture
-def sctr():
-    """Create component and SCTR with published state."""
+def origin_report():
+    """Create component and OriginReport with published state."""
     component = ComponentFactory()
 
-    # Returns SCTR that has component
-    return component.parent_sctr
+    # Returns OriginReport that has component
+    return component.parent_origin_report
 
 
 @pytest.fixture
-def sctr_hidden():
-    """Create component and SCTR with hidden state."""
-    sctr_hidden = SCTRFactory(state=SCTR_STATES.HIDDEN)
-    component = ComponentFactory(parent_sctr=sctr_hidden)
+def origin_report_hidden():
+    """Create component and OriginReport with hidden state."""
+    origin_report_hidden = OriginReportFactory(state=ORIGIN_REPORT_STATES.HIDDEN)
+    component = ComponentFactory(parent_origin_report=origin_report_hidden)
 
-    # Returns SCTR that has component
-    return component.parent_sctr
+    # Returns OriginReport that has component
+    return component.parent_origin_report
 
 
 @pytest.fixture
-def sctr_draft():
-    """Create component and SCTR with draft state."""
-    sctr_draft = SCTRFactory(state=SCTR_STATES.DRAFT)
-    component = ComponentFactory(parent_sctr=sctr_draft)
+def origin_report_draft():
+    """Create component and OriginReport with draft state."""
+    origin_report_draft = OriginReportFactory(state=ORIGIN_REPORT_STATES.DRAFT)
+    component = ComponentFactory(parent_origin_report=origin_report_draft)
 
-    # Returns SCTR that has component
-    return component.parent_sctr
+    # Returns OriginReport that has component
+    return component.parent_origin_report
 
 
 @pytest.fixture
@@ -98,27 +98,27 @@ def auth_header():
 
 
 @pytest.fixture
-def sctr_dict():
-    """Returns dict with SCTR and components for 'create and publish'."""
+def origin_report_dict():
+    """Returns dict with OriginReport and components for 'create and publish'."""
     obj = {
         "unique_identifier_type_str": "SKU",
         "unique_identifier": "1aa24a211232aa",
-        "marketing_name": "aaaa",
+        "short_description": "aaaa",
         "components": [
             {
                 "fraction_cogs": 99,
-                "marketing_name": "why",
+                "short_description": "why",
                 "component_type_str": "EXTERNALLY_SOURCED",
                 "external_sku": "aaaaa",
-                "country_of_origin": "USA",
+                "country_of_origin": "US",
                 "company_name": "Mojang"
             },
             {
                 "fraction_cogs": 1,
-                "marketing_name": "why1",
+                "short_description": "why1",
                 "component_type_str": "MADE_IN_HOUSE",
                 "external_sku": "aaaaa1",
-                "country_of_origin": "China",
+                "country_of_origin": "CH",
                 "company_name": "Alabama"
             }
         ]
@@ -127,8 +127,8 @@ def sctr_dict():
 
 
 @pytest.fixture
-def sctr_invalid_dict():
-    """Returns dict with SCTR and components that is invalid for 'create and publish'.
+def origin_report_invalid_dict():
+    """Returns dict with OriginReport and components that is invalid for 'create and publish'.
 
     This data is valid for creating a draft
     """
@@ -139,7 +139,7 @@ def sctr_invalid_dict():
                 "fraction_cogs": 0,
             },
             {
-                "marketing_name": "why1",
+                "short_description": "why1",
             }
         ]
     }

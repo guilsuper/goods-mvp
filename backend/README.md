@@ -1,6 +1,6 @@
-# Product MVP backend
+# Product backend
 
-The backend for the product mvp.
+The backend for the product.
 
 ## Installation
 
@@ -131,8 +131,8 @@ gcloud auth application-default login
 
 ```bash
 psql -U pguser -h /cloudsql/fwc-alpha-website:us-east1:postgres-main-instance -d postgres
-postgres=> select * from api_sctr;
- id | uid | uit | marketing_name | version | state | cogs | company_id | is_latest_version
+postgres=> select * from api_origin_report;
+ id | uid | uit | short_description | version | state | cogs | company_id | is_latest_version
 ----+-----+-----+----------------+---------+-------+------+------------+-------------------
   4 | ABC666 |   1 | ABC BadHammer  |       1 |     1 |  100 |          3 | f
   3 | ABC666 |   1 | ABC BadHammer  |       1 |     3 |  100 |          3 | f

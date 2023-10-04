@@ -1,19 +1,19 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Module with SCTRFIlter."""
+"""Module with OriginReportFIlter."""
 import django_filters
-from api.models import SCTR
+from api.models import OriginReport
 
 
-class SCTRFilter(django_filters.FilterSet):
-    """FIlter for SCTR objects."""
+class OriginReportFilter(django_filters.FilterSet):
+    """FIlter for OriginReport objects."""
 
     class Meta:
-        """Metaclas of the SCTRFilter."""
+        """Metaclass of the OriginReportFilter."""
 
-        model = SCTR
+        model = OriginReport
         fields = {
             "unique_identifier": ["icontains"],
-            "marketing_name": ["icontains"],
+            "short_description": ["icontains"],
 
             "cogs": ["gte", "lte"],
 

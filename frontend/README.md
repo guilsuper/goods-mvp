@@ -1,6 +1,6 @@
-# Product MVP frontend
+# Product frontend
 
-The frontend for the product mvp.
+The frontend for the product.
 
 ## Installation
 

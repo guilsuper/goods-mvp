@@ -1,0 +1,7 @@
+{% autoescape off %}
+Greetings,
+
+Please follow this link to activate your account:
+
+{{frontend_url}}/activated/{{uid}}/{{token}}
+{% endautoescape %}

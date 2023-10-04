@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='sctr',
             name='state',
-            field=models.IntegerField(choices=[(1, 'DRAFT'), (2, 'PUBLISHED'), (3, 'HIDDEN')], default=api.models.SCTR_STATES['DRAFT']),
+            field=models.IntegerField(choices=[(1, 'DRAFT'), (2, 'PUBLISHED'), (3, 'HIDDEN')], default=api.models.ORIGIN_REPORT_STATES['DRAFT']),
         ),
         migrations.AlterField(
             model_name='sctr',

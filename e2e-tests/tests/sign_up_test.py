@@ -90,6 +90,10 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
     link = os.environ["FRONTEND"] + regex.search(text).group(1)
     driver.get(link)
+    success_indication = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//h2[contains(., 'Successfully activated!')]"))
+    )
+    assert success_indication
 
     # Check if sign-in button exists
     # It should lead to /sign-in url
