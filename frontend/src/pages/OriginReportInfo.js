@@ -8,6 +8,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import { toReadable } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
+import CompanyLogo from '../components/CompanyLogo'
 import { freedomHouseCountryReportURL } from '../utils/FreedomHouse'
 import GetQRCode from '../components/QRCode'
 
@@ -165,6 +166,13 @@ const OriginReportInfo = () => {
     <Container>
       <h3 className='text-center'>Origin Report</h3>
       <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
+        {
+          // If logo is set
+          originReport.company.logo
+            ? <CompanyLogo companyLogo={originReport.company.logo} />
+            : ' '
+        }
+
         <Row className='text-secondary'><p>Identifier Type</p></Row>
         <Row><p>{originReport.unique_identifier_type}</p></Row>
 

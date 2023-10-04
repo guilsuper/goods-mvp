@@ -76,6 +76,11 @@ resource "google_compute_url_map" "url_map" {
     path_rule {
       paths   = ["/media/*"]
       service = google_compute_backend_bucket.media_files_site.self_link
+      route_action {
+        url_rewrite {
+          path_prefix_rewrite = "/"
+        }
+      }
     }
   }
 }

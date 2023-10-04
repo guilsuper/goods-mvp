@@ -75,6 +75,12 @@ class Company(models.Model):
     jurisdiction = models.CharField(
         max_length=400,
     )
+    logo = models.ImageField(
+        # Folder in the MEDIA_ROOT or in a bucket
+        upload_to="company_logo/",
+        # So users can set initial company info without the logo
+        null=True
+    )
 
     # Optional fields
     # This field is needed for future

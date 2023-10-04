@@ -75,6 +75,7 @@ services:
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       - ./backend:/backend
+      - media:/backend/media
     ports:
       - "8000:8000"
     environment:
@@ -114,6 +115,7 @@ services:
       - '3000:3000'
     volumes:
       - ./e2e-tests/nginx/templates:/etc/nginx/templates
+      - media:/usr/share/nginx/media
     environment:
       - BACKEND_HOST=http://backend:8000
     networks:
@@ -130,3 +132,6 @@ services:
 networks:
   prod-net:
     driver: bridge
+
+volumes:
+  media:

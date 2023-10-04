@@ -40,15 +40,17 @@ def init_client() -> dict:
         "name": "aaaa",
         "jurisdiction": "bruh"
     }
-    user = requests.post(
+
+    response = requests.post(
         os.environ["BACKEND"] + "/api/admin_and_company/create/",
         data=data
-    ).json()
+    )
+    response.raise_for_status()
 
     # Wait for email to get
     for _ in range(10):
         time.sleep(1)
-        emails = get_emails(user["email"])
+        emails = get_emails(data["email"])
 
         # If there are messages in sendgird
         if len(emails) > 0:
@@ -63,13 +65,24 @@ def init_client() -> dict:
     ) + "/"
     requests.get(link)
 
-    user["tokens"] = requests.post(
+    tokens = requests.post(
         os.environ["BACKEND"] + "/api/token/",
         data={
             "email": data["email"],
             "password": data["password"]
         }
     ).json()
+
+    # To get full user info and company info
+    response = requests.get(
+        os.environ["BACKEND"] + "/api/self/patch_delete_retrieve/",
+        headers={"Authorization": f"Bearer {tokens['access']}"}
+    )
+    response.raise_for_status()
+    user = response.json()
+    user["tokens"] = tokens
+    user["password"] = data["password"]
+
     return user
 
 

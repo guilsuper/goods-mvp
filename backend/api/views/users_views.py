@@ -18,6 +18,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser
+from rest_framework.parsers import JSONParser
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -28,7 +29,7 @@ class CreateAdministratorAndCompanyView(APIView):
     """Administrator and company initial creation."""
 
     # To accept multipart/form-data in case we use file field
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def post(self, request, *args, **kwargs):
         """Overwritten post method for Administrator creation."""

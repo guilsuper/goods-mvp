@@ -181,30 +181,32 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = "static/"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 CORS_ORIGIN_WHITELIST = [
     os.environ["FRONTEND_HOST"]
 ]
-
-if "GS_BUCKET_NAME" in os.environ:
-    GS_BUCKET_NAME = os.environ["GS_BUCKET_NAME"]
-    GS_QUERYSTRING_AUTH = False
-    if "FRONTEND_HOST" in os.environ:
-        GS_CUSTOM_ENDPOINT = os.environ["FRONTEND_HOST"]
 
 STATICFILES_DIRS = [
     BASE_DIR / "website_root/",
 ]
 
-STORAGES = {"staticfiles": {"BACKEND": "storages.backends.gcloud.GoogleCloudStorage"}}
+GS_QUERYSTRING_AUTH = False
+
+STORAGES = {
+    "default": {
+        "BACKEND": "product.storages.GoogleCloudMediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "product.storages.GoogleCloudStaticStorage",
+    }
+}
+
+GS_MEDIA_BUCKET_NAME = os.environ.get("GS_MEDIA_BUCKET_NAME")
+GS_STATIC_BUCKET_NAME = os.environ.get("GS_STATIC_BUCKET_NAME")
+
+STATIC_URL = "static/"
+MEDIA_URL = "media/"

@@ -1,18 +1,8 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Module for custom pytest settings."""
+"""Module for development settings."""
 import os
 
 from product.settings.settings import *  # noqa: F403, F401
-
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": "db-test.sqlite3",
-    }
-}
-
-GS_QUERYSTRING_AUTH = False
 
 STORAGES = {
     "default": {

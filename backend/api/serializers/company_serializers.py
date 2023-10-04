@@ -2,6 +2,7 @@
 """Module with serializers."""
 from api.models import Company
 from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import SerializerMethodField
 
 
 class CompanySerializer(ModelSerializer):
@@ -15,6 +16,7 @@ class CompanySerializer(ModelSerializer):
             "name",
             "website",
             "jurisdiction",
+            "logo"
         )
 
     def create(self, validated_data):
@@ -43,6 +45,8 @@ class CompanySerializer(ModelSerializer):
 class CompanyRetrieveSerializer(ModelSerializer):
     """Company retrieve serializer."""
 
+    logo = SerializerMethodField(required=False, read_only=True)
+
     class Meta:
         """Meta class for company serializer."""
 
@@ -51,5 +55,20 @@ class CompanyRetrieveSerializer(ModelSerializer):
             "name",
             "website",
             "jurisdiction",
-            "slug"
+            "slug",
+            "logo"
         )
+
+    def get_logo(self, instance: Company) -> str | None:
+        """Return relative url for logo.
+
+        Args:
+            instance: instance of the Company model
+        Returns:
+            relative url to the logo; or None if it doesn't exist
+        """
+        # Check if 'logo' is valid return the url to the logo
+        if bool(instance.logo):
+            return instance.logo.url
+        else:
+            return None

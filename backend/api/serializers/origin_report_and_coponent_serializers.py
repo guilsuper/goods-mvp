@@ -6,7 +6,7 @@ from api.models import ORIGIN_REPORT_STATES
 from api.models import OriginReport
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
-from api.serializers import CompanySerializer
+from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CountrySerializer
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
@@ -165,7 +165,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
     unique_identifier_type_str = CharField(max_length=4, write_only=True)
 
     # Read only fields
-    company = CompanySerializer(read_only=True)
+    company = CompanyRetrieveSerializer(read_only=True)
     id = IntegerField(read_only=True)
     version = IntegerField(read_only=True)
     state = OriginReportStateToString(choices=ORIGIN_REPORT_STATES.choices(), read_only=True)

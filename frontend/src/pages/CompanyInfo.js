@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container'
 import AuthContext from '../context/AuthContext'
 import { Col, Row, Button } from 'react-bootstrap'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import CompanyLogo from '../components/CompanyLogo'
 
 const CompanyInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
@@ -66,6 +67,13 @@ const CompanyInfo = () => {
 
         <Row className='text-secondary'><p>Company jurisdiction</p></Row>
         <Row><p>{company.jurisdiction}</p></Row>
+
+        {
+          // If logo is set
+          company.logo
+            ? <CompanyLogo companyLogo={company.logo} />
+            : ' '
+        }
 
         {
           isAdmin()

@@ -144,3 +144,16 @@ def origin_report_invalid_dict():
         ]
     }
     return obj
+
+
+@pytest.fixture
+def company():
+    """Creates a company."""
+    # Inner function to create fixture with parameters
+    def _method():
+        company = CompanyFactory()
+        company.set_slug()
+        company.save()
+        return company
+
+    return _method
