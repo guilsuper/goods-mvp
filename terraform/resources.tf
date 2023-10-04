@@ -538,7 +538,7 @@ resource "google_artifact_registry_repository" "docker_artifact_repository" {
 }
 
 # allow github service account to read
-resource "google_artifact_registry_repository_iam_member" "github_service_account_docker_artifact_repostiory_read" {
+resource "google_artifact_registry_repository_iam_member" "github_service_account_docker_artifact_repository_read" {
   project    = google_artifact_registry_repository.docker_artifact_repository.project
   location   = google_artifact_registry_repository.docker_artifact_repository.location
   repository = google_artifact_registry_repository.docker_artifact_repository.name
@@ -548,7 +548,7 @@ resource "google_artifact_registry_repository_iam_member" "github_service_accoun
 }
 
 # allow github service account to write
-resource "google_artifact_registry_repository_iam_member" "github_service_account_docker_artifact_repostiory_write" {
+resource "google_artifact_registry_repository_iam_member" "github_service_account_docker_artifact_repository_write" {
   project    = google_artifact_registry_repository.docker_artifact_repository.project
   location   = google_artifact_registry_repository.docker_artifact_repository.location
   repository = google_artifact_registry_repository.docker_artifact_repository.name
@@ -558,7 +558,7 @@ resource "google_artifact_registry_repository_iam_member" "github_service_accoun
 }
 
 # allow github service account to read
-resource "google_artifact_registry_repository_iam_member" "serverless_robot_prod_docker_artifact_repostiory_read" {
+resource "google_artifact_registry_repository_iam_member" "serverless_robot_prod_docker_artifact_repository_read" {
   project    = google_artifact_registry_repository.docker_artifact_repository.project
   location   = google_artifact_registry_repository.docker_artifact_repository.location
   repository = google_artifact_registry_repository.docker_artifact_repository.name
