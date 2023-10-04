@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.11
 
 COPY ./requirements.txt /e2e-tests/
 RUN pip install -r /e2e-tests/requirements.txt

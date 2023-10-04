@@ -1,5 +1,5 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""URL configuration for product_mvp project.
+"""URL configuration for product project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
