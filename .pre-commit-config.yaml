@@ -70,6 +70,11 @@ repos:
         args:
           - --use-current-year
 
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.7.0-1
+    hooks:
+      - id: shfmt
+
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.10.0
     hooks:
