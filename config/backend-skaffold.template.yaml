@@ -32,3 +32,7 @@ customActions:
           value: projects/${GCLOUD_PROJECT}/secrets/django-secret-key/versions/latest
         - name: _GCP_SECRET_GS_BUCKET_NAME
           value: projects/${GCLOUD_PROJECT}/secrets/django-gs-bucket-name/versions/latest
+        - name: _GCP_SECRET_GS_STATIC_BUCKET_NAME
+          value: projects/${GCLOUD_PROJECT}/secrets/django-gs-static-bucket-name/versions/latest
+        - name: _GCP_SECRET_GS_MEDIA_BUCKET_NAME
+          value: projects/${GCLOUD_PROJECT}/secrets/django-gs-media-bucket-name/versions/latest

@@ -396,7 +396,7 @@ resource "google_secret_manager_secret_iam_binding" "django_database_password_ac
   ]
 }
 
-# secret gs bucket name (this might not really need to be a secret
+# secret gs bucket name (this might not really need to be a secret)
 resource "google_secret_manager_secret" "secret_django_gs_bucket_name" {
   secret_id = "django-gs-bucket-name"
   replication {
@@ -414,6 +414,57 @@ resource "google_secret_manager_secret_version" "secret_django_gs_bucket_name_ve
 resource "google_secret_manager_secret_iam_binding" "django_gs_bucket_name_account_bindings" {
   project   = google_secret_manager_secret.secret_django_gs_bucket_name.project
   secret_id = google_secret_manager_secret.secret_django_gs_bucket_name.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  members = [
+    "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com",
+    "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+  ]
+}
+
+
+# secret gs bucket name (this might not really need to be a secret)
+resource "google_secret_manager_secret" "secret_django_gs_static_bucket_name" {
+  secret_id = "django-gs-static-bucket-name"
+  replication {
+    auto {}
+  }
+}
+
+# secret gs bucket actual content
+resource "google_secret_manager_secret_version" "secret_django_gs_static_bucket_name_version" {
+  secret      = google_secret_manager_secret.secret_django_gs_static_bucket_name.id
+  secret_data = google_storage_bucket.google_storage_bucket_static_site.name
+}
+
+# allow cloud run & cloud build service to access secret
+resource "google_secret_manager_secret_iam_binding" "django_gs_static_bucket_name_account_bindings" {
+  project   = google_secret_manager_secret.secret_django_gs_static_bucket_name.project
+  secret_id = google_secret_manager_secret.secret_django_gs_static_bucket_name.secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  members = [
+    "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com",
+    "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+  ]
+}
+
+# secret gs bucket name (this might not really need to be a secret)
+resource "google_secret_manager_secret" "secret_django_gs_media_bucket_name" {
+  secret_id = "django-gs-media-bucket-name"
+  replication {
+    auto {}
+  }
+}
+
+# secret gs bucket actual content
+resource "google_secret_manager_secret_version" "secret_django_gs_media_bucket_name_version" {
+  secret      = google_secret_manager_secret.secret_django_gs_media_bucket_name.id
+  secret_data = google_storage_bucket.media_files_site.name
+}
+
+# allow cloud run & cloud build service to access secret
+resource "google_secret_manager_secret_iam_binding" "django_gs_media_bucket_name_account_bindings" {
+  project   = google_secret_manager_secret.secret_django_gs_media_bucket_name.project
+  secret_id = google_secret_manager_secret.secret_django_gs_media_bucket_name.secret_id
   role      = "roles/secretmanager.secretAccessor"
   members = [
     "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com",
@@ -594,7 +645,25 @@ resource "google_cloud_run_v2_service" "backend_cloud_run" {
         value_source {
           secret_key_ref {
             secret  = google_secret_manager_secret.secret_django_gs_bucket_name.secret_id
-            version = google_secret_manager_secret_version.secret_django_gs_bucket_name_version.version
+            version = "latest"
+          }
+        }
+      }
+      env {
+        name = "GS_STATIC_BUCKET_NAME"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.secret_django_gs_static_bucket_name.secret_id
+            version = "latest"
+          }
+        }
+      }
+      env {
+        name = "GS_MEDIA_BUCKET_NAME"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.secret_django_gs_media_bucket_name.secret_id
+            version = "latest"
           }
         }
       }
