@@ -69,7 +69,7 @@ const Terms = () => {
               <p>The FWC platform helps users discover three categories of content: your internal content, licensed content, and public content. For all types of content, FWC provides links to the original content from its host repository. The access and use of these three kinds of content is permitted as follows:</p>
               <ul>
                   <li>
-                      <p>a) use of your internal content is governed by the end user organization’s internal data policies and controls that authorize FWC&apos;s use;</p>
+                      <p>a) use of your internal content is governed by the end user organization&apos;s internal data policies and controls that authorize FWC&apos;s use;</p>
                   </li>
                   <li>
                       <p>b) use of licensed content is governed by license agreements with third-party publishers that authorize FWC&apos;s use, which may be established by FWC or by your organization;</p>
