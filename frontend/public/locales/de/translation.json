@@ -1,20 +1,24 @@
 {
   "common": {
-    "sign-in": "Anmelden",
-    "sign-out": "Abmelden",
-    "sign-up": "Melden Sie sich an",
-    "about": "Um",
-    "origin-report_one": "Ursprungsbericht",
-    "origin-report_other": "Ursprungsberichte"
+    "sign-in": "Einlogin",
+    "sign-out": "Auslogin",
+    "sign-up": "Anmelden",
+    "our-story": "Unsere Mission",
+    "origin-report-singular": "Ursprungsbericht",
+    "origin-report-plural": "Ursprungsberichte"
   },
   "navigation": {
+    "user": "Nutzer",
     "profile-settings": "Profileinstellungen",
     "home": "Heim",
     "our-origin-reports": "Unsere Herkunftsberichte",
     "create-product-owner": "Produktbesitzer erstellen"
   },
   "home": {
-    "value": "Transparenz in der Lieferkette schafft Mehrwert.",
-    "description": "Dokumentieren Sie die globalen Quellen Ihres Produkts in FreeWorldCertified.org, damit Ihre Kunden wissen, wie ihr Geld für die Freiheit stimmt."
+    "value": "Finde Produkte, die Freiheit priorisieren.",
+    "description": "Teile Herkunftsberichte, damit alle Menschen Produkte auswählen können, die Freiheit priorisieren."
+  },
+  "our-mission": {
+    "mission": "Haben Sie jemals nach einem Produkt aus Ihrem Herkunftsland gesucht, weil Sie kein Geld an Diktatoren geben möchten?\n\nWenn Sie dies schon einmal getan haben, dann haben Sie wahrscheinlich gesehen, dass einige Hersteller nicht wollen, dass Sie sehen, wo ihre Produkte herkommen.  Viele Hersteller beschreiben sich selbst als \"Kunsthandwerker\" oder \"Selbst gemacht,\" während sie in Wirklichkeit importierende Firmen aus Ländern sind, die glauben, dass die Rechte der Bürger nicht wichtiger als die Rechte des Staates sind.\n\nViele von uns suchen nach Produkten, die in unserem Herkunftsland hergestellt werden.  Wir hoffen, dass Sie erwägen, die größere freie Welt anzunehmen."
   }
 }
