@@ -109,7 +109,7 @@ repos:
     rev: v1.16.17
     hooks:
       - id: typos
-        exclude: "(backend/api/migrations/|example-data/products.yaml|backend/free_world_countries/.*.csv)"
+        exclude: "(backend/api/migrations/|example-data/products.yaml|backend/free_world_countries/.*.csv|frontend/public/locales/[a-z]{2}/translation.json)"
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.26.3
