@@ -38,7 +38,7 @@ grassroots level, like indebted labor.  Therefore, as a whole the
 country should go on our not free list.
 
 However, I think there are likely some individual businesses that
-don’t do this.  So, here’s an idea.  If a company is operating such
+don't do this.  So, here's an idea.  If a company is operating such
 that buying from that company reinforces freedom amongst its
 employees, then the company can apply to get free world certified.
 Then, we can help them raise money from donors to sponsor the
