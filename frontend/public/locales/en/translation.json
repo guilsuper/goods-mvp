@@ -3,9 +3,9 @@
     "sign-in": "Sign In",
     "sign-out": "Sign Out",
     "sign-up": "Sign Up",
-    "our-story": "Our Mission",
-    "origin-report-singular": "Origin Report",
-    "origin-report-plural": "Origin Reports"
+    "our-mission": "Our Mission",
+    "origin-report_one": "Origin Report",
+    "origin-report_other": "Origin Reports"
   },
   "navigation": {
     "user": "User",
