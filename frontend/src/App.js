@@ -11,7 +11,7 @@ import './App.css'
 import Header from './components/Header'
 import OriginReportList from './pages/OriginReportList'
 import Home from './pages/Home'
-import About from './pages/About'
+import OurMission from './pages/OurMission'
 import Terms from './pages/Terms'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
@@ -41,7 +41,7 @@ function App () {
             <Route path="/" element={<Home />} />
             <Route path="/origin_report" element={<OriginReportList />} />
             <Route path="/origin_report/:originReportIdentifier" element={<OriginReportInfo />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/our_mission" element={<OurMission />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/sign-up" element={<SignUp />} />
             <Route path="/sign-in" element={<SignIn />} />
