@@ -30,6 +30,8 @@ services:
     ports:
       - "4444:4444"
       - "7900:7900"
+    environment:
+      SE_OPTS: "--log-level WARNING"
     healthcheck:
       test: ["CMD-SHELL", "/opt/bin/check-grid.sh --host 0.0.0.0 --port 4444"]
       interval: 5s
@@ -72,7 +74,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000", "--settings=product.settings.development_settings"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       - ./backend:/backend
       - media:/backend/media
@@ -80,6 +82,7 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_DATABASE=production
+      - DJANGO_SETTINGS_MODULE=product.settings.e2e_test_settings
       - DEBUG=False
       - ALLOWED_HOST=backend
 
