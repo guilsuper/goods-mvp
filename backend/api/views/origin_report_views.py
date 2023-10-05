@@ -33,7 +33,7 @@ class OriginReportCreateView(CreateAPIView):
     """
 
     serializer_class = OriginReportCreateGetSerializer
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         """Returns instance with id after creation."""
@@ -69,8 +69,10 @@ class OriginReportPublishedListView(ListAPIView):
     """Gets published OriginReports only and provides filtering."""
 
     serializer_class = OriginReportCreateGetSerializer
-    queryset = OriginReport.objects.filter(state=ORIGIN_REPORT_STATES.PUBLISHED,
-                                           is_latest_version=True)
+    queryset = OriginReport.objects.filter(
+        state=ORIGIN_REPORT_STATES.PUBLISHED,
+        is_latest_version=True,
+    )
     filterset_class = OriginReportFilter
 
 
@@ -90,7 +92,7 @@ class OriginReportSwitchVisibilityView(UpdateAPIView):
             # Get previous version if exists
             previous = OriginReport.objects.filter(
                 unique_identifier=origin_report.unique_identifier,
-                state=ORIGIN_REPORT_STATES.PUBLISHED
+                state=ORIGIN_REPORT_STATES.PUBLISHED,
             ).order_by("-version")
             # If has published OriginReports set last as latest version
             if len(previous) > 1:
@@ -104,7 +106,7 @@ class OriginReportSwitchVisibilityView(UpdateAPIView):
             # is_latest_version should be updated in current OriginReport
             current = OriginReport.objects.filter(
                 unique_identifier=origin_report.unique_identifier,
-                state=ORIGIN_REPORT_STATES.PUBLISHED
+                state=ORIGIN_REPORT_STATES.PUBLISHED,
             ).order_by("-version")
             if current:
                 if origin_report.version > current[0].version:
@@ -116,7 +118,7 @@ class OriginReportSwitchVisibilityView(UpdateAPIView):
 
         return Response(
             {"message": "Successfully switch visibility"},
-            status=200
+            status=200,
         )
 
 
@@ -130,7 +132,7 @@ class OriginReportCompanyListView(ListAPIView):
     def get_queryset(self):
         """Gets all OriginReports that are related to the user's company."""
         return OriginReport.objects.filter(
-            company=self.request.user.company
+            company=self.request.user.company,
         )
 
 
@@ -147,7 +149,7 @@ class OriginReportRetrieveDestroyView(RetrieveDestroyAPIView):
         if instance.is_latest_version:
             new_latest = OriginReport.objects.filter(
                 unique_identifier=instance.unique_identifier,
-                state=ORIGIN_REPORT_STATES.PUBLISHED
+                state=ORIGIN_REPORT_STATES.PUBLISHED,
             ).order_by("-version")
             # If more then 1 published or hidden origin_reports
             if len(new_latest) > 1:
@@ -209,7 +211,7 @@ class OriginReportMoveToDraftView(UpdateAPIView):
 
         return Response(
             status=200,
-            data={"message": "Instance was moved to the draft state"}
+            data={"message": "Instance was moved to the draft state"},
         )
 
 
@@ -229,7 +231,7 @@ class OriginReportMoveToPublishedView(UpdateAPIView):
             "component_type",
             "external_sku",
             "country_of_origin",
-            "company_name"
+            "company_name",
         )
 
         # Check if COGS is 100
@@ -260,7 +262,7 @@ class OriginReportMoveToPublishedView(UpdateAPIView):
         # If it exists, it's only 1 instance
         old_origin_report = OriginReport.objects.filter(
             unique_identifier=origin_report.unique_identifier,
-            is_latest_version=True
+            is_latest_version=True,
         )
         if old_origin_report:
             old_origin_report[0].is_latest_version = False
@@ -271,7 +273,7 @@ class OriginReportMoveToPublishedView(UpdateAPIView):
         # Real latest version number is in OriginReport that are published or hidden
         old_origin_report = OriginReport.objects.filter(
             unique_identifier=origin_report.unique_identifier,
-            state__in=[ORIGIN_REPORT_STATES.PUBLISHED, ORIGIN_REPORT_STATES.HIDDEN]
+            state__in=[ORIGIN_REPORT_STATES.PUBLISHED, ORIGIN_REPORT_STATES.HIDDEN],
         ).order_by("-version")
         # If found -- version is changed according to old_origin_report with the highest version
         if old_origin_report:
@@ -296,7 +298,7 @@ class ComponentCreateView(CreateAPIView):
             "short_description": "",
             "component_type_str":
                 SOURCE_COMPONENT_TYPE.name_from_integer(
-                    SOURCE_COMPONENT_TYPE.MADE_IN_HOUSE
+                    SOURCE_COMPONENT_TYPE.MADE_IN_HOUSE,
                 ),
         }
         origin_report = get_object_or_404(OriginReport, id=id)

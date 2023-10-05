@@ -33,7 +33,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
         "password",
         "website",
         "name",
-        "jurisdiction"
+        "jurisdiction",
     ]
     field_elements = [driver.find_element(By.ID, id_) for id_ in sign_up_fields_ids]
     assert all(field_elements)
@@ -52,7 +52,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
         "password": "1234",
         "website": "website.com",
         "name": "company name inc",
-        "jurisdiction": "Georgia, USA"
+        "jurisdiction": "Georgia, USA",
     }
 
     # Enter text to each field
@@ -91,7 +91,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     link = os.environ["FRONTEND"] + regex.search(text).group(1)
     driver.get(link)
     success_indication = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//h2[contains(., 'Successfully activated!')]"))
+        EC.presence_of_element_located((By.XPATH, "//h2[contains(., 'Successfully activated!')]")),
     )
     assert success_indication
 

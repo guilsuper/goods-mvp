@@ -57,7 +57,8 @@ def send_email(subject, body, to_emails):
         from_email="support@freeworldcertified.org",
         to_emails=to_emails,
         subject=subject,
-        html_content=body)
+        html_content=body,
+    )
 
     sendgrid_api_token = access_secret_version("sendgrid_token")
     sg = SendGridAPIClient(sendgrid_api_token)

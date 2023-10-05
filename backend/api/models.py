@@ -13,7 +13,7 @@ from django.template.defaultfilters import slugify
 
 full_domain_validator = RegexValidator(
     r"[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9](?:\.[a-zA-Z]{2,})+",
-    "Invalid domain, it should be like example.com.eu or example.com"
+    "Invalid domain, it should be like example.com.eu or example.com",
 )
 
 
@@ -69,7 +69,7 @@ class Company(models.Model):
     website = models.CharField(
         max_length=255,
         validators=[full_domain_validator],
-        unique=True
+        unique=True,
     )
     name = models.CharField(max_length=200)
     jurisdiction = models.CharField(
@@ -79,7 +79,7 @@ class Company(models.Model):
         # Folder in the MEDIA_ROOT or in a bucket
         upload_to="company_logo/",
         # So users can set initial company info without the logo
-        null=True
+        null=True,
     )
 
     # Optional fields
@@ -87,7 +87,7 @@ class Company(models.Model):
     company_unique_identifier = models.FileField(
         upload_to="company_identifiers/%Y/%m",
         null=True,
-        blank=True
+        blank=True,
     )
 
     # Slug field to use in url
@@ -167,28 +167,29 @@ class OriginReport(models.Model):
     unique_identifier = models.CharField(max_length=25)
     unique_identifier_type = models.IntegerField(
         choices=ORIGIN_REPORT_ID_TYPES.choices(),
-        default=ORIGIN_REPORT_ID_TYPES.SKU
+        default=ORIGIN_REPORT_ID_TYPES.SKU,
     )
     short_description = models.CharField(
         max_length=500,
-        null=True)
+        null=True,
+    )
 
     version = models.IntegerField(
         default=0,
         validators=[
-            MinValueValidator(0)
-        ]
+            MinValueValidator(0),
+        ],
     )
     state = models.IntegerField(
         default=ORIGIN_REPORT_STATES.DRAFT,
-        choices=ORIGIN_REPORT_STATES.choices()
+        choices=ORIGIN_REPORT_STATES.choices(),
     )
 
     cogs = models.FloatField(
         default=0,
         validators=[
-            MinValueValidator(0)
-        ]
+            MinValueValidator(0),
+        ],
     )
 
     is_latest_version = models.BooleanField(default=False)
@@ -210,12 +211,12 @@ class SourceComponent(models.Model):
 
     fraction_cogs = models.FloatField(
         blank=True,
-        null=True
+        null=True,
     )
     short_description = models.CharField(max_length=500, null=True, blank=True)
     component_type = models.IntegerField(
         choices=SOURCE_COMPONENT_TYPE.choices(),
-        null=True
+        null=True,
     )
 
     # On of this fields will be set according to the type
@@ -228,6 +229,8 @@ class SourceComponent(models.Model):
     # in case it isn't in our DB and should be saved
     company_name = models.CharField(max_length=200, null=True)
 
-    parent_origin_report = models.ForeignKey(OriginReport,
-                                             related_name="components",
-                                             on_delete=models.CASCADE)
+    parent_origin_report = models.ForeignKey(
+        OriginReport,
+        related_name="components",
+        on_delete=models.CASCADE,
+    )

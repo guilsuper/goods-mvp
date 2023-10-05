@@ -10,7 +10,7 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
-    }
+    },
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # noqa: F405

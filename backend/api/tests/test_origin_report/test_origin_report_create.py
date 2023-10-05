@@ -39,12 +39,12 @@ from django.urls import reverse
         # Try to create as a pm with a incorrect specified fields
         # The OriginReport will not be created
         ("pm", "origin_report_invalid_dict", 400, False),
-    ]
+    ],
 )
 def test_origin_report_create_and_publish(
     request, client, origin_report,
     auth_header, user, origin_report_info,
-    status_code, origin_report_created
+    status_code, origin_report_created,
 ):
     """Tests origin-report-create url."""
     # credentials must be a dict to pass them to the post request
@@ -64,7 +64,7 @@ def test_origin_report_create_and_publish(
         reverse("origin-report-create"),
         data=origin_report_info,
         content_type="application/json",
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code
@@ -72,7 +72,7 @@ def test_origin_report_create_and_publish(
 
     if origin_report_created:
         current_origin_report = OriginReport.objects.filter(
-            unique_identifier=origin_report_info["unique_identifier"]
+            unique_identifier=origin_report_info["unique_identifier"],
         ).first()
 
         assert current_origin_report.company == user.company
@@ -109,12 +109,12 @@ def test_origin_report_create_and_publish(
         # Try to create as a pm with a incorrect specified fields
         # The origin_report will be created
         ("pm", "origin_report_invalid_dict", 201, True),
-    ]
+    ],
 )
 def test_origin_report_create_draft(
     request, client, origin_report,
     auth_header, user, origin_report_info,
-    status_code, origin_report_created
+    status_code, origin_report_created,
 ):
     """Tests origin-report-create-draft url."""
     # credentials must be a dict to pass them to the post request
@@ -134,7 +134,7 @@ def test_origin_report_create_draft(
         reverse("origin-report-create-draft"),
         data=origin_report_info,
         content_type="application/json",
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code
@@ -142,7 +142,7 @@ def test_origin_report_create_draft(
 
     if origin_report_created:
         current_origin_report = OriginReport.objects.filter(
-            unique_identifier=origin_report_info["unique_identifier"]
+            unique_identifier=origin_report_info["unique_identifier"],
         ).first()
 
         assert current_origin_report.company == user.company

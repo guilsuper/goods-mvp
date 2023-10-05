@@ -25,5 +25,5 @@ __all__ = [
     "AdministratorSerializer",
     "GroupSerializer",
     "PMSerializer",
-    "CountrySerializer"
+    "CountrySerializer",
 ]

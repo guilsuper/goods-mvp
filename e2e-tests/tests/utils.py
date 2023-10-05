@@ -38,12 +38,12 @@ def init_client() -> dict:
         "password": "1234",
         "website": "aaaa.com",
         "name": "aaaa",
-        "jurisdiction": "bruh"
+        "jurisdiction": "bruh",
     }
 
     response = requests.post(
         os.environ["BACKEND"] + "/api/admin_and_company/create/",
-        data=data
+        data=data,
     )
     response.raise_for_status()
 
@@ -61,7 +61,7 @@ def init_client() -> dict:
     # Compiles activation link that can be used to make a request to the backend
     regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
     link = os.environ["BACKEND"] + regex.search(text).group(1).replace(
-        "/activated", "/api/activate"
+        "/activated", "/api/activate",
     ) + "/"
     requests.get(link)
 
@@ -69,14 +69,14 @@ def init_client() -> dict:
         os.environ["BACKEND"] + "/api/token/",
         data={
             "email": data["email"],
-            "password": data["password"]
-        }
+            "password": data["password"],
+        },
     ).json()
 
     # To get full user info and company info
     response = requests.get(
         os.environ["BACKEND"] + "/api/self/patch_delete_retrieve/",
-        headers={"Authorization": f"Bearer {tokens['access']}"}
+        headers={"Authorization": f"Bearer {tokens['access']}"},
     )
     response.raise_for_status()
     user = response.json()

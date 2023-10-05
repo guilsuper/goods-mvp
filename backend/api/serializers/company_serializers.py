@@ -16,7 +16,7 @@ class CompanySerializer(ModelSerializer):
             "name",
             "website",
             "jurisdiction",
-            "logo"
+            "logo",
         )
 
     def create(self, validated_data):
@@ -56,7 +56,7 @@ class CompanyRetrieveSerializer(ModelSerializer):
             "website",
             "jurisdiction",
             "slug",
-            "logo"
+            "logo",
         )
 
     def get_logo(self, instance: Company) -> str | None:

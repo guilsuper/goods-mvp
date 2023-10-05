@@ -78,11 +78,11 @@ ROOT_URLCONF = "product.urls"
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
-        "django_filters.rest_framework.DjangoFilterBackend"
+        "django_filters.rest_framework.DjangoFilterBackend",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ]
+    ],
 }
 
 SIMPLE_JWT = {
@@ -141,7 +141,7 @@ DATABASES = {
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
         "HOST": os.environ.get("POSTGRES_HOST"),
         "PORT": os.environ.get("POSTGRES_PORT"),
-    }
+    },
 }
 
 default_database = os.environ.get("DJANGO_DATABASE", "develop")
@@ -187,7 +187,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ORIGIN_WHITELIST = [
-    os.environ["FRONTEND_HOST"]
+    os.environ["FRONTEND_HOST"],
 ]
 
 STATICFILES_DIRS = [
@@ -202,7 +202,7 @@ STORAGES = {
     },
     "staticfiles": {
         "BACKEND": "product.storages.GoogleCloudStaticStorage",
-    }
+    },
 }
 
 GS_MEDIA_BUCKET_NAME = os.environ.get("GS_MEDIA_BUCKET_NAME")

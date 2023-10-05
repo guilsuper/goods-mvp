@@ -52,13 +52,13 @@ def admin():
     def _method(
         email="admin@gmail.com",
         password="1234",
-        company=CompanyFactory.create()
+        company=CompanyFactory.create(),
     ):
         return AdministratorFactory(
             email=email,
             password=password,
             company=company,
-            groups=[GroupFactory(name="Administrator")]
+            groups=[GroupFactory(name="Administrator")],
         )
 
     return _method
@@ -71,13 +71,13 @@ def pm():
     def _method(
         email="pmpm@gmail.com",
         password="1234",
-        company=CompanyFactory.create()
+        company=CompanyFactory.create(),
     ):
         return AdministratorFactory(
             email=email,
             password=password,
             company=company,
-            groups=[GroupFactory(name="PM")]
+            groups=[GroupFactory(name="PM")],
         )
 
     return _method
@@ -90,7 +90,7 @@ def auth_header():
     def _method(user):
         access_token = str(AccessToken.for_user(user))
         credentials = {
-            "HTTP_AUTHORIZATION": "Bearer " + access_token
+            "HTTP_AUTHORIZATION": "Bearer " + access_token,
         }
         return credentials
 
@@ -111,7 +111,7 @@ def origin_report_dict():
                 "component_type_str": "EXTERNALLY_SOURCED",
                 "external_sku": "aaaaa",
                 "country_of_origin": "US",
-                "company_name": "Mojang"
+                "company_name": "Mojang",
             },
             {
                 "fraction_cogs": 1,
@@ -119,9 +119,9 @@ def origin_report_dict():
                 "component_type_str": "MADE_IN_HOUSE",
                 "external_sku": "aaaaa1",
                 "country_of_origin": "CH",
-                "company_name": "Alabama"
-            }
-        ]
+                "company_name": "Alabama",
+            },
+        ],
     }
     return obj
 
@@ -140,8 +140,8 @@ def origin_report_invalid_dict():
             },
             {
                 "short_description": "why1",
-            }
-        ]
+            },
+        ],
     }
     return obj
 

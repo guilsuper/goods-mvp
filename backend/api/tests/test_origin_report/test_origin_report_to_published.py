@@ -31,12 +31,12 @@ from django.urls import reverse
         # If the data is correct
         ("pm", 200, True, True),
         ("pm", 400, True, False),
-    ]
+    ],
 )
 def test_origin_report_move_to_publish(
     request, client, origin_report,
     auth_header, user, is_same_company,
-    status_code, is_correct_origin_report
+    status_code, is_correct_origin_report,
 ):
     """Tests origin-report-to-published url."""
     # credentials must be a dict to pass them to the post request
@@ -61,7 +61,7 @@ def test_origin_report_move_to_publish(
 
     response = client.patch(
         reverse("origin-report-to-published", kwargs={"id": origin_report.id}),
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code

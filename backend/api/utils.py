@@ -59,47 +59,55 @@ def send_activation_email(user_id: int) -> bool:
 
         txt_message = render_to_string(
             "template_activate_account.txt",
-            template_params
+            template_params,
         )
         html_message = render_to_string(
             "template_activate_account.html",
-            template_params
+            template_params,
         )
 
         mail = Mail(
-            from_email=From(email="support@freeworldcertified.org",
-                            name="Free World Certified Support"),
+            from_email=From(
+                email="support@freeworldcertified.org",
+                name="Free World Certified Support",
+            ),
             to_emails=To(admin.email),
             subject=Subject("Activate your account."),
             plain_text_content=PlainTextContent(txt_message),
-            html_content=HtmlContent(html_message)
+            html_content=HtmlContent(html_message),
         )
 
         mail.tracking_settings = TrackingSettings(
             click_tracking=ClickTracking(
                 enable=False,
-                enable_text=False
+                enable_text=False,
             ),
             open_tracking=OpenTracking(
                 enable=False,
             ),
-            subscription_tracking=SubscriptionTracking(False)
+            subscription_tracking=SubscriptionTracking(False),
         )
 
         response = sg.send(mail)
 
         if response.status_code >= 200 and response.status_code < 300:
-            logger.info("Sent email via %s to %s return code %d",
-                        sendgrid_host, admin.email, response.status_code)
+            logger.info(
+                "Sent email via %s to %s return code %d",
+                sendgrid_host, admin.email, response.status_code,
+            )
             return True
         else:
-            logger.warning("Failed to send email via %s to %s return code %d info '%s'",
-                           sendgrid_host, admin.email, response.status_code, response.body)
+            logger.warning(
+                "Failed to send email via %s to %s return code %d info '%s'",
+                sendgrid_host, admin.email, response.status_code, response.body,
+            )
             return False
 
     except Exception as e:
-        logger.warning("Failed to send email via %s to %s with error '%s'",
-                       sendgrid_host,
-                       admin.email,
-                       e)
+        logger.warning(
+            "Failed to send email via %s to %s with error '%s'",
+            sendgrid_host,
+            admin.email,
+            e,
+        )
         return False

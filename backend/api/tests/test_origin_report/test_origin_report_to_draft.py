@@ -25,12 +25,12 @@ from django.urls import reverse
         # PMs from the same company can move OriginReport to draft
         # Copy of OriginReport will be created in the draft state
         ("pm", 200, True, True),
-    ]
+    ],
 )
 def test_origin_report_move_to_draft(
     request, client, origin_report,
     auth_header, user, is_same_company,
-    status_code, draft_created
+    status_code, draft_created,
 ):
     """Tests origin-report-to-draft url."""
     # credentials must be a dict to pass them to the post request
@@ -46,7 +46,7 @@ def test_origin_report_move_to_draft(
 
     response = client.patch(
         reverse("origin-report-to-draft", kwargs={"id": origin_report.id}),
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code
@@ -56,12 +56,15 @@ def test_origin_report_move_to_draft(
     if draft_created:
         # Check that 2 OriginReports exists with the same identifier
         origin_reports = OriginReport.objects.filter(
-            unique_identifier=origin_report.unique_identifier)
+            unique_identifier=origin_report.unique_identifier,
+        )
         assert len(origin_reports) == 2 if draft_created else 1
         # The version should be changed after moving to published state
         assert abs(origin_reports[1].version - origin_reports[0].version) == 0
         # Check that new origin_report is in draft state
-        new_origin_report = [origin_report_curr for origin_report_curr in
-                             origin_reports if origin_report_curr.id != origin_report.id][0]
+        new_origin_report = [
+            origin_report_curr for origin_report_curr in
+            origin_reports if origin_report_curr.id != origin_report.id
+        ][0]
         assert new_origin_report.state == ORIGIN_REPORT_STATES.DRAFT
         assert origin_report.state == ORIGIN_REPORT_STATES.PUBLISHED

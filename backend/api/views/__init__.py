@@ -44,5 +44,5 @@ __all__ = [
     "PMListView",
     "PMRetrieveUpdateDestroyView",
     "SelfRetrieveUpdateDestroyView",
-    "CountryView"
+    "CountryView",
 ]

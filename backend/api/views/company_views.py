@@ -15,7 +15,7 @@ class CompanyUpdateRetrieveView(RetrieveUpdateAPIView):
     permission_classes = [
         IsAuthenticated,
         IsAdministrator,
-        IsCompanyAdministrator
+        IsCompanyAdministrator,
     ]
     queryset = Company.objects.all()
     lookup_field = "slug"

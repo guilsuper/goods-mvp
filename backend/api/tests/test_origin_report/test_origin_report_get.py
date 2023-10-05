@@ -40,13 +40,13 @@ def test_origin_report_get(client, origin_report, origin_report_hidden, origin_r
         # PMs in the same company as a OriginReport can get companie's OriginReports
         ("pm", 200, True, 1),
         # PMs in not the same company as a OriginReport can get companie's OriginReports
-        ("pm", 200, False, 0)
-    ]
+        ("pm", 200, False, 0),
+    ],
 )
 def test_origin_report_get_by_company(
     request, client, auth_header,
     origin_report, user, status_code,
-    is_same_company, count
+    is_same_company, count,
 ):
     """Tests OriginReport origin-report-get-company."""
     # credentials must be a dict to pass them to the post request
@@ -62,7 +62,7 @@ def test_origin_report_get_by_company(
 
     response = client.get(
         reverse("origin-report-get-company"),
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code
@@ -101,12 +101,12 @@ def test_origin_report_get_by_company(
         ("pm", 404, False, "HIDDEN"),
         ("pm", 404, False, "DRAFT"),
         ("pm", 200, False, "PUBLISHED"),
-    ]
+    ],
 )
 def test_origin_report_get_single(
     request, client, auth_header,
     origin_report, user, status_code,
-    is_same_company, origin_report_state
+    is_same_company, origin_report_state,
 ):
     """Tests OriginReport origin-report-delete-retrieve."""
     # credentials must be a dict to pass them to the post request
@@ -126,9 +126,9 @@ def test_origin_report_get_single(
     response = client.get(
         reverse(
             "origin-report-delete-retrieve",
-            kwargs={"id": origin_report.id}
+            kwargs={"id": origin_report.id},
         ),
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code

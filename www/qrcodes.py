@@ -30,8 +30,10 @@ def make(url, fname):
     wpercent = (basewidth / float(logo.size[0]))
     hsize = int((float(logo.size[1]) * float(wpercent)))
     logo = logo.resize((basewidth, hsize), resample=Image.BICUBIC)  # Image.ANTIALIAS)
-    pos = ((img.size[0] - logo.size[0]) // 2,
-           (img.size[1] - logo.size[1]) // 2)
+    pos = (
+        (img.size[0] - logo.size[0]) // 2,
+        (img.size[1] - logo.size[1]) // 2,
+    )
     img.paste(logo, pos)
     img.save(fname)
 

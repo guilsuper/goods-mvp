@@ -17,5 +17,5 @@ class OriginReportFilter(django_filters.FilterSet):
 
             "cogs": ["gte", "lte"],
 
-            "company__name": ["icontains"]
+            "company__name": ["icontains"],
         }

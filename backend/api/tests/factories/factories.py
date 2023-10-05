@@ -15,7 +15,7 @@ class GroupFactory(factory.django.DjangoModelFactory):
     class Meta:
         """Defined model and fields for Group factory."""
         model = Group
-        django_get_or_create = ("name", )
+        django_get_or_create = ("name",)
 
     name = "Administrator"
 
