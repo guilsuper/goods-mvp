@@ -18,6 +18,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import FormParser
+from rest_framework.parsers import JSONParser
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -28,7 +29,7 @@ class CreateAdministratorAndCompanyView(APIView):
     """Administrator and company initial creation."""
 
     # To accept multipart/form-data in case we use file field
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
     def post(self, request, *args, **kwargs):
         """Overwritten post method for Administrator creation."""
@@ -54,13 +55,13 @@ class CreateAdministratorAndCompanyView(APIView):
 
                 return Response(
                     data=data,
-                    status=status.HTTP_201_CREATED
+                    status=status.HTTP_201_CREATED,
                 )
             else:
                 admin.delete()
                 return Response(
                     {"message": "Email wasn't sent"},
-                    status=status.HTTP_400_BAD_REQUEST
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
         # You need to call is_valid before accessing the errors attribute
         # admin.is_valid() is called every time
@@ -91,7 +92,7 @@ class CreateAdministratorView(CreateAPIView):
 
                 return Response(
                     data=request.data,
-                    status=status.HTTP_201_CREATED
+                    status=status.HTTP_201_CREATED,
                 )
             else:
                 admin.delete()
@@ -112,7 +113,7 @@ class ActivationView(RetrieveAPIView):
             admin = Administrator.objects.get(id=uid)
         except (
             TypeError, ValueError,
-            OverflowError, Administrator.DoesNotExist
+            OverflowError, Administrator.DoesNotExist,
         ):
             admin = None
 
@@ -121,12 +122,12 @@ class ActivationView(RetrieveAPIView):
             admin.save()
             return Response(
                 data={"message": "Activated " + admin.email},
-                status=status.HTTP_200_OK
+                status=status.HTTP_200_OK,
             )
 
         return Response(
             data={"message": "Activation denied"},
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_400_BAD_REQUEST,
         )
 
 
@@ -149,7 +150,7 @@ class PMCreateView(CreateAPIView):
 
                 return Response(
                     data=request.data,
-                    status=status.HTTP_201_CREATED
+                    status=status.HTTP_201_CREATED,
                 )
             else:
                 pm.delete()
@@ -164,7 +165,7 @@ class PMRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     permission_classes = [
         IsAuthenticated,
         IsAdministrator,
-        IsCompanyAdministrator
+        IsCompanyAdministrator,
     ]
     queryset = Administrator.objects.filter(groups__name="PM")
     lookup_field = "email"
@@ -174,13 +175,13 @@ class PMListView(ListAPIView):
     """Retrieves the PMs."""
 
     serializer_class = PMSerializer
-    permission_classes = (IsAuthenticated, IsAdministrator, )
+    permission_classes = (IsAuthenticated, IsAdministrator)
 
     def get_queryset(self):
         """Filter the PMs."""
         return Administrator.objects.filter(
             groups__name="PM",
-            company=self.request.user.company
+            company=self.request.user.company,
         )
 
 
@@ -189,7 +190,7 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
     permission_classes = [
         IsAuthenticated,
-        IsAccountOwner
+        IsAccountOwner,
     ]
     queryset = Administrator.objects.all()
 
@@ -199,7 +200,7 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(
             instance,
             data=request.data,
-            partial=True
+            partial=True,
         )
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
@@ -212,7 +213,7 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         return Response(
             {
                 **self.serializer_class(request.user).data,
-            }
+            },
         )
 
     def delete(self, request):
@@ -223,17 +224,17 @@ class SelfRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
 
             return Response(
                 status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION,
-                data={"message": "Successfully deleted"}
+                data={"message": "Successfully deleted"},
             )
         return Response(
             status=status.HTTP_403_FORBIDDEN,
-            data={"message": "Permission denied"}
+            data={"message": "Permission denied"},
         )
 
     def get_serializer_class(self):
         """Get serializer based on the user group."""
         if self.request.user.groups.filter(
-            name="Administrator"
+            name="Administrator",
         ).exists():
             return AdministratorSerializer
         else:

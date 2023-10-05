@@ -35,16 +35,20 @@ def compare_iso_sets():
     else:
         def cato_str(a2):
             return f"{a2} = {_cato.iso2score[a2]} = {_cato.iso2name[a2]}"
-        print(f"Freeddom House is missing these {len(only_fh)} "
-              f"places that CATO scores {', '.join(map(cato_str, only_cato))}.")
+        print(
+            f"Freeddom House is missing these {len(only_fh)} "
+            f"places that CATO scores {', '.join(map(cato_str, only_cato))}.",
+        )
 
     if len(only_fh) == 0:
         print("CATO has every place CATO covers.")
     else:
         def fh_str(a2):
             return f"{a2} = {_fh.iso2score[a2]} = {_fh.iso2name[a2]}"
-        print(f"CATO is missing these {len(only_fh)} "
-              f"places that Freedom House scores {', '.join(map(fh_str, only_fh))}.")
+        print(
+            f"CATO is missing these {len(only_fh)} "
+            f"places that Freedom House scores {', '.join(map(fh_str, only_fh))}.",
+        )
 
 
 def make_plot(all_labels):
@@ -123,9 +127,11 @@ if __name__ == "__main__":
     parser.add_argument("--make-plot", action="store_true")
     parser.add_argument(
         "--all-labels", action="store_true",
-        help=("by default, this only labels countries missing from "
-              "CATO or with CATO scores that don't agree with FreedomHouse.  "
-              "Setting --all-labels puts country names on all points.")
+        help=(
+            "by default, this only labels countries missing from "
+            "CATO or with CATO scores that don't agree with FreedomHouse.  "
+            "Setting --all-labels puts country names on all points."
+        ),
     )
     args = parser.parse_args()
 

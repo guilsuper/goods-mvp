@@ -36,7 +36,7 @@ class AdministratorSerializer(ModelSerializer):
         fields = (
             "password", "email",
             "first_name", "last_name",
-            "groups", "company", "is_active"
+            "groups", "company", "is_active",
         )
 
     def create(self, validated_data):
@@ -78,7 +78,7 @@ class PMSerializer(ModelSerializer):
         fields = (
             "password", "email",
             "first_name", "last_name",
-            "groups", "company", "is_active"
+            "groups", "company", "is_active",
         )
 
     def create(self, validated_data):

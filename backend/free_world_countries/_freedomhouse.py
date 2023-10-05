@@ -140,8 +140,10 @@ with open(resource_filename(__name__, "freedomhouse.csv"), "r") as filehandle:
             is_country = True
             is_territory = False
         else:
-            raise Exception(f"freedomhouse.csv contains unexpected data: "
-                            f"country_or_territory={country_or_territory}")
+            raise Exception(
+                f"freedomhouse.csv contains unexpected data: "
+                f"country_or_territory={country_or_territory}",
+            )
         if status_str == "F":
             freedom_status = FreedomStatus.Free
         elif status_str == "PF":
@@ -149,11 +151,15 @@ with open(resource_filename(__name__, "freedomhouse.csv"), "r") as filehandle:
         elif status_str == "NF":
             freedom_status = FreedomStatus.NotFree
         else:
-            raise Exception(f"freedomhouse.csv contains unexpected data: "
-                            f"status_str={status_str}")
+            raise Exception(
+                f"freedomhouse.csv contains unexpected data: "
+                f"status_str={status_str}",
+            )
 
-        fhr = FreedomHouseRecord(name, region, is_country, is_territory,
-                                 freedom_status, int(score_str))
+        fhr = FreedomHouseRecord(
+            name, region, is_country, is_territory,
+            freedom_status, int(score_str),
+        )
         places[fhr.name] = fhr
 
         if name not in name2iso:
@@ -164,8 +170,10 @@ with open(resource_filename(__name__, "freedomhouse.csv"), "r") as filehandle:
             iso2score[iso_alpha_2] = fhr.score
             iso2name[iso_alpha_2] = fhr.name
             if iso_alpha_2 in _seen_before:
-                print(f"uh oh, got code twice! {iso_alpha_2} --> {name} "
-                      f"but already from {_seen_before[iso_alpha_2]}")
+                print(
+                    f"uh oh, got code twice! {iso_alpha_2} --> {name} "
+                    f"but already from {_seen_before[iso_alpha_2]}",
+                )
                 pdb.set_trace()
             _seen_before[iso_alpha_2] = name
             if freedom_status is FreedomStatus.Free:
@@ -193,7 +201,9 @@ if __name__ == "__main__":
     else:
         fhr = places[args.place_name]
 
-        print(f"{fhr.name} is country={fhr.is_country} and territory={fhr.is_territory} "
-              f"in {fhr.region} that "
-              f"scored {fhr.score} out of 100 for data from 2022, "
-              f"which makes it {fhr.status}")
+        print(
+            f"{fhr.name} is country={fhr.is_country} and territory={fhr.is_territory} "
+            f"in {fhr.region} that "
+            f"scored {fhr.score} out of 100 for data from 2022, "
+            f"which makes it {fhr.status}",
+        )

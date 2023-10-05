@@ -82,7 +82,8 @@ def automatic_default(output_file_path, date, user):
             status,
             version, date,
             name,
-            user, comment)
+            user, comment,
+        )
 
     with open(output_file_path, "w", newline="") as o_fh:
         csv_writer = csv.writer(o_fh, dialect="unix", quoting=csv.QUOTE_MINIMAL)

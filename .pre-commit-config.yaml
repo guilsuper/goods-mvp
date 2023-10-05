@@ -70,6 +70,11 @@ repos:
         args:
           - --use-current-year
 
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.7.0-1
+    hooks:
+      - id: shfmt
+
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.10.0
     hooks:
@@ -100,6 +105,12 @@ repos:
       - id: codespell
         exclude: "(frontend/package-lock.json)"
 
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.16.17
+    hooks:
+      - id: typos
+        exclude: "(backend/api/migrations/|example-data/products.yaml|backend/free_world_countries/.*.csv)"
+
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.26.3
     hooks:
@@ -110,6 +121,11 @@ repos:
     rev: v1.28.1
     hooks:
       - id: tfsec
+
+  - repo: https://github.com/asottile/add-trailing-comma
+    rev: v3.1.0
+    hooks:
+      - id: add-trailing-comma
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0

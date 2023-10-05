@@ -28,8 +28,10 @@ def driver():
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     if "SELENIUM_HOST" in os.environ:
-        driver = webdriver.Remote(command_executor=os.environ["SELENIUM_HOST"],
-                                  options=options)
+        driver = webdriver.Remote(
+            command_executor=os.environ["SELENIUM_HOST"],
+            options=options,
+        )
     else:
         driver = webdriver.Chrome(options=options)
     yield driver
@@ -82,7 +84,7 @@ def signed_in_client(driver: webdriver.Chrome) -> dict:
 
     # Update existing tokens, because old tokens aren't valid
     _client["tokens"] = json.loads(
-        driver.execute_script("return window.localStorage;")["authTokens"]
+        driver.execute_script("return window.localStorage;")["authTokens"],
     )
 
     return _client
@@ -104,7 +106,7 @@ def origin_report_create_published() -> Callable:
                     "component_type_str": "EXTERNALLY_SOURCED",
                     "external_sku": "aaaaa",
                     "country_of_origin": "US",
-                    "company_name": "Mojang"
+                    "company_name": "Mojang",
                 },
                 {
                     "fraction_cogs": 1,
@@ -112,14 +114,14 @@ def origin_report_create_published() -> Callable:
                     "component_type_str": "MADE_IN_HOUSE",
                     "external_sku": "aaaaa1",
                     "country_of_origin": "CN",  # China
-                    "company_name": "Alabama"
-                }
-            ]
+                    "company_name": "Alabama",
+                },
+            ],
         }
         response = requests.post(
             os.environ["BACKEND"] + "/api/origin_report/create/",
             json=data,
-            headers={"Authorization": f"Bearer {_client['tokens']['access']}"}
+            headers={"Authorization": f"Bearer {_client['tokens']['access']}"},
         )
         response.raise_for_status()
         return response.json()
@@ -146,14 +148,14 @@ def origin_report_create_draft() -> Callable:
                     "component_type_str": "EXTERNALLY_SOURCED",
                     "external_sku": "aaaaa",
                     "country_of_origin": "US",
-                    "company_name": "Mojang"
-                }
-            ]
+                    "company_name": "Mojang",
+                },
+            ],
         }
         response = requests.post(
             os.environ["BACKEND"] + "/api/origin_report/create_draft/",
             json=data,
-            headers={"Authorization": f"Bearer {_client['tokens']['access']}"}
+            headers={"Authorization": f"Bearer {_client['tokens']['access']}"},
         )
         response.raise_for_status()
         return response.json()

@@ -180,11 +180,11 @@ const EditOriginReportForm = () => {
           body: JSON.stringify(inputFields[index])
         }
 
-        const resonseComponent = await fetch(
+        const responseComponent = await fetch(
           '/api/component/patch_delete_retrieve/' + inputFields[index].id + '/',
           configComponent
         )
-        responsesComponent = [...responsesComponent, resonseComponent]
+        responsesComponent = [...responsesComponent, responseComponent]
       }
 
       // If PUBLISH button was pressed
@@ -217,7 +217,7 @@ const EditOriginReportForm = () => {
     const result = await responseOriginReport.json()
 
     if (responseOriginReport.status === 200) {
-      alert('OriginReport Successfully editted')
+      alert('OriginReport Successfully edited')
       navigate('/origin_report/' + originReportIdentifier)
     } else if (responseOriginReport.status === 400) {
       let message = 'Invalid input data:'
@@ -230,7 +230,7 @@ const EditOriginReportForm = () => {
 
     for (const index in responsesComponent) {
       if (responsesComponent[index].status === 200) {
-        alert('Component #' + (1 + +index) + ' successfully editted')
+        alert('Component #' + (1 + +index) + ' successfully edited')
         navigate('/origin_report/' + originReportIdentifier)
       } else if (responsesComponent[index].status === 400) {
         let message = 'Invalid input data:'

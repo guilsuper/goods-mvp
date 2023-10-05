@@ -6,7 +6,7 @@ from api.models import ORIGIN_REPORT_STATES
 from api.models import OriginReport
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
-from api.serializers import CompanySerializer
+from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CountrySerializer
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
@@ -66,7 +66,7 @@ class SourceComponentSerializer(ModelSerializer):
         """Metaclass for the SourceComponentSerializer."""
 
         model = SourceComponent
-        exclude = ("parent_origin_report", )
+        exclude = ("parent_origin_report",)
 
     def validate_fraction_cogs(self, value):
         """Validates the COGS, it should be greater than 0 for a published OriginReport."""
@@ -91,7 +91,7 @@ class SourceComponentSerializer(ModelSerializer):
             # Check if external sku exists if component type is EXTERNALLY_SOURCED
             if "external_sku" not in attrs or "company_name" not in attrs:
                 raise ValidationError(
-                    "External sku and company name is required for externally sourced type."
+                    "External sku and company name is required for externally sourced type.",
                 )
         return super().validate(attrs)
 
@@ -110,11 +110,11 @@ class SourceComponentDraftSerializer(ModelSerializer):
         max_length=18,
         write_only=True,
         required=False,
-        allow_blank=True
+        allow_blank=True,
     )
     component_type = ComponentTypeToString(
         choices=SOURCE_COMPONENT_TYPE.choices(),
-        read_only=True
+        read_only=True,
     )
     # To display a country full name instead of a code
     country_of_origin = PrimaryKeyRelatedField(required=False, queryset=Country.objects.all())
@@ -126,7 +126,7 @@ class SourceComponentDraftSerializer(ModelSerializer):
         """Metaclass for the SourceComponent draft Serializer."""
 
         model = SourceComponent
-        exclude = ("parent_origin_report", )
+        exclude = ("parent_origin_report",)
 
     def validate_fraction_cogs(self, value):
         """Validates the COGS, it should be greater or equal to 0 for a draft OriginReport."""
@@ -165,14 +165,14 @@ class OriginReportCreateGetSerializer(ModelSerializer):
     unique_identifier_type_str = CharField(max_length=4, write_only=True)
 
     # Read only fields
-    company = CompanySerializer(read_only=True)
+    company = CompanyRetrieveSerializer(read_only=True)
     id = IntegerField(read_only=True)
     version = IntegerField(read_only=True)
     state = OriginReportStateToString(choices=ORIGIN_REPORT_STATES.choices(), read_only=True)
     cogs = FloatField(read_only=True)
     unique_identifier_type = UniqueIdentifierTypeToString(
         choices=ORIGIN_REPORT_ID_TYPES,
-        read_only=True
+        read_only=True,
     )
     is_latest_version = BooleanField(read_only=True)
 
@@ -194,7 +194,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
             "state",
             "cogs",
             "unique_identifier_type",
-            "is_latest_version"
+            "is_latest_version",
         )
 
     def validate_unique_identifier_type_str(self, value):
@@ -266,7 +266,7 @@ class OriginReportDraftSerializer(ModelSerializer):
             "unique_identifier_type",
             "unique_identifier",
             "short_description",
-            "components"
+            "components",
         )
 
     def create(self, validated_data):

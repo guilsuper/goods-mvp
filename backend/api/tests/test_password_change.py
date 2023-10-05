@@ -13,13 +13,13 @@ from django.urls import reverse
         # PMs have no permission to perform this action
         ("pm", 200),
         # User can't access it
-        (None, 401)
-    ]
+        (None, 401),
+    ],
 )
 def test_password_change(
     request, client,
     auth_header, user,
-    status_code
+    status_code,
 ):
     """Tests password changing."""
     # credentials must be a dict to pass them to the post request
@@ -36,7 +36,7 @@ def test_password_change(
         reverse("self-patch-delete-retrieve"),
         data={"password": new_password},
         content_type="application/json",
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code
@@ -49,8 +49,8 @@ def test_password_change(
             reverse("token-obtain-pair"),
             data={
                 "email": user.email,
-                "password": new_password
-            }
+                "password": new_password,
+            },
         )
 
         assert response.status_code == 200

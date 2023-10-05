@@ -38,17 +38,19 @@ def init_client() -> dict:
         "password": "1234",
         "website": "aaaa.com",
         "name": "aaaa",
-        "jurisdiction": "bruh"
+        "jurisdiction": "bruh",
     }
-    user = requests.post(
+
+    response = requests.post(
         os.environ["BACKEND"] + "/api/admin_and_company/create/",
-        data=data
-    ).json()
+        data=data,
+    )
+    response.raise_for_status()
 
     # Wait for email to get
     for _ in range(10):
         time.sleep(1)
-        emails = get_emails(user["email"])
+        emails = get_emails(data["email"])
 
         # If there are messages in sendgird
         if len(emails) > 0:
@@ -59,17 +61,28 @@ def init_client() -> dict:
     # Compiles activation link that can be used to make a request to the backend
     regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
     link = os.environ["BACKEND"] + regex.search(text).group(1).replace(
-        "/activated", "/api/activate"
+        "/activated", "/api/activate",
     ) + "/"
     requests.get(link)
 
-    user["tokens"] = requests.post(
+    tokens = requests.post(
         os.environ["BACKEND"] + "/api/token/",
         data={
             "email": data["email"],
-            "password": data["password"]
-        }
+            "password": data["password"],
+        },
     ).json()
+
+    # To get full user info and company info
+    response = requests.get(
+        os.environ["BACKEND"] + "/api/self/patch_delete_retrieve/",
+        headers={"Authorization": f"Bearer {tokens['access']}"},
+    )
+    response.raise_for_status()
+    user = response.json()
+    user["tokens"] = tokens
+    user["password"] = data["password"]
+
     return user
 
 

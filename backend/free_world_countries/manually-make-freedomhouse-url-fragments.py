@@ -59,7 +59,7 @@ def automatic_default(output_file_path):
 
         recs[country.alpha_2] = FreedomHouseCountryNameURLFragment(
             country.alpha_2,
-            fragment
+            fragment,
         )
 
     with open(output_file_path, "w", newline="") as o_fh:

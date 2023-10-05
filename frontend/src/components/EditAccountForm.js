@@ -58,7 +58,7 @@ const EditAccountForm = () => {
     const result = await response.json()
 
     if (response.status === 200) {
-      alert('Successfully editted')
+      alert('Successfully edited')
       updateUser()
       navigate('/account/info')
     } else if (response.status === 400) {

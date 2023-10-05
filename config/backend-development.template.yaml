@@ -48,6 +48,16 @@ spec:
             secretKeyRef:
               key: latest
               name: django-gs-bucket-name
+        - name: GS_STATIC_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: django-gs-static-bucket-name
+        - name: GS_MEDIA_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: django-gs-media-bucket-name
         - name: FRONTEND_HOST
           value: https://${FQDN}
         - name: SENDGRID_API_KEY

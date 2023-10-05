@@ -36,12 +36,12 @@ from django.urls import reverse
         # Unhide hidden OriginReport as PM in the same company
         # OriginReport state will be changed
         ("pm", "HIDDEN", "PUBLISHED", 200),
-    ]
+    ],
 )
 def test_origin_report_change_visibility_same_company(
     request, client, origin_report,
     auth_header, user, origin_report_state,
-    new_state, status_code
+    new_state, status_code,
 ):
     """Tests origin-report-switch-visibility url."""
     # credentials must be a dict to pass them to the post request
@@ -59,10 +59,10 @@ def test_origin_report_change_visibility_same_company(
         reverse(
             "origin-report-switch-visibility",
             kwargs={
-                "id": origin_report.id
-            }
+                "id": origin_report.id,
+            },
         ),
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code
@@ -97,12 +97,12 @@ def test_origin_report_change_visibility_same_company(
         # Unhide hidden OriginReport as PM in a different company
         # Action not allowed
         ("pm", "HIDDEN", 403),
-    ]
+    ],
 )
 def test_origin_report_change_visibility_different_company(
     request, client, origin_report,
     auth_header, user,
-    origin_report_state, status_code
+    origin_report_state, status_code,
 ):
     """Tests origin-report-switch-visibility url."""
     # credentials must be a dict to pass them to the post request
@@ -120,10 +120,10 @@ def test_origin_report_change_visibility_different_company(
         reverse(
             "origin-report-switch-visibility",
             kwargs={
-                "id": origin_report.id
-            }
+                "id": origin_report.id,
+            },
         ),
-        **credentials
+        **credentials,
     )
 
     assert response.status_code == status_code

@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                     alpha_2 = country.alpha_2,
                     alpha_3 = pyc.alpha_3,
                     name = country.name,
-                    free = country.status == Status.Free
+                    free = country.status == Status.Free,
                 )
 
     def delete_countries(apps, schema_editor):

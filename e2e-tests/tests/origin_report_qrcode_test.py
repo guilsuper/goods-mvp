@@ -15,7 +15,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 def test_flag_origin_report_info_page(
     driver: webdriver.Chrome,
     origin_report_create_published: Callable,
-    client: dict
+    client: dict,
 ):
     """Checks if the qr code is displayed in the OriginReport page with the correct link."""
     origin_report = origin_report_create_published()
@@ -24,8 +24,8 @@ def test_flag_origin_report_info_page(
 
     origin_report_item = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located(
-            (By.XPATH, f"//a[@href='/origin_report/{origin_report['id']}']")
-        )
+            (By.XPATH, f"//a[@href='/origin_report/{origin_report['id']}']"),
+        ),
     )
     assert origin_report_item
 
@@ -35,7 +35,7 @@ def test_flag_origin_report_info_page(
 
     # ensure that the QR Code is present
     qrcode_present = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//*[local-name()='svg']"))
+        EC.presence_of_element_located((By.XPATH, "//*[local-name()='svg']")),
     )
     assert qrcode_present
 
