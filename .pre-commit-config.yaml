@@ -29,6 +29,9 @@ repos:
 
       - id: check-merge-conflict
 
+      - id: debug-statements
+        exclude: "(backend/free_world_countries/_freedomhouse.py)"
+
       - id: check-yaml
 
       - id: end-of-file-fixer
