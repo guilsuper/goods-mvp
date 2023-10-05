@@ -46,7 +46,25 @@ const Header = () => {
           className="me-3"
         >
           <Dropdown.Item eventKey="accountInfo" href="/account/info">{ t('navigation.profile-settings') }</Dropdown.Item>
-          <Dropdown.Divider />
+          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>{ t('common.sign-out') }</Dropdown.Item>
+
+        </DropdownButton>
+      )
+    }
+  }
+
+  const isAdmin = () => {
+    return user.groups.map(pair => (pair.name === 'Administrator'))
+  }
+
+  const languageButton = () => {
+    return (
+        <DropdownButton
+          variant="success"
+          title="Language"
+          align='end'
+          className="me-3"
+        >
           {
             Object.keys(lngs).map((lng) => (
               <Dropdown.Item key={lng}
@@ -58,16 +76,8 @@ const Header = () => {
               </Dropdown.Item>
             ))
           }
-          <Dropdown.Divider />
-          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>{ t('common.sign-out') }</Dropdown.Item>
-
         </DropdownButton>
-      )
-    }
-  }
-
-  const isAdmin = () => {
-    return user.groups.map(pair => (pair.name === 'Administrator'))
+    )
   }
 
   return (
@@ -98,6 +108,7 @@ const Header = () => {
         </Nav>
       </Navbar.Collapse>
       {authButton()}
+      {languageButton()}
     </Navbar>
   )
 }
