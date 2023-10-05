@@ -108,6 +108,11 @@ repos:
       - id: detect-secrets
         exclude: frontend/package.lock.json
 
+  - repo: 'https://github.com/zricethezav/gitleaks'
+    rev: v8.8.4
+    hooks:
+      - id: gitleaks
+
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
     hooks:
