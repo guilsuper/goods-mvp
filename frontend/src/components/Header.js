@@ -89,7 +89,6 @@ const Header = () => {
         <Nav>
           <NavLink eventKey="home" as={Link} to="/">{ t('navigation.home') }</NavLink>
           <NavLink eventKey="originReport" as={Link} to="/origin_report">{ t('common.origin-report_other') }</NavLink>
-          <NavLink eventKey="about" as={Link} to="/about">{ t('common.about') }</NavLink>
           {user ? <NavLink eventKey="ourOriginReport" as={Link} to="/account/origin_report">{ t('navigation.our-origin-reports') }</NavLink> : ' '}
           { user && isAdmin()
             ? <NavLink eventKey="accountPM" as={Link} to="/account/pm">

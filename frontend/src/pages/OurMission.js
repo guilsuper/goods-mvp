@@ -6,18 +6,18 @@ import React from 'react'
 import Container from 'react-bootstrap/Container'
 import { useTranslation } from 'react-i18next'
 
-const About = () => {
+const OurMission = () => {
   const { t } = useTranslation()
 
   return (
     <Container className="align-items-center">
       <Container>
         <h3 className="text-center">{ t('common.about') }</h3>
-          <p style={{ textAlign: 'justify' }}>...
+          <p style={{ textAlign: 'justify' }}>{ t('common.about') }
         </p>
       </Container>
     </Container>
   )
 }
 
-export default About
+export default OurMission
