@@ -6,18 +6,19 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Image, Row } from 'react-bootstrap'
 
-const CompanyLogo = ({ companyLogo }) => {
-  CompanyLogo.propTypes = {
-    companyLogo: PropTypes.string
+const ImageComponent = ({ src, text }) => {
+  ImageComponent.propTypes = {
+    src: PropTypes.string,
+    text: PropTypes.string
   }
 
   return (
     <>
-      <Row className='text-secondary'><p>Company logo</p></Row>
+      <Row className='text-secondary'><p>{text}</p></Row>
       <Row className='pb-3 w-25'>
         <Image
             className='w-50 ms-3'
-            src={companyLogo}
+            src={src}
             thumbnail
         />
       </Row>
@@ -25,4 +26,4 @@ const CompanyLogo = ({ companyLogo }) => {
   )
 }
 
-export default CompanyLogo
+export default ImageComponent

@@ -7,7 +7,7 @@ import { Button, Form } from 'react-bootstrap'
 import AuthContext from '../context/AuthContext'
 import { useParams, useNavigate } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
-import CompanyLogo from './CompanyLogo'
+import ImageComponent from './ImageComponent'
 
 const EditCompanyForm = () => {
   // authTokens are for sending request to the backend
@@ -125,7 +125,7 @@ const EditCompanyForm = () => {
         {
           // If logo is set
           company.logo
-            ? <CompanyLogo companyLogo={company.logo} />
+            ? <ImageComponent src={company.logo} text={'Company logo'}/>
             : ' '
         }
 

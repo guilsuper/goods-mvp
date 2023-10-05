@@ -10,6 +10,7 @@ import FormContainer from '../utils/FormContainer'
 import CountrySelect from './CountrySelect'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import ReactCountryFlag from 'react-country-flag'
+import ImageComponent from '../components/ImageComponent'
 
 const EditOriginReportForm = () => {
   // authTokens are for sending request to the backend
@@ -122,21 +123,19 @@ const EditOriginReportForm = () => {
     event.persist()
 
     // Get only not empty data
-    const data = {
-      unique_identifier:
-        event.target.unique_identifier.value
-          ? event.target.unique_identifier.value
-          : originReport.unique_identifier,
-
-      unique_identifier_type_str:
-        event.target.unique_identifier_type_str.value
-          ? event.target.unique_identifier_type_str.value
-          : originReport.unique_identifier_type,
-
-      short_description:
-        event.target.short_description[0].value
-          ? event.target.short_description[0].value
-          : originReport.short_description
+    const data = new FormData()
+    if (event.target.unique_identifier.value) {
+      data.append('unique_identifier', event.target.unique_identifier.value)
+    }
+    if (event.target.unique_identifier_type_str.value) {
+      data.append('unique_identifier_type_str', event.target.unique_identifier_type_str.value)
+    }
+    if (event.target.short_description[0].value) {
+      data.append('short_description', event.target.short_description[0].value)
+    }
+    if (event.target.thumbnail) {
+      console.log('YES')
+      data.append('thumbnail', event.target.thumbnail.files[0])
     }
 
     // Config for move to publish request
@@ -153,11 +152,9 @@ const EditOriginReportForm = () => {
     const configOriginReport = {
       method: 'PATCH',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
         Authorization: 'Bearer ' + authTokens.access
       },
-      body: JSON.stringify(data)
+      body: data
     }
 
     // responses for each request
@@ -399,6 +396,18 @@ const EditOriginReportForm = () => {
         <Form.Group className="mb-3" controlId="short_description">
           <Form.Label>Short description</Form.Label>
           <Form.Control type="text" placeholder={originReport.short_description} />
+        </Form.Group>
+
+        {
+          // If logo is set
+          originReport.thumbnail
+            ? <ImageComponent src={originReport.thumbnail_url} text={'Origin Report thumbnail'}/>
+            : ' '
+        }
+
+        <Form.Group className="mb-3" controlId="thumbnail">
+          <Form.Label>Origin Report Thumbnail</Form.Label>
+          <Form.Control type="file"/>
         </Form.Group>
 
         <p>COGS: {calculateCOGS()}%</p>

@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container'
 import AuthContext from '../context/AuthContext'
 import { Col, Row, Button } from 'react-bootstrap'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import CompanyLogo from '../components/CompanyLogo'
+import ImageComponent from '../components/ImageComponent'
 
 const CompanyInfo = () => {
   const { user, authTokens } = useContext(AuthContext)
@@ -71,7 +71,7 @@ const CompanyInfo = () => {
         {
           // If logo is set
           company.logo
-            ? <CompanyLogo companyLogo={company.logo} />
+            ? <ImageComponent src={company.logo} text={'Company logo'}/>
             : ' '
         }
 

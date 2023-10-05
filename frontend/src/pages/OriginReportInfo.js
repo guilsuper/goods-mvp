@@ -8,7 +8,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import { toReadable } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
-import CompanyLogo from '../components/CompanyLogo'
+import ImageComponent from '../components/ImageComponent'
 import { freedomHouseCountryReportURL } from '../utils/FreedomHouse'
 import GetQRCode from '../components/QRCode'
 
@@ -169,7 +169,13 @@ const OriginReportInfo = () => {
         {
           // If logo is set
           originReport.company.logo
-            ? <CompanyLogo companyLogo={originReport.company.logo} />
+            ? <ImageComponent src={originReport.company.logo} text={'Company logo'}/>
+            : ' '
+        }
+        {
+          // If logo is set
+          originReport.thumbnail
+            ? <ImageComponent src={originReport.thumbnail_url} text={'Origin Report thumbnail'}/>
             : ' '
         }
 
@@ -234,25 +240,31 @@ const OriginReportInfo = () => {
             <Row><p>{component.external_sku}</p></Row>
           </Col>
 
-          <Col>
-            <p>
-              <a href={freedomHouseCountryReportURL(component.country_of_origin_info.name, component.country_of_origin_info.freedom_house_url_name)}>
-                {component.country_of_origin_info.name}
-              </a>
-            </p>
-          </Col>
-          <Col className='d-flex align-items-center justify-content-center'>
-            <ReactCountryFlag
-              countryCode={component.country_of_origin}
-              svg
-              style={{
-                width: '6.6em',
-                height: '5em',
-                border: '1px solid #dee2e6'
-              }}
-              title={component.country_of_origin_info.name}
-            />
-          </Col>
+          { // If component wasn't initialized
+          component.country_of_origin
+            ? <>
+              <Col>
+                <p>
+                  <a href={freedomHouseCountryReportURL(component.country_of_origin_info.name, component.country_of_origin_info.freedom_house_url_name)}>
+                    {component.country_of_origin_info.name}
+                  </a>
+                </p>
+              </Col>
+              <Col className='d-flex align-items-center justify-content-center'>
+                <ReactCountryFlag
+                  countryCode={component.country_of_origin}
+                  svg
+                  style={{
+                    width: '6.6em',
+                    height: '5em',
+                    border: '1px solid #dee2e6'
+                  }}
+                  title={component.country_of_origin_info.name}
+                />
+              </Col>
+            </>
+            : ' '
+          }
         </Row>
         ))}
 
