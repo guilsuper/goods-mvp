@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from tests.utils import init_client
+from tests.utils import update_client_info
 
 
 load_dotenv()
@@ -41,7 +42,10 @@ def driver():
 @pytest.fixture
 def client() -> dict:
     """Returns client info and tokens."""
-    return _client
+    # To update the client info after each test
+    global _client
+    yield _client
+    _client = update_client_info(_client)
 
 
 @pytest.fixture
@@ -161,3 +165,38 @@ def origin_report_create_draft() -> Callable:
         return response.json()
 
     return create
+
+
+@pytest.fixture
+def image_path():
+    """Returns path to the test_data/media/birb.png"""
+    return os.getcwd() + "/tests/test_data/media/birb.png"
+
+
+@pytest.fixture
+def company_image(image_path, signed_in_client, driver):
+    """Sets or creates a company image for current client."""
+    # Check is company have a logo
+    # If not, create it
+    if _client["company"]["logo"]:
+        return
+
+    edit_url = f"{os.environ['FRONTEND']}/account/company/" \
+               f"edit/{signed_in_client['company']['slug']}"
+
+    driver.get(edit_url)
+
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, "logo")),
+    ).send_keys(image_path)
+
+    WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")),
+    ).click()
+
+    WebDriverWait(driver, 10).until(EC.alert_is_present())
+    alert = driver.switch_to.alert
+    assert alert.text == "Successfully edited"
+    alert.accept()
+
+    return image_path

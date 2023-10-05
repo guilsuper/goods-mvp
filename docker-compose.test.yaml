@@ -72,7 +72,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000", "--settings=product.settings.development_settings"]
     volumes:
       - ./backend:/backend
       - media:/backend/media

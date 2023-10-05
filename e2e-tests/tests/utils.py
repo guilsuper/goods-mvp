@@ -86,6 +86,20 @@ def init_client() -> dict:
     return user
 
 
+def update_client_info(client: dict) -> dict:
+    """Updates _client info"""
+    response = requests.get(
+        os.environ["BACKEND"] + "/api/self/patch_delete_retrieve/",
+        headers={"Authorization": f"Bearer {client['tokens']['access']}"},
+    )
+    response.raise_for_status()
+    response = response.json()
+
+    client.update(response)
+    client["company"].update(response["company"])
+    return client
+
+
 def get_country_data() -> dict():
     response = requests.get(os.environ["BACKEND"] + "/api/country/list/")
     response.raise_for_status()
