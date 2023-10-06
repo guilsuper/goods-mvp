@@ -1,0 +1,24 @@
+{
+  "common": {
+    "sign-in": "Sign In",
+    "sign-out": "Sign Out",
+    "sign-up": "Sign Up",
+    "our-mission": "Our Mission",
+    "origin-report_one": "Origin Report",
+    "origin-report_other": "Origin Reports"
+  },
+  "navigation": {
+    "user": "User",
+    "profile-settings": "Profile Settings",
+    "home": "Home",
+    "our-origin-reports": "Our Origin Reports",
+    "create-product-owner": "Create Product Owner"
+  },
+  "home": {
+    "value": "Find products that prioritize freedom.",
+    "description": "Share origin reports, so everyone can pick products that prioritize freedom."
+  },
+  "our-mission": {
+    "mission": "Have you ever searched for a product made in your home country because you would rather not send money to a dictator?\n\nIf you have, then you probably also found that some manufacturers would prefer you did not know where they make their products.  Many sellers describe themselves as \"artisans\" or \"homegrown\" while actually operating as import companies for factories operated in nations that believe that their citizens should be subordinate to their government.\n\nMany of us have sought products made in our home country.  We hope you will consider embracing the broader free world.  There are many free nations in the world.  Encouraging trade amongst free nations is one of the highest and best uses of our purchasing dollars.\n\nthat everyone can work toward freedom.  Global freedom for all of humanity.\n\nWe believe that all nation's governments should be by the people, of the people, and for the people.\n\nHow do you know which countries are part of the free world?  Several organizations actively research the state of freedom in nations around the world.\n\nOur process is simple.  Anyone can post information about a product.  Any manufacturer can certify their product's origins.  Our system also gives partial credit by allowing manufacturers to certify what fraction of their Cost Of Goods Sold (COGS) come from different countries.\n\nWe rely on truth and justice.  We trust and verify.  Any company can self-certify their countries of origin.\n\nOur goal is to bring the concept of the \"free world\" into clear view for all consumers around the world, so that everyone can work toward freedom.  Global freedom for all of humanity.\n\nYours in the struggle for freedom,"
+  }
+}

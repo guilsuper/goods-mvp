@@ -42,6 +42,12 @@ repos:
 
       - id: check-added-large-files
 
+  - repo: https://github.com/sirosen/texthooks
+    rev: 0.5.0
+    hooks:
+      - id: fix-smartquotes
+      - id: fix-spaces
+
   - repo: https://github.com/pre-commit/mirrors-csslint
     rev: v1.0.5
     hooks:
@@ -109,7 +115,7 @@ repos:
     rev: v1.16.17
     hooks:
       - id: typos
-        exclude: "(backend/api/migrations/|example-data/products.yaml|backend/free_world_countries/.*.csv)"
+        exclude: "(backend/api/migrations/|example-data/products.yaml|backend/free_world_countries/.*.csv|frontend/public/locales/[a-z]{2}/translation.json)"
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.26.3
@@ -146,6 +152,7 @@ repos:
         additional_dependencies:
           - eslint@8.50.0
           - eslint-config-standard@^17.1.0
+          - eslint-plugin-i18next@^6.0.3
           - eslint-plugin-import@^2.28.1
           - eslint-plugin-jest@^27.4.2
           - eslint-plugin-n@^16.1.0

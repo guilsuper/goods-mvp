@@ -7,9 +7,12 @@ import Form from 'react-bootstrap/Form'
 import { useNavigate } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
 import { Button } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
 
 const SignUpForm = () => {
   const navigate = useNavigate()
+
+  const { t } = useTranslation()
 
   const [formValues, setFormValues] = useState({
     email: '',
@@ -71,7 +74,7 @@ const SignUpForm = () => {
   return (
     <FormContainer>
       <Form onSubmit={submitHandler}>
-        <h2 className="text-center">Sign Up</h2>
+        <h2 className="text-center">{ t('common.sign-up') }</h2>
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>Company Administrator Email Address</Form.Label>
           <Form.Control
@@ -123,7 +126,7 @@ const SignUpForm = () => {
         </Form.Group>
 
         <Button className="mb-3" variant="primary" type="submit">
-          Sign Up
+          { t('common.sign-up') }
         </Button>
       </Form>
     </FormContainer>

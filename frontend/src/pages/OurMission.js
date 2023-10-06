@@ -5,17 +5,21 @@
 import React from 'react'
 import Container from 'react-bootstrap/Container'
 import { useTranslation } from 'react-i18next'
+import { multilineTranslation } from '../utils/I18nUtils'
 
-const Home = () => {
+const OurMission = () => {
   const { t } = useTranslation()
+
   return (
     <Container className="align-items-center">
       <Container>
-        <h3 className="text-center">{ t('home.value') }</h3>
-        <p style={{ textAlign: 'justify' }}>{ t('home.description') } </p>
+        <h3 className="text-center">{ t('common.our-mission') }</h3>
+        <p style={{ textAlign: 'justify' }}>
+          { multilineTranslation(t('our-mission.mission')) }
+        </p>
       </Container>
     </Container>
   )
 }
 
-export default Home
+export default OurMission
