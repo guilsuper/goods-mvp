@@ -43,13 +43,12 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_DATABASE=production
+      - SECRET_KEY='8_*lw4(^907@enln%2r(av@__8_$w46n-h+s7s_7lm%ar5c_e6'
       - DJANGO_SETTINGS_MODULE=product.settings.development_settings
       - DEBUG=False
       - ALLOWED_HOST=backend
       - SENDGRID_HOST=http://sendgrid-mock:3000
       - SENDGRID_API_KEY=SENDGRID_MOCK_KEY
-    env_file:
-      - ./backend/.env
     depends_on:
       db:
         condition: service_healthy
