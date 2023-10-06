@@ -7,11 +7,8 @@ import { Navbar, Nav, NavLink, Button, ButtonGroup, Dropdown, DropdownButton } f
 import { Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
 import { useTranslation } from 'react-i18next'
-
-const lngs = {
-  en: { nativeName: 'English' },
-  de: { nativeName: 'Deutsch' }
-}
+import { supportedLngs } from '../i18n'
+const langmap = require('langmap')
 
 const Header = () => {
   const { authTokens, logoutUser, user } = useContext(AuthContext)
@@ -66,13 +63,13 @@ const Header = () => {
           className="me-3"
         >
           {
-            Object.keys(lngs).map((lng) => (
+            supportedLngs.map((lng) => (
               <Dropdown.Item key={lng}
                              eventKey="changeLang{lng}"
                              onClick={ () => i18n.changeLanguage(lng) }
                              active={ i18n.resolvedLanguage === lng }
               >
-                { lngs[lng].nativeName }
+                { langmap[lng].nativeName }
               </Dropdown.Item>
             ))
           }
