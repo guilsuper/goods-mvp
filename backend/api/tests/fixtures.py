@@ -160,40 +160,67 @@ def origin_report_invalid_dict():
     return obj
 
 
-def flatten_dict_for_formdata(input_dict: dict, sep: str = "[{i}]") -> dict:
-    """Converts dict to form-data friendly dict.
+def dict_to_form_data(data: dict, sep: str = "[{i}]") -> dict:
+    """Converts dict data to multipart/form-data friendly dict.
 
     Args:
-        input_dict: raw python dictionary.
-        sep: array separator (symbol to identify an array variable).
+        data: raw python dictionary.
+        sep: arrays separator (symbol to identify an array-like variable).
 
     Returns:
         Modified dictionary that supports multipart content-type.
 
-    Note:
-        Examples and original code is here:
-        https://gist.github.com/awbacker/ed0b29df769ccd0f886a
+    Examples:
+        Converting the following dictionary:
+
+        ```python
+        data = {
+            "name": "Abro",
+            "status": {
+                "code": "112",
+                "desc": "why",
+                "workers": [
+                    {
+                        "name": "1111"
+                    }
+                ]
+            },
+            "notes": ["1", "2"]
+        }
+        ```
+
+        Using `dict_to_form_data(data)` results in the
+        following multipart/form-data friendly dictionary:
+
+        ```python
+        {
+            'name': 'Abro',
+            'status.code': '112',
+            'status.desc': 'why',
+            'status.workers[0].name': '1111',
+            'notes[0]': '1',
+            'notes[1]': '2'
+        }
+        ```
     """
-    def __flatten(value, prefix, result_dict, previous=None) -> dict:
-        """Nested function to prevent the main interface from having to have "optional" parameters
-        that must always be null on first call (e.g. prefix & result_dict).
-        """
-        if isinstance(value, dict):
+    def inner(input: dict, inner_sep: str, result: dict, previous=None) -> dict:
+        """Inner function to transform data as a recursive function."""
+        # If inner element is a dictionary
+        if isinstance(input, dict):
             if previous == "dict":
-                prefix += "."
-
-            for key, v in value.items():
-                __flatten(v, prefix + key, result_dict, "dict")
-
-        elif isinstance(value, (list, tuple)):
-            for i, v in enumerate(value):
-                __flatten(v, prefix + sep.format(i=i), result_dict)
+                inner_sep += "."
+            for key, value in input.items():
+                inner(value, inner_sep + key, result, "dict")
+        # If inner element is array-like
+        elif isinstance(input, (list, tuple)):
+            for index, value in enumerate(input):
+                inner(value, inner_sep + sep.format(i=index), result)
         else:
-            result_dict[prefix] = value
+            result[inner_sep] = input
 
-        return result_dict
+        return result
 
-    return __flatten(input_dict, "", {})
+    return inner(data, "", {})
 
 
 @pytest.fixture

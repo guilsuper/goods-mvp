@@ -6,7 +6,7 @@ origin-report-create-draft
 """
 import pytest
 from api.models import OriginReport
-from api.tests.fixtures import flatten_dict_for_formdata
+from api.tests.fixtures import dict_to_form_data
 from django.urls import reverse
 
 
@@ -59,7 +59,7 @@ def test_origin_report_create_and_publish(
     # If parameter is not empty, replace it with actual data
     if origin_report_info:
         # If origin_report_info is not None, it contains string "origin_report_dict"
-        origin_report_info = flatten_dict_for_formdata(request.getfixturevalue(origin_report_info))
+        origin_report_info = dict_to_form_data(request.getfixturevalue(origin_report_info))
 
     response = client.post(
         reverse("origin-report-create"),
@@ -128,7 +128,7 @@ def test_origin_report_create_draft(
     # If parameter is not empty, replace it with actual data
     if origin_report_info:
         # If origin_report_info is not None, it contains string "origin_report_invalid_dict"
-        origin_report_info = flatten_dict_for_formdata(request.getfixturevalue(origin_report_info))
+        origin_report_info = dict_to_form_data(request.getfixturevalue(origin_report_info))
 
     response = client.post(
         reverse("origin-report-create-draft"),

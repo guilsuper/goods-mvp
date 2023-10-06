@@ -133,8 +133,8 @@ const EditOriginReportForm = () => {
     if (event.target.short_description[0].value) {
       data.append('short_description', event.target.short_description[0].value)
     }
-    if (event.target.thumbnail) {
-      console.log('YES')
+    // Handle the file input
+    if (event.target.thumbnail.files.length !== 0) {
       data.append('thumbnail', event.target.thumbnail.files[0])
     }
 
@@ -401,12 +401,12 @@ const EditOriginReportForm = () => {
         {
           // If logo is set
           originReport.thumbnail
-            ? <ImageComponent src={originReport.thumbnail_url} text={'Origin Report thumbnail'}/>
+            ? <ImageComponent src={originReport.thumbnail_url} text={'Thumbnail'}/>
             : ' '
         }
 
         <Form.Group className="mb-3" controlId="thumbnail">
-          <Form.Label>Origin Report Thumbnail</Form.Label>
+          <Form.Label>Thumbnail</Form.Label>
           <Form.Control type="file"/>
         </Form.Group>
 

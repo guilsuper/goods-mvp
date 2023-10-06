@@ -175,7 +175,7 @@ const OriginReportInfo = () => {
         {
           // If logo is set
           originReport.thumbnail
-            ? <ImageComponent src={originReport.thumbnail_url} text={'Origin Report thumbnail'}/>
+            ? <ImageComponent src={originReport.thumbnail_url} text={'Thumbnail'}/>
             : ' '
         }
 
@@ -240,31 +240,25 @@ const OriginReportInfo = () => {
             <Row><p>{component.external_sku}</p></Row>
           </Col>
 
-          { // If component wasn't initialized
-          component.country_of_origin
-            ? <>
-              <Col>
-                <p>
-                  <a href={freedomHouseCountryReportURL(component.country_of_origin_info.name, component.country_of_origin_info.freedom_house_url_name)}>
-                    {component.country_of_origin_info.name}
-                  </a>
-                </p>
-              </Col>
-              <Col className='d-flex align-items-center justify-content-center'>
-                <ReactCountryFlag
-                  countryCode={component.country_of_origin}
-                  svg
-                  style={{
-                    width: '6.6em',
-                    height: '5em',
-                    border: '1px solid #dee2e6'
-                  }}
-                  title={component.country_of_origin_info.name}
-                />
-              </Col>
-            </>
-            : ' '
-          }
+          <Col>
+            <p>
+              <a href={freedomHouseCountryReportURL(component.country_of_origin_info.name, component.country_of_origin_info.freedom_house_url_name)}>
+                {component.country_of_origin_info.name}
+              </a>
+            </p>
+          </Col>
+          <Col className='d-flex align-items-center justify-content-center'>
+            <ReactCountryFlag
+              countryCode={component.country_of_origin}
+              svg
+              style={{
+                width: '6.6em',
+                height: '5em',
+                border: '1px solid #dee2e6'
+              }}
+              title={component.country_of_origin_info.name}
+            />
+          </Col>
         </Row>
         ))}
 

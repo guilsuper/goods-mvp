@@ -26,7 +26,10 @@ const ListItem = ({ originReport }) => {
       style={{ color: 'inherit', textDecoration: 'inherit' }}
     >
       <Row>
-        <Image src="/FreeWorldCertified-logo-192.png"/>
+        { originReport.thumbnail_url
+          ? <Image src={originReport.thumbnail_url}/>
+          : <Image src="/FreeWorldCertified-logo-192.png"/>
+        }
       </Row>
       <Row>
         {'Identifier: ' + originReport.unique_identifier}

@@ -20,6 +20,7 @@ const ImageComponent = ({ src, text }) => {
             className='w-50 ms-3'
             src={src}
             thumbnail
+            alt={text || src}
         />
       </Row>
     </>

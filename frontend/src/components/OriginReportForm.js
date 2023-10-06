@@ -226,7 +226,7 @@ const OriginReportForm = () => {
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="thumbnail">
-        <Form.Label>Origin Report Thumbnail</Form.Label>
+        <Form.Label>Thumbnail</Form.Label>
         <Form.Control type="file"/>
       </Form.Group>
 

@@ -118,7 +118,11 @@ class SourceComponentDraftSerializer(ModelSerializer):
         read_only=True,
     )
     # To display a country full name instead of a code
-    country_of_origin = PrimaryKeyRelatedField(required=False, queryset=Country.objects.all())
+    country_of_origin = PrimaryKeyRelatedField(
+        required=False,
+        allow_null=True,
+        queryset=Country.objects.all(),
+    )
     # To allow these fields be blank
     external_sku = CharField(max_length=25, required=False, allow_blank=True)
     company_name = CharField(max_length=200, required=False, allow_blank=True)
