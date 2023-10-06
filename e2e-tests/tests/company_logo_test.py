@@ -63,7 +63,8 @@ def test_company_logo_pages(
             EC.presence_of_element_located(
                 (
                     By.XPATH,
-                    "//img[contains(concat(' ',normalize-space(@class),' '),' img-thumbnail ')]",
+                    "//img[contains(concat(' ', normalize-space(@class), ' '), "
+                    "' img-thumbnail ')]",
                 ),
             ),
         )

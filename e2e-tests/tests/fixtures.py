@@ -53,6 +53,9 @@ def signed_in_client(driver: webdriver.Chrome) -> dict:
     """Force sign in the client in the browser and returns its info and tokens."""
 
     driver.get(os.environ["FRONTEND"] + "/sign-in")
+    # If client is signed in, he is not able to visit this link
+    if driver.current_url != os.environ["FRONTEND"] + "/sign-in":
+        return _client
 
     # Enter user data
     sign_in_data = {
@@ -168,13 +171,23 @@ def origin_report_create_draft() -> Callable:
 
 
 @pytest.fixture
-def image_path():
-    """Returns path to the test_data/media/birb.png"""
-    return os.getcwd() + "/tests/test_data/media/birb.png"
+def image_path() -> str:
+    """Creates temporary image and returns its path"""
+    from PIL import Image
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
+        # Create a simple white image using PIL
+        image = Image.new("RGB", (100, 100), "white")
+
+        # Save the image to the temporary file
+        image.save(temp_file.name, "PNG")
+
+    return temp_file.name
 
 
 @pytest.fixture
-def company_image(image_path, signed_in_client, driver):
+def company_image(image_path, signed_in_client, driver) -> str:
     """Sets or creates a company image for current client."""
     # Check is company have a logo
     # If not, create it
