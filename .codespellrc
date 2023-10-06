@@ -1,2 +1,2 @@
 [codespell]
-skip=backend/free_world_countries/_country_list.csv
+skip=backend/free_world_countries/_country_list.csv,frontend/public/locales/*/translation.json
