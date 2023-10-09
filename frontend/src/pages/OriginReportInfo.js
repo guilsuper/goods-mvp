@@ -52,7 +52,7 @@ const OriginReportInfo = () => {
       }
     }
     getOriginReportInfo()
-  }, [navigate, originReportIdentifier, authTokens.access])
+  }, [navigate, originReportIdentifier, authTokens])
 
   const isOwner = (user) => {
     // If not authorized
