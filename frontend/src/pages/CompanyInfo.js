@@ -49,7 +49,7 @@ const CompanyInfo = () => {
       }
     }
     getCompanyInfo()
-  }, [navigate, companyName])
+  }, [navigate, companyName, authTokens.access])
 
   const isAdmin = () => {
     return user.groups.map(pair => (pair.name === 'Administrator'))

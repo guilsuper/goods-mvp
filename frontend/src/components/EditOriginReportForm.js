@@ -114,7 +114,7 @@ const EditOriginReportForm = () => {
     getOriginReports()
     // Set available choices that depends on external sku field and company name
     setAvailableOriginReport(originReports)
-  }, [authTokens, navigate, originReportIdentifier, setOriginReports])
+  }, [authTokens, navigate, originReportIdentifier, originReports, setOriginReports])
 
   // Handle submit
   const submitHandler = async (event) => {

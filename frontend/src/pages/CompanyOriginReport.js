@@ -41,7 +41,7 @@ const CompanyOriginReport = () => {
       }
     }
     getOriginReports()
-  }, [user])
+  }, [user, authTokens.access, navigate])
 
   const submitHandler = async (event) => {
     event.preventDefault()
