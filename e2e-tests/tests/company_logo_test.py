@@ -64,17 +64,17 @@ def test_company_logo_edit(
     assert company_logo
 
     # Get local image, that was used in company logo creation
-    src = company_logo.get_attribute("src")
-    img1 = Image.open(image_path)
+    img_reference = Image.open(image_path)
 
     # Get logo directly by media url in the company info page
+    src = company_logo.get_attribute("src")
     response = requests.get(src)
     image_data = response.content
-    img2 = Image.open(BytesIO(image_data))
+    img_test = Image.open(BytesIO(image_data))
 
     # numpy.isclose is used to set the error
     # that is close to 0
-    assert numpy.isclose(compare_images(img1, img2), 0)
+    assert numpy.isclose(compare_images(img_reference, img_test), 0)
 
 
 def test_company_logo_pages(
