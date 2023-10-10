@@ -60,7 +60,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile-nginx
+      dockerfile: Dockerfile
     ports:
       - '3000:3000'
     volumes:
