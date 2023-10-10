@@ -105,7 +105,7 @@ def auth_header():
 def origin_report_dict():
     """Returns dict with OriginReport and components for 'create and publish'."""
     # Create in-memory image
-    image = Image.new("RGB", (100, 100), "white")
+    image = Image.new("RGB", (100, 100), "red")
     image_io = BytesIO()
     image.save(image_io, "PNG")
     image_io.seek(0)
