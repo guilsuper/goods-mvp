@@ -15,6 +15,7 @@ from rest_framework.serializers import FloatField
 from rest_framework.serializers import IntegerField
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import PrimaryKeyRelatedField
+from rest_framework.serializers import SerializerMethodField
 from rest_framework.serializers import ValidationError
 
 
@@ -175,6 +176,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
         read_only=True,
     )
     is_latest_version = BooleanField(read_only=True)
+    thumbnail_url = SerializerMethodField(read_only=True)
 
     class Meta:
         """Metaclass for the OriginReportCreateSerializer."""
@@ -186,6 +188,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
             "unique_identifier",
             "short_description",
             "components",
+            "thumbnail",
 
             # Read only
             "id",
@@ -195,6 +198,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
             "cogs",
             "unique_identifier_type",
             "is_latest_version",
+            "thumbnail_url",
         )
 
     def validate_unique_identifier_type_str(self, value):
@@ -249,6 +253,20 @@ class OriginReportCreateGetSerializer(ModelSerializer):
 
         return origin_report
 
+    def get_thumbnail_url(self, instance: OriginReport) -> str | None:
+        """Return relative url for thumbnail.
+
+        Args:
+            instance: instance of the OriginReport model
+        Returns:
+            relative url to the thumbnail; or None if it doesn't exist
+        """
+        # Check if 'thumbnail' is valid return the url to the thumbnail
+        if bool(instance.thumbnail):
+            return instance.thumbnail.url
+        else:
+            return None
+
 
 class OriginReportDraftSerializer(ModelSerializer):
     """OriginReport creating draft serilizer."""
@@ -256,6 +274,7 @@ class OriginReportDraftSerializer(ModelSerializer):
     id = IntegerField(read_only=True)
     components = SourceComponentDraftSerializer(many=True)
     short_description = CharField(max_length=500, allow_blank=True, required=False)
+    thumbnail_url = SerializerMethodField(read_only=True)
 
     class Meta:
         """Metaclass for the OriginReportDraftSerializer."""
@@ -267,6 +286,8 @@ class OriginReportDraftSerializer(ModelSerializer):
             "unique_identifier",
             "short_description",
             "components",
+            "thumbnail",
+            "thumbnail_url",
         )
 
     def create(self, validated_data):
@@ -303,6 +324,20 @@ class OriginReportDraftSerializer(ModelSerializer):
                 SourceComponent.objects.create(parent_origin_report=origin_report, **component)
 
         return origin_report
+
+    def get_thumbnail_url(self, instance: OriginReport) -> str | None:
+        """Return relative url for thumbnail.
+
+        Args:
+            instance: instance of the OriginReport model
+        Returns:
+            relative url to the thumbnail; or None if it doesn't exist
+        """
+        # Check if 'thumbnail' is valid return the url to the thumbnail
+        if bool(instance.thumbnail):
+            return instance.thumbnail.url
+        else:
+            return None
 
 
 class OriginReportPublishValidatorSerializer(ModelSerializer):

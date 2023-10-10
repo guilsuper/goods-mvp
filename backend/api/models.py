@@ -194,6 +194,11 @@ class OriginReport(models.Model):
 
     is_latest_version = models.BooleanField(default=False)
 
+    thumbnail = models.ImageField(
+        upload_to="origin_report_thumbnail/",
+        null=True,
+    )
+
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
 

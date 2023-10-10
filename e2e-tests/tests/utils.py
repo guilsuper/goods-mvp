@@ -3,7 +3,9 @@ import os
 import re
 import time
 
+import numpy
 import requests
+from PIL import Image
 
 
 def get_emails(email: str) -> list():
@@ -86,6 +88,24 @@ def init_client() -> dict:
     return user
 
 
+def update_client_info(client: dict) -> dict:
+    """Is used to update _client's information after each test.
+
+    The data in e2e tests is permanent in a single session.
+    This function is used to manage _client's data after each test.
+    """
+    response = requests.get(
+        os.environ["BACKEND"] + "/api/self/patch_delete_retrieve/",
+        headers={"Authorization": f"Bearer {client['tokens']['access']}"},
+    )
+    response.raise_for_status()
+    response = response.json()
+
+    client.update(response)
+    client["company"].update(response["company"])
+    return client
+
+
 def get_country_data() -> dict():
     response = requests.get(os.environ["BACKEND"] + "/api/country/list/")
     response.raise_for_status()
@@ -94,3 +114,11 @@ def get_country_data() -> dict():
     for country in country_list:
         country_map[country["alpha_2"]] = country
     return country_map
+
+
+def compare_images(img1: Image, img2: Image) -> float:
+    """Compare 2 images if they are the same using MSE."""
+    # MSE is a metric, if it close to 0, then 2 arrays (images) are similar
+    # For more details:
+    # https://pyimagesearch.com/2014/09/15/python-compare-two-images/
+    return numpy.mean((numpy.array(img1) - numpy.array(img2)) ** 2)

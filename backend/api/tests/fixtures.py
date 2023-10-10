@@ -1,5 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module contains useful fixtures."""
+from io import BytesIO
+
 import pytest
 from api.tests.factories.factories import AdministratorFactory
 from api.tests.factories.factories import CompanyFactory
@@ -7,7 +9,9 @@ from api.tests.factories.factories import ComponentFactory
 from api.tests.factories.factories import GroupFactory
 from api.tests.factories.factories import ORIGIN_REPORT_STATES
 from api.tests.factories.factories import OriginReportFactory
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client
+from PIL import Image
 from rest_framework_simplejwt.tokens import AccessToken
 
 
@@ -100,10 +104,20 @@ def auth_header():
 @pytest.fixture
 def origin_report_dict():
     """Returns dict with OriginReport and components for 'create and publish'."""
+    # Create in-memory image
+    image = Image.new("RGB", (100, 100), "red")
+    image_io = BytesIO()
+    image.save(image_io, "PNG")
+    image_io.seek(0)
+    image_name = "test_image.png"
+
+    uploaded_image = SimpleUploadedFile(image_name, image_io.read(), content_type="image/png")
+
     obj = {
         "unique_identifier_type_str": "SKU",
         "unique_identifier": "1aa24a211232aa",
         "short_description": "aaaa",
+        "thumbnail": uploaded_image,
         "components": [
             {
                 "fraction_cogs": 99,

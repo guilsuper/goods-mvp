@@ -82,6 +82,7 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_DATABASE=production
+      - DJANGO_SETTINGS_MODULE=product.settings.e2e_test_settings
       - DEBUG=False
       - ALLOWED_HOST=backend
 
