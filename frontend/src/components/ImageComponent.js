@@ -4,7 +4,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Image, Row } from 'react-bootstrap'
+import { Row } from 'react-bootstrap'
 
 const ImageComponent = ({ src, text }) => {
   ImageComponent.propTypes = {
@@ -16,11 +16,11 @@ const ImageComponent = ({ src, text }) => {
     <>
       <Row className='text-secondary'><p>{text}</p></Row>
       <Row className='pb-3 w-25'>
-        <Image
-            className='w-50 ms-3'
-            src={src}
-            thumbnail
-            alt={text || src}
+        <img
+          className='w-50 ms-3 img-thumbnail'
+          src={src}
+          // Means text or src. Eslint replaced it from "text ? text : src" statement
+          alt={text || src}
         />
       </Row>
     </>

@@ -6,7 +6,7 @@ origin-report-create-draft
 """
 import pytest
 from api.models import OriginReport
-from api.tests.fixtures import dict_to_form_data
+from api.utils import dict_to_form_data
 from django.urls import reverse
 
 
