@@ -1,7 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
-"""Module for testing functions in api/utils.py."""
+"""Module for testing functions in api/form_data_utils.py."""
 import pytest
-from api.utils import dict_to_form_data
+from api.form_data_utils import dict_to_form_data
 
 
 @pytest.mark.parametrize(
