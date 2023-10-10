@@ -1,12 +1,18 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Checks if a user can add the company logo and it will be displayed."""
 import os
+from io import BytesIO
+from time import sleep
 from typing import Callable
 
+import numpy as np
+import requests
+from PIL import Image
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from tests.utils import compare_images
 
 
 def test_company_logo_edit(
@@ -35,6 +41,40 @@ def test_company_logo_edit(
     alert = driver.switch_to.alert
     assert alert.text == "Successfully edited"
     alert.accept()
+
+    info_url = f"{os.environ['FRONTEND']}/account/company/" \
+               f"info/{signed_in_client['company']['slug']}"
+    # There is an issue with loading after successful edited
+    # We need to wait till user's information will be updated
+    # Otherwise it will give an alert 'Server is not responding'
+    # from AuthContext.js::updateUser()
+    sleep(1)
+    driver.get(info_url)
+
+    assert driver.current_url == info_url
+    company_logo = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (
+                By.XPATH,
+                "//img[contains(concat(' ', normalize-space(@class), ' '), "
+                "' img-thumbnail ')]",
+            ),
+        ),
+    )
+    assert company_logo
+
+    # Get local image, that was used in company logo creation
+    src = company_logo.get_attribute("src")
+    img1 = Image.open(image_path)
+
+    # Get logo directly by media url in the company info page
+    response = requests.get(src)
+    image_data = response.content
+    img2 = Image.open(BytesIO(image_data))
+
+    # np.isclose is used to set the error
+    # that is close to 0
+    assert np.isclose(compare_images(img1, img2), 0)
 
 
 def test_company_logo_pages(

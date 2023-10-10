@@ -53,6 +53,9 @@ def signed_in_client(driver: webdriver.Chrome) -> dict:
     """Force sign in the client in the browser and returns its info and tokens."""
 
     driver.get(os.environ["FRONTEND"] + "/sign-in")
+    # e2e tests' data is permanent in a single session
+    # This is used to update or create an authorization for a client
+    # In case client was authorized
     # If client is signed in, he is not able to visit this link
     if driver.current_url != os.environ["FRONTEND"] + "/sign-in":
         return _client
@@ -178,7 +181,7 @@ def image_path() -> str:
 
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
         # Create a simple white image using PIL
-        image = Image.new("RGB", (100, 100), "white")
+        image = Image.new("RGB", (100, 100), "red")
 
         # Save the image to the temporary file
         image.save(temp_file.name, "PNG")
