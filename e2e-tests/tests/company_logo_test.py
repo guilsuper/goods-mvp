@@ -5,7 +5,7 @@ from io import BytesIO
 from time import sleep
 from typing import Callable
 
-import numpy as np
+import numpy
 import requests
 from PIL import Image
 from selenium import webdriver
@@ -72,9 +72,9 @@ def test_company_logo_edit(
     image_data = response.content
     img2 = Image.open(BytesIO(image_data))
 
-    # np.isclose is used to set the error
+    # numpy.isclose is used to set the error
     # that is close to 0
-    assert np.isclose(compare_images(img1, img2), 0)
+    assert numpy.isclose(compare_images(img1, img2), 0)
 
 
 def test_company_logo_pages(
