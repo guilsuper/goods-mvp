@@ -3,7 +3,7 @@ import os
 import re
 import time
 
-import numpy as np
+import numpy
 import requests
 from PIL import Image
 
@@ -121,4 +121,4 @@ def compare_images(img1: Image, img2: Image) -> float:
     # MSE is a metric, if it close to 0, then 2 arrays (images) are similar
     # For more details:
     # https://pyimagesearch.com/2014/09/15/python-compare-two-images/
-    return np.mean((np.array(img1) - np.array(img2)) ** 2)
+    return numpy.mean((numpy.array(img1) - numpy.array(img2)) ** 2)
