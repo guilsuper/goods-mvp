@@ -173,7 +173,7 @@ const OriginReportInfo = () => {
             : ' '
         }
         {
-          // If logo is set
+          // If thumbnail is set
           originReport.thumbnail
             ? <ImageComponent src={originReport.thumbnail_url} text={'Thumbnail'}/>
             : ' '
