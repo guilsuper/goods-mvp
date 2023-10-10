@@ -1,12 +1,14 @@
-FROM node:16
+FROM node:16 AS builder
 
 WORKDIR /frontend
 
-COPY package*.json ./
+COPY package*.json /frontend
+RUN npm clean-install
 
-RUN npm install
+COPY . /frontend
+RUN npm run build --if-present
 
-COPY . .
+WORKDIR /
 
-RUN npm run build
-RUN npm install -g serve
+FROM nginx:1.25 AS runner
+COPY --from=builder frontend/build/ /usr/share/nginx/html
