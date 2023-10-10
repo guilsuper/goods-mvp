@@ -86,7 +86,35 @@ updates:
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: "docker"
+      prefix: "docker backend"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for docker
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "docker frontend"
+      include: "scope"
+    assignees:
+      - "bakerkj"
+    reviewers:
+      - "bakerkj"
+    open-pull-requests-limit: 10
+
+# Maintain dependencies for docker
+  - package-ecosystem: "docker"
+    directory: "/e2e-tests"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "docker e2e-tests"
       include: "scope"
     assignees:
       - "bakerkj"

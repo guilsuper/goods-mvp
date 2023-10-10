@@ -62,7 +62,7 @@ const OriginReportForm = () => {
       }
     }
     getOriginReports()
-  }, [setOriginReports])
+  }, [setOriginReports, navigate])
 
   const submitHandler = async (event) => {
     event.preventDefault()

@@ -51,7 +51,7 @@ const EditCompanyForm = () => {
       }
     }
     getCompanyInfo()
-  }, [navigate, companyName])
+  }, [navigate, companyName, authTokens])
 
   const submitHandler = async (event) => {
     event.preventDefault()
