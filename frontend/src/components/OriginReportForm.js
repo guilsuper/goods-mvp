@@ -69,28 +69,28 @@ const OriginReportForm = () => {
     event.persist()
 
     // set data value from the form
-    const data = {
-      unique_identifier:
-        event.target.unique_identifier.value,
+    const data = new FormData()
 
-      unique_identifier_type_str:
-        event.target.unique_identifier_type_str.value,
+    data.append('unique_identifier', event.target.unique_identifier.value)
+    data.append('unique_identifier_type_str', event.target.unique_identifier_type_str.value)
+    data.append('short_description', event.target.short_description[0].value)
+    data.append('thumbnail', event.target.thumbnail.files[0])
 
-      short_description:
-        event.target.short_description[0].value
-    }
-
-    data.components = inputFields
-
+    inputFields.forEach((value, index) => {
+      data.append(`components[${index}]fraction_cogs`, value.fraction_cogs)
+      data.append(`components[${index}]short_description`, value.short_description)
+      data.append(`components[${index}]component_type_str`, value.component_type_str)
+      data.append(`components[${index}]external_sku`, value.external_sku)
+      data.append(`components[${index}]country_of_origin`, value.country_of_origin)
+      data.append(`components[${index}]company_name`, value.company_name)
+    })
     // Config for POST request
     const config = {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
         Authorization: 'Bearer ' + authTokens.access
       },
-      body: JSON.stringify(data)
+      body: data
     }
 
     let response = ''
@@ -106,7 +106,6 @@ const OriginReportForm = () => {
     }
 
     const result = await response.json()
-
     if (response.status === 201) {
       alert('Successfully created')
       navigate('/account/origin_report')
@@ -224,6 +223,11 @@ const OriginReportForm = () => {
       <Form.Group className="mb-3" controlId="short_description">
         <Form.Label>Short Description</Form.Label>
         <Form.Control type="text" placeholder="Enter short description" />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="thumbnail">
+        <Form.Label>Thumbnail</Form.Label>
+        <Form.Control type="file"/>
       </Form.Group>
 
       <p>COGS: {calculateCOGS()}%</p>

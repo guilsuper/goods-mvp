@@ -94,6 +94,7 @@ class OriginReportFactory(DjangoModelFactory):
     state = ORIGIN_REPORT_STATES.PUBLISHED
     cogs = 100
     is_latest_version = True
+    thumbnail = factory.django.ImageField()
 
     company = factory.SubFactory(CompanyFactory)
 
