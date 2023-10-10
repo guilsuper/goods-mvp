@@ -81,9 +81,13 @@ def test_company_logo_pages(
     driver: webdriver.Chrome,
     signed_in_client: dict,
     company_image: str,
+    image_path: str,
     origin_report_create_published: Callable,
 ):
     """Tests if company logo is displayed on info, edit company pages and origin report."""
+    # Get local image, that was used in company logo creation
+    img_reference = Image.open(image_path)
+
     # Initialize origin report
     origin_report_id = origin_report_create_published()["id"]
 
@@ -113,3 +117,13 @@ def test_company_logo_pages(
         # Check if the image is served not by the backend
         for host in [os.environ["BACKEND"], "localhost"]:
             assert host not in company_logo.get_attribute("src")
+
+        # Get logo directly by media url in the company info page
+        src = company_logo.get_attribute("src")
+        response = requests.get(src)
+        image_data = response.content
+        img_test = Image.open(BytesIO(image_data))
+
+        # numpy.isclose is used to set the error
+        # that is close to 0
+        assert numpy.isclose(compare_images(img_reference, img_test), 0)
