@@ -1,5 +1,8 @@
 FROM python:3.11
 
+# PYTHONDONTWRITEBYTECODE don't write .pyc files.
+ENV PYTHONDONTWRITEBYTECODE=1
+
 COPY ./requirements.txt /e2e-tests/
 RUN pip install -r /e2e-tests/requirements.txt
 COPY . /e2e-tests/
