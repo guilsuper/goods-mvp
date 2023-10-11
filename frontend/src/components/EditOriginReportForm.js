@@ -106,6 +106,8 @@ const EditOriginReportForm = () => {
 
       if (response.status === 200) {
         setOriginReports(data)
+        // Set available choices that depends on external sku field and company name
+        setAvailableOriginReport(data)
       } else {
         alert('Not authenticated or permission denied')
         navigate('/')
@@ -113,9 +115,7 @@ const EditOriginReportForm = () => {
     }
     // Set all available OriginReports for a external sku field
     getOriginReports()
-    // Set available choices that depends on external sku field and company name
-    setAvailableOriginReport(originReports)
-  }, [authTokens, navigate, originReportIdentifier, originReports, setOriginReports])
+  }, [authTokens.access, navigate, originReportIdentifier])
 
   // Handle submit
   const submitHandler = async (event) => {
