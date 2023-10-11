@@ -24,7 +24,9 @@ services:
       - prod-net
 
   selenium-chrome:
-    image: selenium/standalone-chrome
+    build:
+      context: ./e2e-tests/selenium/
+      dockerfile: Dockerfile
     networks:
       - prod-net
     ports:
