@@ -49,6 +49,12 @@ services:
       - ALLOWED_HOST=backend
       - SENDGRID_HOST=http://sendgrid-mock:3000
       - SENDGRID_API_KEY=SENDGRID_MOCK_KEY
+      - FRONTEND_HOST=http://localhost:3000
+      - POSTGRES_HOST=db
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
     depends_on:
       db:
         condition: service_healthy
