@@ -1,8 +1,8 @@
 FROM python:3.11
 
-# PYTHONDONTWRITEBYTECODE optimizes the python execution.
-# PYTHONUNBUFFERED to see the Django logs in the console.
+# PYTHONDONTWRITEBYTECODE don't write .pyc files.
 ENV PYTHONDONTWRITEBYTECODE=1
+# PYTHONUNBUFFERED to see the Django logs in the console.
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /backend
