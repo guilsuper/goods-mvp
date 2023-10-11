@@ -42,11 +42,21 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_DATABASE=production
-      - SECRET_KEY='8_*lw4(^907@enln%2r(av@__8_$w46n-h+s7s_7lm%ar5c_e6'
-      - DJANGO_SETTINGS_MODULE=product.settings.development_settings
       - DEBUG=False
+
       - ALLOWED_HOST=backend
+      - FRONTEND_HOST=http://localhost:3000
+
+      - DJANGO_DATABASE=production
+      - DJANGO_SETTINGS_MODULE=product.settings.development_settings
+      - SECRET_KEY='8_*lw4(^907@enln%2r(av@__8_$w46n-h+s7s_7lm%ar5c_e6'
+
+      - POSTGRES_HOST=db
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PORT=5432
+
       - SENDGRID_HOST=http://sendgrid-mock:3000
       - SENDGRID_API_KEY=SENDGRID_MOCK_KEY
     depends_on:
