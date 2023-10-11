@@ -23,3 +23,17 @@ export function toReadable (macroCase) {
   // Join the parts back together with spaces
   return readableParts.join(' ')
 }
+
+/**
+  * Quality of life feature, calculates all component COGS
+ */
+export const calculateCOGS = (components) => {
+  const sum = components.reduce(function (prev, current) {
+    return prev + +current.fraction_cogs
+  }, 0)
+  // If NaN
+  if (!sum) {
+    return 0
+  }
+  return sum
+}
