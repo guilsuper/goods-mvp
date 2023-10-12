@@ -11,6 +11,7 @@ import CountrySelect from './CountrySelect'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import ReactCountryFlag from 'react-country-flag'
 import ImageComponent from '../components/ImageComponent'
+import { calculateCOGS } from '../utils/Utilities'
 
 const EditOriginReportForm = () => {
   // authTokens are for sending request to the backend
@@ -319,18 +320,6 @@ const EditOriginReportForm = () => {
     setInputFields(values)
   }
 
-  // Quality of life feature, calculates all component COGS
-  const calculateCOGS = () => {
-    const sum = inputFields.reduce(function (prev, current) {
-      return prev + +current.fraction_cogs
-    }, 0)
-    // If NaN
-    if (!sum) {
-      return 0
-    }
-    return sum
-  }
-
   const handleExternalSKUChange = (index, text, event) => {
     // event here doesn't have event.target.id
     const values = [...inputFields]
@@ -410,7 +399,7 @@ const EditOriginReportForm = () => {
           <Form.Control type="file"/>
         </Form.Group>
 
-        <p>COGS: {calculateCOGS()}%</p>
+        <p>COGS: {calculateCOGS(inputFields)}%</p>
 
         <Row className='mt-4'>
           <Col className='ps-4'>

@@ -12,8 +12,6 @@ DATABASES = {
     },
 }
 
-GS_QUERYSTRING_AUTH = False
-
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -24,3 +22,5 @@ STORAGES = {
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # noqa: F405
+
+STATICFILES_DIRS = []

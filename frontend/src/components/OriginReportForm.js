@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router'
 import CountrySelect from './CountrySelect'
 import { Typeahead } from 'react-bootstrap-typeahead'
 import ReactCountryFlag from 'react-country-flag'
+import { calculateCOGS } from '../utils/Utilities'
 
 const OriginReportForm = () => {
   // authTokens are for sending request to the backend
@@ -194,17 +195,6 @@ const OriginReportForm = () => {
     setInputFields(values)
   }
 
-  const calculateCOGS = () => {
-    const sum = inputFields.reduce(function (prev, current) {
-      return prev + +current.fraction_cogs
-    }, 0)
-    // If NaN
-    if (!sum) {
-      return 0
-    }
-    return sum
-  }
-
   return (
     <Form onSubmit={submitHandler}>
       <Form.Group className="mb-3">
@@ -230,7 +220,7 @@ const OriginReportForm = () => {
         <Form.Control type="file"/>
       </Form.Group>
 
-      <p>COGS: {calculateCOGS()}%</p>
+      <p>COGS: {calculateCOGS(inputFields)}%</p>
 
       <Row className='mt-4'>
         <Col className='ps-4'>
