@@ -106,8 +106,11 @@ const EditOriginReportForm = () => {
       const data = await response.json()
 
       if (response.status === 200) {
+        // Permanent data about available origin reports
         setOriginReports(data)
-        // Set available choices that depends on external sku field and company name
+        // Set available origin reports
+        // It's initialization
+        // This information is supposed to change depending on user actions
         setAvailableOriginReport(data)
       } else {
         alert('Not authenticated or permission denied')
