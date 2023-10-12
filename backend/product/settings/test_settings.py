@@ -24,3 +24,5 @@ STORAGES = {
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")  # noqa: F405
+
+STATICFILES_DIRS = []
