@@ -108,9 +108,9 @@ const EditOriginReportForm = () => {
       if (response.status === 200) {
         // Permanent data about available origin reports
         setOriginReports(data)
-        // Set available origin reports
-        // It's initialization
-        // This information is supposed to change depending on user actions
+        // Initialize the set available origin reports. This set will
+        // be filtered based on what the user searches for out of the
+        // total set of origin reports.
         setAvailableOriginReport(data)
       } else {
         alert('Not authenticated or permission denied')
