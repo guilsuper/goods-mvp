@@ -106,7 +106,12 @@ const EditOriginReportForm = () => {
       const data = await response.json()
 
       if (response.status === 200) {
+        // Permanent data about available origin reports
         setOriginReports(data)
+        // Initialize the set available origin reports. This set will
+        // be filtered based on what the user searches for out of the
+        // total set of origin reports.
+        setAvailableOriginReport(data)
       } else {
         alert('Not authenticated or permission denied')
         navigate('/')
@@ -114,9 +119,7 @@ const EditOriginReportForm = () => {
     }
     // Set all available OriginReports for a external sku field
     getOriginReports()
-    // Set available choices that depends on external sku field and company name
-    setAvailableOriginReport(originReports)
-  }, [authTokens, navigate, originReportIdentifier, originReports, setOriginReports])
+  }, [authTokens.access, navigate, originReportIdentifier])
 
   // Handle submit
   const submitHandler = async (event) => {
