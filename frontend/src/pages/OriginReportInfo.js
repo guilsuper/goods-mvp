@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Col, Row, Container, Button } from 'react-bootstrap'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import AuthContext from '../context/AuthContext'
-import { toReadable } from '../utils/Utilities'
+import { toReadable, calculateCOGS } from '../utils/Utilities'
 import ReactCountryFlag from 'react-country-flag'
 import ImageComponent from '../components/ImageComponent'
 import { freedomHouseCountryReportURL } from '../utils/FreedomHouse'
@@ -125,17 +125,6 @@ const OriginReportInfo = () => {
     return
   }
 
-  const calculateCOGS = () => {
-    const sum = originReport.components.reduce(function (prev, current) {
-      return prev + +current.fraction_cogs
-    }, 0)
-    // If NaN
-    if (!sum) {
-      return 0
-    }
-    return sum
-  }
-
   const switchVisibility = async () => {
     const config = {
       method: 'PUT',
@@ -208,7 +197,7 @@ const OriginReportInfo = () => {
               </>
             : ' '
         }
-        <p className='text-secondary'>COGS: {calculateCOGS()}%</p>
+        <p className='text-secondary'>COGS: {calculateCOGS(originReport.components)}%</p>
 
         <Row className='mt-4'>
           <Col className='ps-4'>
