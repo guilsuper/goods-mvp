@@ -12,8 +12,6 @@ DATABASES = {
     },
 }
 
-GS_QUERYSTRING_AUTH = False
-
 STORAGES = {
     "default": {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
