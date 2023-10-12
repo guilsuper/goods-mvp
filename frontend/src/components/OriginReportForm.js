@@ -75,7 +75,9 @@ const OriginReportForm = () => {
     data.append('unique_identifier', event.target.unique_identifier.value)
     data.append('unique_identifier_type_str', event.target.unique_identifier_type_str.value)
     data.append('short_description', event.target.short_description[0].value)
-    data.append('thumbnail', event.target.thumbnail.files[0])
+    if (event.target.thumbnail.files.length !== 0) {
+      data.append('thumbnail', event.target.thumbnail.files[0])
+    }
 
     inputFields.forEach((value, index) => {
       data.append(`components[${index}]fraction_cogs`, value.fraction_cogs)
