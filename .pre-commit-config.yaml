@@ -83,6 +83,7 @@ repos:
     rev: v3.7.0-1
     hooks:
       - id: shfmt
+        args: [ "--write", "--indent", "4"]
 
   - repo: https://github.com/asottile/reorder-python-imports
     rev: v3.10.0
