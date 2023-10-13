@@ -72,6 +72,14 @@ services:
       timeout: 10s
       retries: 10
 
+  # By default, cleanup media volume
+  media-volume-cleanup:
+    build:
+      context: ./e2e-tests/media-volume-cleanup
+      dockerfile: Dockerfile
+    volumes:
+      - media:/mnt/media
+
   backend:
     build:
       context: ./backend
@@ -101,6 +109,8 @@ services:
       - SENDGRID_HOST=http://sendgrid-mock:3000
       - SENDGRID_API_KEY=SENDGRID_MOCK_KEY
     depends_on:
+      media-volume-cleanup:
+        condition: service_started
       db-test:
         condition: service_healthy
       sendgrid-mock:
@@ -127,6 +137,8 @@ services:
     networks:
       - prod-net
     depends_on:
+      media-volume-cleanup:
+        condition: service_started
       backend:
         condition: service_healthy
     healthcheck:
