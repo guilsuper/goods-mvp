@@ -233,6 +233,36 @@ resource "google_sql_user" "postgres_user" {
   password = random_password.postgres_password.result
 }
 
+#########################################################################################################################
+# cloud storage logging bucket
+
+# tfsec:ignore:google-storage-bucket-encryption-customer-key
+resource "google_storage_bucket" "logging" {
+  name     = "fwc-static-logging"
+  location = var.gcp_region
+
+  storage_class = "STANDARD"
+  force_destroy = true
+
+  uniform_bucket_level_access = true
+
+  lifecycle_rule {
+    action {
+      type = "Delete"
+    }
+    condition {
+      age = 14 # days
+    }
+  }
+}
+
+resource "google_storage_bucket_iam_member" "cloud_storage_object_creator_member" {
+  bucket = google_storage_bucket.logging.name
+  role   = "roles/storage.objectCreator"
+
+  member = "group:cloud-storage-analytics@google.com"
+}
+
 
 #########################################################################################################################
 # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
@@ -248,6 +278,10 @@ resource "google_storage_bucket" "google_storage_bucket_static_site" {
   force_destroy = true
 
   uniform_bucket_level_access = true
+
+  logging {
+    log_bucket = google_storage_bucket.logging.name
+  }
 
   website {
     main_page_suffix = "index.html"
@@ -293,6 +327,10 @@ resource "google_storage_bucket" "media_files_site" {
   force_destroy = true
 
   uniform_bucket_level_access = true
+
+  logging {
+    log_bucket = google_storage_bucket.logging.name
+  }
 
   cors {
     origin          = ["https://${var.fqdn}"]
