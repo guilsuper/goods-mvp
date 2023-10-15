@@ -569,10 +569,27 @@ resource "google_secret_manager_secret_iam_binding" "sendgrid_secret_api_key_ser
 #########################################################################################################################
 # artifactregistry.googleapis.com
 resource "google_artifact_registry_repository" "docker_artifact_repository" {
+  provider      = google-beta
   repository_id = "fwc"
   description   = "FWC Docker Artifact Repository"
   location      = var.gcp_region
   format        = "DOCKER"
+
+  cleanup_policy_dry_run = false
+  cleanup_policies {
+    id     = "keep-at-most-7"
+    action = "KEEP"
+    most_recent_versions {
+      keep_count = 7
+    }
+  }
+  cleanup_policies {
+    id     = "delete-all-the-others"
+    action = "DELETE"
+    condition {
+      older_than = "1209600s" # 14 * 60 * 60 * 24
+    }
+  }
 }
 
 # allow github service account to read
@@ -942,4 +959,23 @@ resource "google_storage_bucket" "terraform_state_bucket" {
   depends_on = [
     google_project_iam_member.service_account
   ]
+}
+
+
+#########################################################################################################################
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project_iam#google_project_iam_audit_config
+resource "google_project_iam_audit_config" "project" {
+  project = var.gcp_project_id
+  service = "allServices"
+  audit_log_config {
+    log_type = "ADMIN_READ"
+  }
+}
+
+resource "google_project_iam_audit_config" "artifact_registry_write" {
+  project = var.gcp_project_id
+  service = "artifactregistry.googleapis.com"
+  audit_log_config {
+    log_type = "DATA_WRITE"
+  }
 }
