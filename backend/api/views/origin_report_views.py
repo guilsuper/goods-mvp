@@ -14,7 +14,6 @@ from api.serializers import OriginReportPublishValidatorSerializer
 from api.serializers import SourceComponentDraftSerializer
 from api.serializers import SourceComponentSerializer
 from django.db.models import Sum
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
@@ -291,29 +290,12 @@ class ComponentCreateView(CreateAPIView):
     permission_classes = [IsAuthenticated, IsOriginReportOwner]
     serializer_class = SourceComponentSerializer
 
-    def post(self, request, id):
-        """Creates empty component and attaches it to origin_report."""
-        data = {
-            "fraction_cogs": 0,
-            "short_description": "",
-            "component_type_str":
-                SOURCE_COMPONENT_TYPE.name_from_integer(
-                    SOURCE_COMPONENT_TYPE.MADE_IN_HOUSE,
-                ),
-        }
-        origin_report = get_object_or_404(OriginReport, id=id)
-        component = SourceComponentDraftSerializer(data=data)
 
-        if not component.is_valid():
-            return Response(component.errors, status=400)
+class ComponentDraftCreateView(CreateAPIView):
+    """View for component creation."""
 
-        component.validated_data["parent_origin_report"] = origin_report
-        component.validated_data["country_of_origin"] = ""
-        component.validated_data["external_sku"] = ""
-
-        component = component.save()
-        component = SourceComponentSerializer(component.__dict__)
-        return Response(component.data, status=200)
+    permission_classes = [IsAuthenticated, IsOriginReportOwner]
+    serializer_class = SourceComponentDraftSerializer
 
 
 class ComponentPatchRetrieveDeleteView(RetrieveUpdateDestroyAPIView):

@@ -122,17 +122,30 @@ class SourceComponentDraftSerializer(ModelSerializer):
     # To allow these fields be blank
     external_sku = CharField(max_length=25, required=False, allow_blank=True)
     company_name = CharField(max_length=200, required=False, allow_blank=True)
+    parent_origin_report = PrimaryKeyRelatedField(
+        queryset=OriginReport.objects.all(),
+        required=False,
+    )
 
     class Meta:
         """Metaclass for the SourceComponent draft Serializer."""
 
         model = SourceComponent
-        exclude = ("parent_origin_report",)
+        fields = "__all__"
 
     def validate_fraction_cogs(self, value):
         """Validates the COGS, it should be greater or equal to 0 for a draft OriginReport."""
         if value < 0:
             raise ValidationError("Should be more or equal to 0")
+        return value
+
+    def validate_parent_origin_report(self, value):
+        """Check if user has permission to add component to the OR."""
+        user = self.context["request"].user
+        origin_report = OriginReport.objects.get(id=value)
+
+        if user.company != origin_report.company:
+            raise ValidationError("You are not an OR owner.")
         return value
 
     def validate_component_type_str(self, value):

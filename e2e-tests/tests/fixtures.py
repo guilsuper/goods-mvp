@@ -160,6 +160,14 @@ def origin_report_create_draft() -> Callable:
                     "country_of_origin": "US",
                     "company_name": "Mojang",
                 },
+                {
+                    "fraction_cogs": 99,
+                    "short_description": "why",
+                    "component_type_str": "EXTERNALLY_SOURCED",
+                    "external_sku": "aaaaa",
+                    "country_of_origin": "US",
+                    "company_name": "Mojang",
+                },
             ],
         }
         response = requests.post(

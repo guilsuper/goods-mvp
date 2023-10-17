@@ -3,6 +3,7 @@
 from api.views import ActivationView
 from api.views import CompanyUpdateRetrieveView
 from api.views import ComponentCreateView
+from api.views import ComponentDraftCreateView
 from api.views import ComponentPatchRetrieveDeleteView
 from api.views import CountryView
 from api.views import CreateAdministratorAndCompanyView
@@ -73,7 +74,12 @@ urlpatterns = [
     ),
 
     path(
-        "component/create/<int:id>/",
+        "component/create_draft/",
+        ComponentDraftCreateView.as_view(),
+        name="component-create-draft",
+    ),
+    path(
+        "component/create/",
         ComponentCreateView.as_view(),
         name="component-create",
     ),
