@@ -1,5 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module with serializers."""
+import json
+
 from api.models import Country
 from api.models import ORIGIN_REPORT_ID_TYPES
 from api.models import ORIGIN_REPORT_STATES
@@ -122,30 +124,17 @@ class SourceComponentDraftSerializer(ModelSerializer):
     # To allow these fields be blank
     external_sku = CharField(max_length=25, required=False, allow_blank=True)
     company_name = CharField(max_length=200, required=False, allow_blank=True)
-    parent_origin_report = PrimaryKeyRelatedField(
-        queryset=OriginReport.objects.all(),
-        required=False,
-    )
 
     class Meta:
         """Metaclass for the SourceComponent draft Serializer."""
 
         model = SourceComponent
-        fields = "__all__"
+        exclude = ("parent_origin_report",)
 
     def validate_fraction_cogs(self, value):
         """Validates the COGS, it should be greater or equal to 0 for a draft OriginReport."""
         if value < 0:
             raise ValidationError("Should be more or equal to 0")
-        return value
-
-    def validate_parent_origin_report(self, value):
-        """Check if user has permission to add component to the OR."""
-        user = self.context["request"].user
-        origin_report = OriginReport.objects.get(id=value)
-
-        if user.company != origin_report.company:
-            raise ValidationError("You are not an OR owner.")
         return value
 
     def validate_component_type_str(self, value):
@@ -337,6 +326,46 @@ class OriginReportDraftSerializer(ModelSerializer):
                 SourceComponent.objects.create(parent_origin_report=origin_report, **component)
 
         return origin_report
+
+    def update(self, origin_report, validated_data):
+        """Update origin report method."""
+        if "components" not in self.initial_data:
+            return super().update(origin_report, validated_data)
+
+        # Components are list of string that looks like a dictionaries
+        components_data = dict(**self.initial_data)["components"]
+        components_data = [
+            json.loads(component.replace("'", '"'))
+            for component in components_data
+        ]
+
+        # Validate componetns data
+        component_serializer = SourceComponentDraftSerializer(data=components_data, many=True)
+        if not component_serializer.is_valid():
+            raise ValidationError(component_serializer.errors)
+
+        # Get validated data
+        components_data = [dict(**component) for component in component_serializer.validated_data]
+        # Replace all components
+        SourceComponent.objects.filter(
+            parent_origin_report=origin_report,
+        ).all().delete()
+
+        # Create each component
+        for component in components_data:
+            if "component_type_str" in component:
+                component["component_type"] = component.pop("component_type_str")
+            SourceComponent.objects.create(parent_origin_report=origin_report, **component)
+
+        origin_report.cogs = sum([
+            component["fraction_cogs"]
+            for component in components_data
+            if "fraction_cogs" in component and component["fraction_cogs"]
+        ])
+        # To save COGS update
+        origin_report.save()
+
+        return super().update(origin_report, validated_data)
 
     def get_thumbnail_url(self, instance: OriginReport) -> str | None:
         """Return relative url for thumbnail.
