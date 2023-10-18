@@ -67,13 +67,15 @@ def init_client() -> dict:
     ) + "/"
     requests.get(link)
 
-    tokens = requests.post(
+    response = requests.post(
         os.environ["BACKEND"] + "/api/token/",
         data={
             "email": data["email"],
             "password": data["password"],
         },
-    ).json()
+    )
+    response.raise_for_status()
+    tokens = response.json()
 
     # To get full user info and company info
     response = requests.get(
