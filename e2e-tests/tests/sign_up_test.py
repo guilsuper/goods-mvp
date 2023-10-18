@@ -24,29 +24,11 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     assert button
 
     # After click -- should redirect to sign-up page
-    driver.execute_script("arguments[0].click();", button)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(button)).click()
+
     assert driver.current_url == os.environ["FRONTEND"] + "/sign-up"
 
-    # Check if all 5 fields exist
-    sign_up_fields_ids = [
-        "email",
-        "password",
-        "website",
-        "name",
-        "jurisdiction",
-    ]
-    field_elements = [driver.find_element(By.ID, id_) for id_ in sign_up_fields_ids]
-    assert all(field_elements)
-
-    # Check if sign-up button exists
-    sign_up_buttons = driver.find_elements(By.TAG_NAME, "button")
-    for element in sign_up_buttons:
-        if element.text == "Sign Up":
-            sign_up_button = element
-
-    assert sign_up_button
-
-    # Enter user data
+    # User user data
     sign_up_data = {
         "email": "admin@website.com",
         "password": "1234",
@@ -54,6 +36,14 @@ def test_sign_up_correct(driver: webdriver.Chrome):
         "name": "company name inc",
         "jurisdiction": "Georgia, USA",
     }
+    field_elements = [driver.find_element(By.ID, id_) for id_ in sign_up_data.keys()]
+    assert all(field_elements)
+
+    # Check if sign-up button exists
+    sign_up_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//button[contains(., 'Sign Up')]")),
+    )
+    assert sign_up_button
 
     # Enter text to each field
     [
@@ -61,8 +51,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
         for el, key in zip(field_elements, sign_up_data)
     ]
 
-    # Wait until this button is clickable
-    driver.execute_script("arguments[0].click();", sign_up_button)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(sign_up_button)).click()
 
     # Wait for an alert & ensure account creation worked
     WebDriverWait(driver, 10).until(EC.alert_is_present())
@@ -89,6 +78,8 @@ def test_sign_up_correct(driver: webdriver.Chrome):
 
     regex = re.compile("(/activated/[a-zA-Z]{0,4}/[0-9a-zA-Z_-]+)")
     link = os.environ["FRONTEND"] + regex.search(text).group(1)
+    assert link
+
     driver.get(link)
     success_indication = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//h2[contains(., 'Successfully activated!')]")),
@@ -101,31 +92,8 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     assert button
 
     # After click -- should redirect to sign-up page
-    button.click()
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(button)).click()
     assert driver.current_url == os.environ["FRONTEND"] + "/sign-in"
-
-    # Check if all 2 fields exist
-    sign_in_fields_ids = [
-        "email",
-        "password",
-    ]
-    field_elements = [driver.find_element(By.ID, id_) for id_ in sign_in_fields_ids]
-    assert all(field_elements)
-
-    # Check if sign-in button exists
-    # Selenium can't find this button without a wait time
-    # 5 retries for 1 second to wait
-    for _ in range(5):
-        sign_in_buttons = driver.find_elements(By.TAG_NAME, "button")
-        for element in sign_in_buttons:
-            if element.text == "Sign In":
-                sign_in_button = element
-
-        if sign_in_button:
-            break
-        time.sleep(1)
-
-    assert sign_in_button
 
     # Enter user data
     sign_in_data = {
@@ -133,63 +101,50 @@ def test_sign_up_correct(driver: webdriver.Chrome):
         "password": "1234",
     }
 
+    field_elements = [driver.find_element(By.ID, id_) for id_ in sign_in_data.keys()]
+    assert all(field_elements)
+
+    sign_in_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//button[contains(., 'Sign In')]")),
+    )
+    assert sign_in_button
+
     # Enter text to each field
     [
         el.send_keys(sign_in_data[key])
         for el, key in zip(field_elements, sign_in_data)
     ]
 
-    # Wait until this button is clickable
-    driver.execute_script("arguments[0].click();", sign_in_button)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(sign_in_button)).click()
     # Wait for an alert
     WebDriverWait(driver, 10).until(EC.alert_is_present())
     alert = driver.switch_to.alert
     assert alert.text == "Successfully logged"
     alert.accept()
 
-    # Wait page to load
-    # 5 retries for 1 second
-    # Until page url change
-    for _ in range(5):
-        if driver.current_url == os.environ["FRONTEND"] + "/account/info":
-            break
-        time.sleep(1)
-
     assert driver.current_url == os.environ["FRONTEND"] + "/account/info"
 
-    # Check if company button exists
-    company_info_button = driver.find_element(By.LINK_TEXT, "Company info")
+    ############################################################
+    # test company website edit
+
+    company_info_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.LINK_TEXT, "Company info")),
+    )
     assert company_info_button
 
     # Click on company edit button
-    driver.execute_script("arguments[0].click();", company_info_button)
-
-    # Wait page to load
-    # 5 retries for 1 second
-    # Until page url change
-    for _ in range(5):
-        if driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc":
-            break
-        time.sleep(1)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(company_info_button)).click()
 
     # Should be redirected to company info page
     assert driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc"
 
-    # Check if edit button exists
-    edit_button = driver.find_element(By.LINK_TEXT, "Edit")
-
+    edit_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.LINK_TEXT, "Edit")),
+    )
     assert edit_button
 
     # Click on company edit button
-    driver.execute_script("arguments[0].click();", edit_button)
-
-    # Wait page to load
-    # 5 retries for 1 second
-    # Until page url change
-    for _ in range(5):
-        if driver.current_url == os.environ["FRONTEND"] + "/account/company/edit/company-name-inc":
-            break
-        time.sleep(1)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(edit_button)).click()
 
     # Should be redirected to company edit page
     assert driver.current_url == os.environ["FRONTEND"] + "/account/company/edit/company-name-inc"
@@ -202,11 +157,9 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     assert all(field_elements)
 
     # Check if edit button exists
-    edit_buttons = driver.find_elements(By.TAG_NAME, "button")
-    for element in edit_buttons:
-        if element.text == "Edit":
-            edit_button = element
-
+    edit_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//button[contains(., 'Edit')]")),
+    )
     assert edit_button
 
     # Enter text to each field
@@ -216,56 +169,55 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     ]
 
     # Click on company edit button
-    driver.execute_script("arguments[0].click();", edit_button)
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(edit_button)).click()
     # Wait for an alert
     WebDriverWait(driver, 10).until(EC.alert_is_present())
     alert = driver.switch_to.alert
     assert alert.text == "Successfully edited"
     alert.accept()
 
-    # Wait page to load
-    # 5 retries for 1 second
-    # Until page url change
-    for _ in range(5):
-        if driver.current_url == os.environ["FRONTEND"] + "/account/info":
-            break
-        time.sleep(1)
     # If editing was successful, then redirect
     assert driver.current_url == os.environ["FRONTEND"] + "/account/info"
 
     # Go back to company info and check the changes
     # Wait to load this element
-    # Check if element with new company website exists
-    for _ in range(5):
-        company_info_button = driver.find_element(By.LINK_TEXT, "Company info")
-        if company_info_button:
-            break
-        time.sleep(1)
-    driver.execute_script("arguments[0].click();", company_info_button)
-
-    # Wait page to load
-    # 5 retries for 1 second
-    # Until page url change
-    for _ in range(5):
-        if driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc":
-            break
-        time.sleep(1)
+    company_info_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.LINK_TEXT, "Company info")),
+    )
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(company_info_button)).click()
 
     assert driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc"
 
-    # Wait to load this element
-    # Check if element with new company website exists
-    for _ in range(5):
-        new_website = None
-        # Selenium can't find it by LINK_TEXT or by XPATH
-        all_company_fields = driver.find_elements(By.TAG_NAME, "p")
-        # One of these tags, should contain updated data
-        for field in all_company_fields:
-            if field.text == company_update_data["website"]:
-                new_website = field
-                break
-        if new_website:
-            break
-        time.sleep(1)
-
+    new_website = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (
+                By.XPATH,
+                f"//p[contains(., '{company_update_data['website']}')]",
+            ),
+        ),
+    )
     assert new_website.text == company_update_data["website"]
+
+    ############################################################
+    # test sign out
+    menu_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located(
+            (
+                By.XPATH,
+                f"//button[contains(., '{sign_in_data['email']}')]",
+            ),
+        ),
+    )
+    assert menu_button
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(menu_button)).click()
+
+    sign_out_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//a[contains(., 'Sign Out')]")),
+    )
+    assert sign_out_button
+    WebDriverWait(driver, 10).until(EC.element_to_be_clickable(sign_out_button)).click()
+
+    sign_in_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//button[contains(., 'Sign In')]")),
+    )
+    assert sign_in_button
