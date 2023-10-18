@@ -161,12 +161,12 @@ def origin_report_create_draft() -> Callable:
                     "company_name": "Mojang",
                 },
                 {
-                    "fraction_cogs": 99,
-                    "short_description": "why",
+                    "fraction_cogs": 20,
+                    "short_description": "bacon",
                     "component_type_str": "EXTERNALLY_SOURCED",
-                    "external_sku": "aaaaa",
-                    "country_of_origin": "US",
-                    "company_name": "Mojang",
+                    "external_sku": "meat",
+                    "country_of_origin": "FR",
+                    "company_name": "Isort",
                 },
             ],
         }

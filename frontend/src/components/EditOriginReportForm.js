@@ -27,17 +27,12 @@ const EditOriginReportForm = () => {
 
   // Variables to track components' changes
   const [inputFields, setInputFields] = useState([{
-    id: 0,
     fraction_cogs: 0,
     short_description: '',
     component_type_str: 'MADE_IN_HOUSE',
     external_sku: '',
     country_of_origin: 'AF',
-    company_name: '',
-    parent_origin_report: 0,
-    // Fields for tracking created and deleted components
-    is_deleted: false,
-    is_created: false
+    company_name: ''
   }])
 
   // Are constant values that represents all existing published OriginReports
@@ -78,15 +73,12 @@ const EditOriginReportForm = () => {
         const data = []
         for (const index in result.components) {
           data.push({
-            id: result.components[index].id,
             fraction_cogs: result.components[index].fraction_cogs,
             short_description: result.components[index].short_description,
             component_type_str: result.components[index].component_type,
             external_sku: result.components[index].external_sku,
             country_of_origin: result.components[index].country_of_origin,
-            company_name: result.components[index].company_name,
-            is_deleted: false,
-            is_created: false
+            company_name: result.components[index].company_name
           })
         }
         setInputFields(data)
@@ -148,6 +140,8 @@ const EditOriginReportForm = () => {
       data.append('thumbnail', event.target.thumbnail.files[0])
     }
 
+    data.append('components', JSON.stringify(inputFields))
+
     // Config for move to publish request
     const config = {
       method: 'PATCH',
@@ -167,99 +161,12 @@ const EditOriginReportForm = () => {
       body: data
     }
 
-    // responses for each request
-    let response = ''
-    let responseOriginReport = ''
-    let responsesComponent = []
-
     // Save OriginReport changes
-    responseOriginReport = await fetch('/api/origin_report/patch/' + originReportIdentifier + '/', configOriginReport)
-    // Delete components
-    const componentToDelete = inputFields.filter(component => component.is_deleted === true)
-    for (const index in componentToDelete) {
-      const componentId = componentToDelete[index].id
-
-      const config = {
-        method: 'DELETE',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authTokens.access
-        }
-      }
-
-      let response = ''
-      try {
-        response = await fetch('/api/component/patch_delete_retrieve/' + componentId + '/', config)
-      } catch (error) {
-        alert('Server is not responding')
-        window.location.reload()
-      }
-
-      if (response.status === 204) {
-        alert('Successfully deleted #' + componentId)
-      } else {
-        alert('Failed to delete #' + componentId)
-        window.location.reload()
-      }
-    }
-    // Create components
-    const componentToCreate = inputFields.filter(component => component.is_created === true)
-    for (const index in componentToCreate) {
-      componentToCreate[index].parent_origin_report = originReport.id
-
-      const config = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authTokens.access
-        },
-        body: JSON.stringify(componentToCreate[index])
-      }
-
-      let response = ''
-      try {
-        response = await fetch('/api/component/create_draft/', config)
-      } catch (error) {
-        alert('Server is not responding')
-        window.location.reload()
-      }
-      const result = await response.json()
-      if (response.status === 201) {
-        alert('Successfully created #' + result.id)
-      } else {
-        let message = 'Invalid create data #' + index
-        for (const invalidElement in result) {
-          message += '\n' + invalidElement + ': ' + result[invalidElement]
-        }
-        alert(message)
-        window.location.reload()
-      }
-    }
-    // Save component changes
-    // If components.id > 0, then it was retrieved from the backend and should be updated
-    const componentToSave = inputFields.filter(component => (component.id && !component.is_deleted))
-    for (const index in componentToSave) {
-      const configComponent = {
-        method: 'PATCH',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authTokens.access
-        },
-        body: JSON.stringify(componentToSave[index])
-      }
-
-      const responseComponent = await fetch(
-        '/api/component/patch_delete_retrieve/' + componentToSave[index].id + '/',
-        configComponent
-      )
-      responsesComponent = [...responsesComponent, responseComponent]
-    }
+    const responseOriginReport = await fetch('/api/origin_report/patch/' + originReportIdentifier + '/', configOriginReport)
 
     // If PUBLISH button was pressed
     if (buttonType !== 'draft') {
-      response = await fetch('/api/origin_report/to_published/' + originReportIdentifier + '/', config)
+      const response = await fetch('/api/origin_report/to_published/' + originReportIdentifier + '/', config)
       const resultPublish = await response.json()
 
       if (response.status === 200) {
@@ -294,20 +201,6 @@ const EditOriginReportForm = () => {
       alert('Not authenticated or permission denied')
       navigate('/')
     }
-
-    for (const index in responsesComponent) {
-      if (responsesComponent[index].status === 200) {
-        alert('Component #' + (1 + +index) + ' successfully edited')
-        navigate('/origin_report/' + originReportIdentifier)
-      } else if (responsesComponent[index].status === 400) {
-        let message = 'Invalid save component data #' + index
-        message += JSON.stringify(await responsesComponent[index].json())
-        alert(message)
-      } else {
-        alert('Not authenticated or permission denied')
-        navigate('/')
-      }
-    }
   }
 
   // Handle adding a component fields
@@ -316,20 +209,14 @@ const EditOriginReportForm = () => {
     // Update inputFields
     const values = [...inputFields]
     values.push({
-      id: 0,
       fraction_cogs: 0,
       short_description: '',
       component_type_str: 'MADE_IN_HOUSE',
       external_sku: '',
       country_of_origin: 'AF',
-      company_name: '',
-      parent_origin_report: 0,
-      // Fields for tracking created and deleted components
-      is_deleted: false,
-      is_created: true
+      company_name: ''
     })
     setInputFields(values)
-    console.log(inputFields)
   }
 
   // Handle removing a component
@@ -337,16 +224,9 @@ const EditOriginReportForm = () => {
     // id != 0 means that component exists in the DB
     // So we need to remove it in the DB
     const values = [...inputFields]
-    console.log(index)
-    if (values[index].id !== 0) {
-      values[index].is_deleted = true
-    } else {
-      // If component was created in the form
-      // Remove it from components array
-      values.splice(index, 1)
-    }
+    values.splice(index, 1)
+
     setInputFields(values)
-    console.log(inputFields)
   }
 
   // Changes inputFields list

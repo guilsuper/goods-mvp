@@ -10,6 +10,7 @@ from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
 from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CountrySerializer
+from django.db import transaction
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import ChoiceField
@@ -334,10 +335,21 @@ class OriginReportDraftSerializer(ModelSerializer):
 
         # Components are list of string that looks like a dictionaries
         components_data = dict(**self.initial_data)["components"]
-        components_data = [
-            json.loads(component.replace("'", '"'))
-            for component in components_data
-        ]
+
+        # In case it will be a list, that contains string that looks like
+        # list of dictionaries (data from the frontend)
+        # Or a list of dictionaries (from the django.test.client.encode_multipart in tests)
+        try:
+            components_data = json.loads(components_data[0])
+        except json.decoder.JSONDecodeError:
+            components_data = [
+                component.replace("'", '"')
+                for component in components_data
+            ]
+            components_data = [
+                json.loads(component)
+                for component in components_data
+            ]
 
         # Validate componetns data
         component_serializer = SourceComponentDraftSerializer(data=components_data, many=True)
@@ -355,12 +367,19 @@ class OriginReportDraftSerializer(ModelSerializer):
         for component in components_data:
             if "component_type_str" in component:
                 component["component_type"] = component.pop("component_type_str")
-            SourceComponent.objects.create(parent_origin_report=origin_report, **component)
+
+        components_data = [
+            SourceComponent(parent_origin_report=origin_report, **component)
+            for component in components_data
+        ]
+
+        # Create as a single transaction
+        with transaction.atomic():
+            SourceComponent.objects.bulk_create(components_data)
 
         origin_report.cogs = sum([
-            component["fraction_cogs"]
+            component.fraction_cogs
             for component in components_data
-            if "fraction_cogs" in component and component["fraction_cogs"]
         ])
         # To save COGS update
         origin_report.save()

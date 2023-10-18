@@ -52,9 +52,11 @@ def test_not_removing_components_after_reload(
     assert driver.current_url == edit_page_url
 
     # Wait until components are loaded
-    img_src = "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/us.svg"
+    placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f"//img[@src='{img_src}']")),
+        EC.presence_of_element_located((
+            By.XPATH, f"//input[@placeholder='{placeholder}']",
+        )),
     )
 
     # Find 2 buttons that are related to each component
@@ -74,9 +76,11 @@ def test_not_removing_components_after_reload(
     # Refresh page and check if 2 component are back
     driver.refresh()
     # Wait until components are loaded
-    img_src = "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/us.svg"
+    placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f"//img[@src='{img_src}']")),
+        EC.presence_of_element_located((
+            By.XPATH, f"//input[@placeholder='{placeholder}']",
+        )),
     )
 
     delete_buttons = WebDriverWait(driver, 10).until(
@@ -98,9 +102,11 @@ def test_single_add_component_button(
     assert driver.current_url == edit_page_url
 
     # Wait until components are loaded
-    img_src = "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/us.svg"
+    placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f"//img[@src='{img_src}']")),
+        EC.presence_of_element_located((
+            By.XPATH, f"//input[@placeholder='{placeholder}']",
+        )),
     )
 
     add_buttons = WebDriverWait(driver, 10).until(
@@ -124,9 +130,11 @@ def test_remove_component_button_if_single_component_only(
     assert driver.current_url == edit_page_url
 
     # Wait until components are loaded
-    img_src = "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/us.svg"
+    placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, f"//img[@src='{img_src}']")),
+        EC.presence_of_element_located((
+            By.XPATH, f"//input[@placeholder='{placeholder}']",
+        )),
     )
 
     # Find 2 buttons that are related to each component
