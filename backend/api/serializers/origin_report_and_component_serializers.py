@@ -231,6 +231,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
 
         return super().validate(attrs)
 
+    @transaction.atomic
     def create(self, validated_data):
         """Overwritten create method for setting up the OriginReport info."""
         # Setup state
@@ -293,6 +294,7 @@ class OriginReportDraftSerializer(ModelSerializer):
             "thumbnail_url",
         )
 
+    @transaction.atomic
     def create(self, validated_data):
         """Overwritten create method for setting up the OriginReport info."""
         # Setup state
