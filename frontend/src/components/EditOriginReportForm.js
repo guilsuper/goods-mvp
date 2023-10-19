@@ -143,16 +143,6 @@ const EditOriginReportForm = () => {
 
     data.append('components', JSON.stringify(inputFields))
 
-    // Config for move to publish request
-    const config = {
-      method: 'PATCH',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
-      }
-    }
-
     // config to update OriginReport
     const configOriginReport = {
       method: 'PATCH',
@@ -163,11 +153,34 @@ const EditOriginReportForm = () => {
     }
 
     // Save OriginReport changes
-    const responseOriginReport = await fetch('/api/origin_report/patch/' + originReportIdentifier + '/', configOriginReport)
+    let responseOriginReport = ''
+    try {
+      responseOriginReport = await fetch('/api/origin_report/patch/' + originReportIdentifier + '/', configOriginReport)
+    } catch (error) {
+      alert('Server is not working')
+      return
+    }
 
     // If PUBLISH button was pressed
     if (buttonType !== 'draft') {
-      const response = await fetch('/api/origin_report/to_published/' + originReportIdentifier + '/', config)
+      // Config for move to publish request
+      const config = {
+        method: 'PATCH',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + authTokens.access
+        }
+      }
+
+      let response = ''
+      try {
+        response = await fetch('/api/origin_report/to_published/' + originReportIdentifier + '/', config)
+      } catch (error) {
+        alert('Server is not working')
+        return
+      }
+
       const resultPublish = await response.json()
 
       if (response.status === 200) {
