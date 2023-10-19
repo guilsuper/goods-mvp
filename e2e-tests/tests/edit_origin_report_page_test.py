@@ -51,10 +51,7 @@ def test_not_removing_components_after_reload(
     driver.get(edit_page_url)
     assert driver.current_url == edit_page_url
 
-    # Wait until components are loaded
-    # Frontend gives a default 1 component at the beginning
-    # But we need to wait for all the components to be loaded
-    # If we can retrieve short_description, then the components were loaded correctly
+    # To wait until all components are loaded; wait for short description
     placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((
@@ -78,10 +75,7 @@ def test_not_removing_components_after_reload(
 
     # Refresh page and check if 2 component are back
     driver.refresh()
-    # Wait until components are loaded
-    # Frontend gives a default 1 component at the beginning
-    # But we need to wait for all the components to be loaded
-    # If we can retrieve short_description, then the components were loaded correctly
+    # To wait until all components are loaded; wait for short description
     placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((
@@ -107,10 +101,7 @@ def test_single_add_component_button(
     driver.get(edit_page_url)
     assert driver.current_url == edit_page_url
 
-    # Wait until components are loaded
-    # Frontend gives a default 1 component at the beginning
-    # But we need to wait for all the components to be loaded
-    # If we can retrieve short_description, then the components were loaded correctly
+    # To wait until all components are loaded; wait for short description
     placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((
@@ -138,10 +129,7 @@ def test_remove_component_button_if_single_component_only(
     driver.get(edit_page_url)
     assert driver.current_url == edit_page_url
 
-    # Wait until components are loaded
-    # Frontend gives a default 1 component at the beginning
-    # But we need to wait for all the components to be loaded
-    # If we can retrieve short_description, then the components were loaded correctly
+    # To wait until all components are loaded; wait for short description
     placeholder = origin_report["components"][0]["short_description"]
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((
