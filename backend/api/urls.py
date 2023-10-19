@@ -2,8 +2,6 @@
 """API urls module."""
 from api.views import ActivationView
 from api.views import CompanyUpdateRetrieveView
-from api.views import ComponentCreateView
-from api.views import ComponentPatchRetrieveDeleteView
 from api.views import CountryView
 from api.views import CreateAdministratorAndCompanyView
 from api.views import CreateAdministratorView
@@ -71,18 +69,6 @@ urlpatterns = [
         OriginReportSwitchVisibilityView.as_view(),
         name="origin-report-switch-visibility",
     ),
-
-    path(
-        "component/create/<int:id>/",
-        ComponentCreateView.as_view(),
-        name="component-create",
-    ),
-    path(
-        "component/patch_delete_retrieve/<int:id>/",
-        ComponentPatchRetrieveDeleteView.as_view(),
-        name="component-patch-retrieve-delete",
-    ),
-
     path(
         "admin_and_company/create/",
         CreateAdministratorAndCompanyView.as_view(),

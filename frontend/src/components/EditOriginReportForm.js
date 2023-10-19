@@ -25,14 +25,14 @@ const EditOriginReportForm = () => {
   // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
 
-  // components input fields data
+  // Variables to track components' changes
   const [inputFields, setInputFields] = useState([{
-    id: 0,
     fraction_cogs: 0,
     short_description: '',
-    component_type_str: '',
+    component_type_str: 'MADE_IN_HOUSE',
     external_sku: '',
-    country_of_origin: '',
+    // FIXME update retrieving first country after the appropriate feature merge
+    country_of_origin: 'AF',
     company_name: ''
   }])
 
@@ -67,14 +67,13 @@ const EditOriginReportForm = () => {
         alert('Action not allowed')
         navigate('/')
       } else {
-        // set originReport, components and inputFields
+        // set originReport and components
         setOriginReport(result)
 
         // Change component_type to component_type_str
         const data = []
         for (const index in result.components) {
           data.push({
-            id: result.components[index].id,
             fraction_cogs: result.components[index].fraction_cogs,
             short_description: result.components[index].short_description,
             component_type_str: result.components[index].component_type,
@@ -142,6 +141,8 @@ const EditOriginReportForm = () => {
       data.append('thumbnail', event.target.thumbnail.files[0])
     }
 
+    data.append('components', JSON.stringify(inputFields))
+
     // Config for move to publish request
     const config = {
       method: 'PATCH',
@@ -161,53 +162,26 @@ const EditOriginReportForm = () => {
       body: data
     }
 
-    // responses for each request
-    let response = ''
-    let responseOriginReport = ''
-    let responsesComponent = []
+    // Save OriginReport changes
+    const responseOriginReport = await fetch('/api/origin_report/patch/' + originReportIdentifier + '/', configOriginReport)
 
-    try {
-      // Save OriginReport changes
-      responseOriginReport = await fetch('/api/origin_report/patch/' + originReportIdentifier + '/', configOriginReport)
-      // Save component changes
-      for (const index in inputFields) {
-        const configComponent = {
-          method: 'PATCH',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + authTokens.access
-          },
-          body: JSON.stringify(inputFields[index])
-        }
+    // If PUBLISH button was pressed
+    if (buttonType !== 'draft') {
+      const response = await fetch('/api/origin_report/to_published/' + originReportIdentifier + '/', config)
+      const resultPublish = await response.json()
 
-        const responseComponent = await fetch(
-          '/api/component/patch_delete_retrieve/' + inputFields[index].id + '/',
-          configComponent
-        )
-        responsesComponent = [...responsesComponent, responseComponent]
+      if (response.status === 200) {
+        alert('Successfully saved and published')
+        navigate('/origin_report/' + originReportIdentifier)
+      } else if (response.status === 400) {
+        let message = 'Invalid save data:'
+        message += JSON.stringify(resultPublish)
+        alert(message)
+        window.location.reload()
+      } else {
+        alert('Not authenticated or permission denied')
+        navigate('/')
       }
-
-      // If PUBLISH button was pressed
-      if (buttonType !== 'draft') {
-        response = await fetch('/api/origin_report/to_published/' + originReportIdentifier + '/', config)
-        const resultPublish = await response.json()
-
-        if (response.status === 200) {
-          alert('Successfully saved and published')
-          navigate('/origin_report/' + originReportIdentifier)
-        } else if (response.status === 400) {
-          let message = 'Invalid input data:'
-          message += JSON.stringify(resultPublish)
-          alert(message)
-        } else {
-          alert('Not authenticated or permission denied')
-          navigate('/')
-        }
-      }
-    } catch (error) {
-      alert('Server is not responding')
-      return
     }
 
     // If PUBLISH button pressed, do not display these messages
@@ -218,100 +192,42 @@ const EditOriginReportForm = () => {
     const result = await responseOriginReport.json()
 
     if (responseOriginReport.status === 200) {
-      alert('OriginReport Successfully edited')
+      alert('Origin Report Successfully edited')
       navigate('/origin_report/' + originReportIdentifier)
     } else if (responseOriginReport.status === 400) {
-      let message = 'Invalid input data:'
+      let message = 'Invalid origin report data:'
       message += JSON.stringify(result)
       alert(message)
     } else {
       alert('Not authenticated or permission denied')
       navigate('/')
     }
-
-    for (const index in responsesComponent) {
-      if (responsesComponent[index].status === 200) {
-        alert('Component #' + (1 + +index) + ' successfully edited')
-        navigate('/origin_report/' + originReportIdentifier)
-      } else if (responsesComponent[index].status === 400) {
-        let message = 'Invalid input data:'
-        message += JSON.stringify(await responsesComponent[index].json())
-        alert(message)
-      } else {
-        alert('Not authenticated or permission denied')
-        navigate('/')
-      }
-    }
   }
 
   // Handle adding a component fields
   // Creates a new component in the backed
   const handleAddFields = async () => {
-    const config = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
-      }
-    }
-
-    let response = ''
-    try {
-      response = await fetch('/api/component/create/' + originReportIdentifier + '/', config)
-    } catch (error) {
-      alert('Server is not responding')
-      return
-    }
-
-    const result = await response.json()
-
-    if (response.status !== 200) {
-      alert('Server is not responding')
-      return
-    }
     // Update inputFields
     const values = [...inputFields]
     values.push({
-      id: result.id,
-      fraction_cogs: result.fraction_cogs,
-      short_description: result.short_description,
-      component_type_str: result.component_type,
-      external_sku: result.external_sku,
-      country_of_origin: result.country_of_origin,
-      company_name: result.company_name
+      fraction_cogs: 0,
+      short_description: '',
+      component_type_str: 'MADE_IN_HOUSE',
+      external_sku: '',
+      // FIXME update retrieving first country after the appropriate feature merge
+      country_of_origin: 'AF',
+      company_name: ''
     })
     setInputFields(values)
   }
 
-  // Handle removing a field
-  // Deletes component in the backend
+  // Handle removing a component
   const handleRemoveFields = async (index) => {
-    const componentId = inputFields[index].id
-
-    const config = {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
-      }
-    }
-
-    let response = ''
-    try {
-      response = await fetch('/api/component/patch_delete_retrieve/' + componentId + '/', config)
-    } catch (error) {
-      alert('Server is not responding')
-      return
-    }
-
-    if (response.status !== 204) {
-      alert('Server is not responding')
-    }
-
+    // id != 0 means that component exists in the DB
+    // So we need to remove it in the DB
     const values = [...inputFields]
     values.splice(index, 1)
+
     setInputFields(values)
   }
 
@@ -423,7 +339,11 @@ const EditOriginReportForm = () => {
         </Row>
 
         {inputFields.map((inputField, index) => (
-          <Row key={`${inputField}~${index}`} className='mb-3 p-3 border rounded'>
+          <Row
+            key={`${inputField}~${index}`}
+            // Display only not deleted components
+            className={'mb-3 p-3 border rounded' + (inputField.is_deleted ? ' d-none' : '')}
+          >
             <Col>
               <Form.Group className="mb-3" controlId="fraction_cogs">
                 <Form.Control
@@ -508,17 +428,24 @@ const EditOriginReportForm = () => {
               }
             </Col>
             <Container>
-              <Button onClick={() => handleAddFields()} className='me-2'>
-                Add component
-              </Button>
-              <Button disabled={index === 0} onClick={() => handleRemoveFields(index)}>
+              <Button
+                disabled={
+                  // If there is more then 1 displayed components
+                  (inputFields.length - inputFields.filter(component => component.is_deleted).length) <= 1
+                }
+                onClick={() => handleRemoveFields(index)}
+              >
                 Remove component
               </Button>
             </Container>
           </Row>
         ))}
-
-        <Button onClick={() => (setButtonType('publish'))} className="my-3 me-2" variant="primary" type="submit">
+        <Container>
+          <Button onClick={() => handleAddFields()} className='me-2' variant='secondary'>
+            Add component
+          </Button>
+        </Container>
+        <Button onClick={() => (setButtonType('publish'))} className="my-3 me-2" variant="success" type="submit">
           Publish
         </Button>
         <Button onClick={() => (setButtonType('draft'))} className="my-3" variant="primary" type="submit">

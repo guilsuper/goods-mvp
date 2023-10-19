@@ -5,21 +5,17 @@ from api.models import ORIGIN_REPORT_STATES
 from api.models import OriginReport
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
-from api.permissions import IsComponentOwner
 from api.permissions import IsOriginReportOwner
 from api.permissions import ReadOnly
 from api.serializers import OriginReportCreateGetSerializer
 from api.serializers import OriginReportDraftSerializer
 from api.serializers import OriginReportPublishValidatorSerializer
-from api.serializers import SourceComponentDraftSerializer
 from api.serializers import SourceComponentSerializer
 from django.db.models import Sum
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveDestroyAPIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -283,43 +279,3 @@ class OriginReportMoveToPublishedView(UpdateAPIView):
 
         origin_report.save()
         return Response(status=200, data={"message": "Instance was moved to the published state"})
-
-
-class ComponentCreateView(CreateAPIView):
-    """View for component creation."""
-
-    permission_classes = [IsAuthenticated, IsOriginReportOwner]
-    serializer_class = SourceComponentSerializer
-
-    def post(self, request, id):
-        """Creates empty component and attaches it to origin_report."""
-        data = {
-            "fraction_cogs": 0,
-            "short_description": "",
-            "component_type_str":
-                SOURCE_COMPONENT_TYPE.name_from_integer(
-                    SOURCE_COMPONENT_TYPE.MADE_IN_HOUSE,
-                ),
-        }
-        origin_report = get_object_or_404(OriginReport, id=id)
-        component = SourceComponentDraftSerializer(data=data)
-
-        if not component.is_valid():
-            return Response(component.errors, status=400)
-
-        component.validated_data["parent_origin_report"] = origin_report
-        component.validated_data["country_of_origin"] = ""
-        component.validated_data["external_sku"] = ""
-
-        component = component.save()
-        component = SourceComponentSerializer(component.__dict__)
-        return Response(component.data, status=200)
-
-
-class ComponentPatchRetrieveDeleteView(RetrieveUpdateDestroyAPIView):
-    """Component patch, retrieve and delete view."""
-
-    permission_classes = [IsAuthenticated, IsComponentOwner]
-    serializer_class = SourceComponentDraftSerializer
-    lookup_field = "id"
-    queryset = SourceComponent.objects.all()

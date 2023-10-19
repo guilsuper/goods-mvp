@@ -18,9 +18,10 @@ const OriginReportForm = () => {
   const [inputFields, setInputFields] = useState([{
     fraction_cogs: 0,
     short_description: '',
-    component_type_str: 'EXTERNALLY_SOURCED',
+    component_type_str: 'MADE_IN_HOUSE',
     external_sku: '',
-    country_of_origin: '',
+    // FIXME update retrieving first country after the appropriate feature merge
+    country_of_origin: 'AF',
     company_name: ''
   }])
   // For different submits
