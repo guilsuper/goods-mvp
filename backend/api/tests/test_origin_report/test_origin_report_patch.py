@@ -149,13 +149,13 @@ def test_patch_OR_and_components(
 
     data = {
         "unique_identifier_type_str": "SKU",
-        "unique_identifier": "1aa24a211232aa",
-        "short_description": "aaaa",
+        "unique_identifier": "123897asdh",
+        "short_description": "Iron pan",
         "thumbnail": uploaded_image,
         "components": [
             {
-                "fraction_cogs": 20,
-                "short_description": "why",
+                "fraction_cogs": 80,
+                "short_description": "Iron",
                 "component_type_str": "EXTERNALLY_SOURCED",
                 "external_sku": "aaaaa",
                 "country_of_origin": "US",
@@ -163,11 +163,11 @@ def test_patch_OR_and_components(
             },
             {
                 "fraction_cogs": 20,
-                "short_description": "why1",
-                "component_type_str": "MADE_IN_HOUSE",
-                "external_sku": "aaaaa1",
-                "country_of_origin": "CH",
-                "company_name": "Alabama",
+                "short_description": "Plastic handle",
+                "component_type_str": "EXTERNALLY_SOURCED",
+                "external_sku": "Polymer",
+                "country_of_origin": "FR",
+                "company_name": "Isort",
             },
         ],
     }

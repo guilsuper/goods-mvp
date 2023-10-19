@@ -328,6 +328,7 @@ class OriginReportDraftSerializer(ModelSerializer):
 
         return origin_report
 
+    @transaction.atomic
     def update(self, origin_report, validated_data):
         """Update origin report method."""
         if "components" not in self.initial_data:
@@ -373,9 +374,7 @@ class OriginReportDraftSerializer(ModelSerializer):
             for component in components_data
         ]
 
-        # Create as a single transaction
-        with transaction.atomic():
-            SourceComponent.objects.bulk_create(components_data)
+        SourceComponent.objects.bulk_create(components_data)
 
         origin_report.cogs = sum([
             component.fraction_cogs

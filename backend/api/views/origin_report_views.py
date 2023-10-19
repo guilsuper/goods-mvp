@@ -5,20 +5,17 @@ from api.models import ORIGIN_REPORT_STATES
 from api.models import OriginReport
 from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
-from api.permissions import IsComponentOwner
 from api.permissions import IsOriginReportOwner
 from api.permissions import ReadOnly
 from api.serializers import OriginReportCreateGetSerializer
 from api.serializers import OriginReportDraftSerializer
 from api.serializers import OriginReportPublishValidatorSerializer
-from api.serializers import SourceComponentDraftSerializer
 from api.serializers import SourceComponentSerializer
 from django.db.models import Sum
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
 from rest_framework.generics import ListAPIView
 from rest_framework.generics import RetrieveDestroyAPIView
-from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.generics import UpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -282,26 +279,3 @@ class OriginReportMoveToPublishedView(UpdateAPIView):
 
         origin_report.save()
         return Response(status=200, data={"message": "Instance was moved to the published state"})
-
-
-class ComponentCreateView(CreateAPIView):
-    """View for component creation."""
-
-    permission_classes = [IsAuthenticated, IsOriginReportOwner]
-    serializer_class = SourceComponentSerializer
-
-
-class ComponentDraftCreateView(CreateAPIView):
-    """View for component creation."""
-
-    permission_classes = [IsAuthenticated, IsOriginReportOwner]
-    serializer_class = SourceComponentDraftSerializer
-
-
-class ComponentPatchRetrieveDeleteView(RetrieveUpdateDestroyAPIView):
-    """Component patch, retrieve and delete view."""
-
-    permission_classes = [IsAuthenticated, IsComponentOwner]
-    serializer_class = SourceComponentDraftSerializer
-    lookup_field = "id"
-    queryset = SourceComponent.objects.all()

@@ -2,9 +2,6 @@
 """Contains all the views."""
 from api.views.company_views import CompanyUpdateRetrieveView
 from api.views.country_views import CountryView
-from api.views.origin_report_views import ComponentCreateView
-from api.views.origin_report_views import ComponentDraftCreateView
-from api.views.origin_report_views import ComponentPatchRetrieveDeleteView
 from api.views.origin_report_views import OriginReportCompanyListView
 from api.views.origin_report_views import OriginReportCreateDraftView
 from api.views.origin_report_views import OriginReportCreateView
@@ -26,9 +23,6 @@ from api.views.users_views import SelfRetrieveUpdateDestroyView
 
 __all__ = [
     "CompanyUpdateRetrieveView",
-    "ComponentCreateView",
-    "ComponentDraftCreateView",
-    "ComponentPatchRetrieveDeleteView",
     "OriginReportCreateDraftView",
     "OriginReportCreateView",
     "OriginReportPublishedListView",

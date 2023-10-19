@@ -31,6 +31,7 @@ const EditOriginReportForm = () => {
     short_description: '',
     component_type_str: 'MADE_IN_HOUSE',
     external_sku: '',
+    // FIXME update retrieving first country after the appropriate feature merge
     country_of_origin: 'AF',
     company_name: ''
   }])
@@ -213,6 +214,7 @@ const EditOriginReportForm = () => {
       short_description: '',
       component_type_str: 'MADE_IN_HOUSE',
       external_sku: '',
+      // FIXME update retrieving first country after the appropriate feature merge
       country_of_origin: 'AF',
       company_name: ''
     })
