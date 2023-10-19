@@ -58,7 +58,6 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "django_countries",
-    "django_migration_linter",
 ]
 
 MIDDLEWARE = [
