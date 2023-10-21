@@ -228,7 +228,7 @@ const EditOriginReportForm = () => {
           {
             // If logo is set
             originReport.thumbnail
-              ? <ImageComponent src={originReport.ythumbnail_url} text={'Thumbnail'}/>
+              ? <ImageComponent src={originReport.thumbnail_url} text={'Thumbnail'}/>
               : ' '
           }
 
