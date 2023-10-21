@@ -2,28 +2,16 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import ListItem from '../components/ListItem'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
+import { useSearchOriginReportsQuery } from '../api/OriginReport'
+import LoadingComponent from '../components/LoadingComponent'
 
 const OriginReportList = () => {
-  const [originReports, setOriginReports] = useState([])
+  const [query, setQuery] = React.useState({})
 
-  useEffect(() => {
-    getOriginReports()
-  }, [])
-
-  const getOriginReports = async () => {
-    let response = ''
-    try {
-      response = await fetch('/api/origin_report/get/')
-    } catch (error) {
-      alert('Server is not responding')
-      return
-    }
-    const data = await response.json()
-    setOriginReports(data)
-  }
+  const { isLoading, isError, data: originReports, error } = useSearchOriginReportsQuery({ query })
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -36,30 +24,32 @@ const OriginReportList = () => {
         params[event.target[attr].id] = event.target[attr].value
       }
     })
-    const config = {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }
-
-    let query = '?'
+    const q = {}
     Object.keys(params).forEach(function (param) {
       if (params[param]) {
-        query += param + '=' + params[param] + '&'
+        q[param] = params[param]
       }
     })
+    setQuery(q)
+  }
 
-    let response = ''
-    try {
-      response = await fetch('/api/origin_report/get/' + query, config)
-    } catch (error) {
-      alert('Server is not responding')
-      return
-    }
-    const result = await response.json()
-    setOriginReports(result)
+  let results
+  if (isLoading) {
+    results = (
+      <LoadingComponent />
+    )
+  } else if (isError) {
+    results = <Row><h2 className="text-center">An error has occurred: { error.message }</h2></Row>
+  } else if (originReports.length === 0) {
+    results = <Row><h2 className="text-center">No origin reports found...</h2></Row>
+  } else {
+    results = (
+      <Row className="justify-content-md-center">
+        {originReports.map((originReport, index) => (
+          <ListItem key={index} originReport={originReport}/>
+        ))}
+      </Row>
+    )
   }
 
   return (
@@ -95,11 +85,7 @@ const OriginReportList = () => {
           </Container>
         </Col>
         <Col>
-          <Row className="justify-content-md-center">
-            {originReports.map((originReport, index) => (
-              <ListItem key={index} originReport={originReport}/>
-            ))}
-          </Row>
+          {results}
         </Col>
       </Row>
     </Container>

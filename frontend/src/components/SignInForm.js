@@ -2,15 +2,17 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext } from 'react'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import AuthContext from '../context/AuthContext'
 import FormContainer from '../utils/FormContainer'
+import { useLogin } from '../lib/Auth'
 
 const SignIn = () => {
-  // Sets tokens and user information
-  const { signInUser } = useContext(AuthContext)
+  const navigate = useNavigate()
+
+  const login = useLogin()
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -25,34 +27,19 @@ const SignIn = () => {
       }
     })
 
-    // config for POST request
-    const config = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+    login.mutate({ data }, {
+      onSuccess: (data, variables, context) => {
+        alert('Successfully logged')
+        navigate('/account/info')
       },
-      body: JSON.stringify(data)
-    }
-
-    let response = ''
-    try {
-      response = await fetch('/api/token/', config)
-    } catch (error) {
-      alert('Server is not working')
-      return
-    }
-
-    const tokens = await response.json()
-
-    if (response.status === 200) {
-      signInUser(event, tokens)
-      alert('Successfully logged')
-    } else if (response.status === 401) {
-      alert('Invalid input data')
-    } else {
-      alert('Not authenticated or permission denied')
-    }
+      onError: (error, variables, context) => {
+        if (error.request?.status === 401) {
+          alert('Invalid input data')
+        } else {
+          alert('Not authenticated or permission denied')
+        }
+      }
+    })
   }
 
   return (

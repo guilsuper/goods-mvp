@@ -18,7 +18,6 @@ import SignIn from './pages/SignIn'
 import Footer from './components/Footer'
 import PrivateRoute from './utils/PrivateRoute'
 import AccountInfo from './pages/AccountInfo'
-import { AuthProvider } from './context/AuthContext'
 import EditAccountForm from './components/EditAccountForm'
 import ActivatePage from './pages/ActivatePage'
 import CompanyOriginReport from './pages/CompanyOriginReport'
@@ -31,10 +30,14 @@ import CompanyInfo from './pages/CompanyInfo'
 import EditCompanyForm from './components/EditCompanyForm'
 import OriginReportCreate from './pages/OriginReportCreate'
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient({})
+
 function App () {
   return (
-    <Router>
-      <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <Router>
         <div className="d-flex flex-column min-vh-100">
           <Header/>
           <Routes>
@@ -61,8 +64,8 @@ function App () {
           </Routes>
           <Footer />
         </div>
-      </AuthProvider>
-    </Router>
+      </Router>
+    </QueryClientProvider>
   )
 }
 

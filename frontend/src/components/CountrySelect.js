@@ -2,9 +2,11 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Form } from 'react-bootstrap'
 import PropTypes from 'prop-types'
+
+import { useCountryListQuery } from '../api/CountryList'
 
 const CountrySelect = ({ id, onChange, value }) => {
   CountrySelect.propTypes = {
@@ -13,27 +15,15 @@ const CountrySelect = ({ id, onChange, value }) => {
     value: PropTypes.string
   }
 
-  // Are constant values that represents all countries
-  const [countries, setCountries] = useState([])
+  const { isLoading, isError, data: countryList, error } = useCountryListQuery({})
 
-  useEffect(() => {
-    async function getCountries () {
-      let response = ''
-      try {
-        response = await fetch('/api/country/list/')
+  if (isLoading) {
+    return <span>Loading...</span>
+  }
 
-        if (response.status === 200) {
-          const data = await response.json()
-          setCountries(data)
-        } else {
-          alert('Unexpected response from server')
-        }
-      } catch (error) {
-        alert('Server is not responding')
-      }
-    }
-    getCountries()
-  }, [setCountries])
+  if (isError) {
+    return <span>An error has occurred: { error.message }</span>
+  }
 
   return (
     <Form.Select
@@ -42,10 +32,9 @@ const CountrySelect = ({ id, onChange, value }) => {
       onChange={onChange}
       value={value}
     >
-      {countries.sort((a, b) => { return a.name > b.name ? 1 : (a.name === b.name ? 0 : -1) })
-        .map((option, i) => (
+      {countryList.map((option, i) => (
         <option key={option.alpha_2} value={option.alpha_2}>{option.name}</option>
-        ))}
+      ))}
     </Form.Select>
   )
 }

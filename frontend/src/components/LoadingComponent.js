@@ -1,0 +1,16 @@
+/*
+ * Copyright 2023 Free World Certified -- all rights reserved.
+ */
+
+import React from 'react'
+import { Spinner } from 'react-bootstrap'
+
+const LoadingComponent = () => {
+  return (
+    <Spinner animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  )
+}
+
+export default LoadingComponent

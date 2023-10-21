@@ -2,19 +2,21 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext } from 'react'
+import React from 'react'
 import { Button, Form } from 'react-bootstrap'
-import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
+import { useEditAccount } from '../api/Account'
+import { useUser } from '../lib/Auth'
 
 const EditAccountForm = () => {
-  // authTokens are for sending request to the backend
-  // updateUser for updating current user localStorage
   // user is needed to display local storage information
-  const { authTokens, updateUser, user } = useContext(AuthContext)
+  const user = useUser({})
+
   // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
+
+  const editAccount = useEditAccount()
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -36,42 +38,24 @@ const EditAccountForm = () => {
       }
     })
 
-    // Config for PATCH request
-    const config = {
-      method: 'PATCH',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
+    editAccount.mutate(data, {
+      onSuccess: (data, variables, context) => {
+        alert('Successfully edited')
+        navigate('/account/info')
       },
-      body: JSON.stringify(data)
-    }
-
-    let response = ''
-    try {
-      response = await fetch('/api/self/patch_delete_retrieve/', config)
-    } catch (error) {
-      alert('Server is not responding')
-      return
-    }
-
-    const result = await response.json()
-
-    if (response.status === 200) {
-      alert('Successfully edited')
-      updateUser()
-      navigate('/account/info')
-    } else if (response.status === 400) {
-      let message = 'Invalid input data:'
-      for (const invalidElement in result) {
-        event.target[invalidElement].style = 'border-color: red'
-
-        message += '\n' + invalidElement + ': ' + result[invalidElement]
+      onError: (error, variables, context) => {
+        if (error.request?.status === 400) {
+          let message = 'Invalid input data:'
+          for (const invalidElement in error.response.data) {
+            event.target[invalidElement].style = 'border-color: red'
+            message += '\n' + invalidElement + ': ' + error.response.data[invalidElement]
+          }
+          alert(message)
+        } else {
+          alert('Not authenticated or permission denied')
+        }
       }
-      alert(message)
-    } else {
-      alert('Not authenticated or permission denied')
-    }
+    })
   }
 
   return (
@@ -79,7 +63,7 @@ const EditAccountForm = () => {
       <Form onSubmit={submitHandler}>
       <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
-          <Form.Control type="email" placeholder={user.email} />
+          <Form.Control type="email" placeholder={user.data?.email} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="password">
@@ -89,12 +73,12 @@ const EditAccountForm = () => {
 
         <Form.Group className="mb-3" controlId="first_name">
           <Form.Label>First name</Form.Label>
-          <Form.Control type="text" placeholder={user.first_name} />
+          <Form.Control type="text" placeholder={user.data?.first_name} />
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="last_name">
           <Form.Label>Last name</Form.Label>
-          <Form.Control type="text" placeholder={user.last_name} />
+          <Form.Control type="text" placeholder={user.data?.last_name} />
         </Form.Group>
 
         <Button className="mb-3" variant="primary" type="submit">

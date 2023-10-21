@@ -4,9 +4,10 @@
 
 import React from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
+import { storage } from '../utils/Storage'
 
 const PrivateRoute = () => {
-  const authTokens = localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null
+  const authTokens = storage.getToken()
 
   return authTokens ? <Outlet /> : <Navigate to="/" />
 }
