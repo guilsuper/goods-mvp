@@ -8,11 +8,14 @@ import { useNavigate } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
 import { Button } from 'react-bootstrap'
 import { useTranslation } from 'react-i18next'
+import { useCreateAccount } from '../api/Account'
 
 const SignUpForm = () => {
   const navigate = useNavigate()
 
   const { t } = useTranslation()
+
+  const createAccount = useCreateAccount()
 
   const [formValues, setFormValues] = useState({
     email: '',
@@ -42,33 +45,23 @@ const SignUpForm = () => {
       formData.append(key, value)
     }
 
-    const config = {
-      method: 'POST',
-      body: formData
-    }
-
-    let response = ''
-    try {
-      response = await fetch('/api/admin_and_company/create/', config)
-    } catch (error) {
-      alert('Server is not working')
-      return
-    }
-
-    const result = await response.json()
-
-    if (response.status === 201) {
-      alert('Successfully created. Check your email.')
-      navigate('/')
-    } else if (response.status === 400) {
-      let message = 'Invalid input data:'
-      for (const invalidElement in result) {
-        message += '\n' + invalidElement + ': ' + result[invalidElement]
+    createAccount.mutate(formData, {
+      onSuccess: (data, variables, context) => {
+        alert('Successfully created. Check your email.')
+        navigate('/')
+      },
+      onError: (error, variables, context) => {
+        if (error.request?.status === 400) {
+          let message = 'Invalid input data:'
+          for (const invalidElement in error.response.data) {
+            message += '\n' + invalidElement + ': ' + error.response.data[invalidElement]
+          }
+          alert(message)
+        } else {
+          alert('Not authenticated or permission denied' + error)
+        }
       }
-      alert(message)
-    } else {
-      alert('Not authenticated or permission denied')
-    }
+    })
   }
 
   return (

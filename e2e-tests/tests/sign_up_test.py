@@ -138,6 +138,7 @@ def test_sign_up_correct(driver: webdriver.Chrome):
     # Should be redirected to company info page
     assert driver.current_url == os.environ["FRONTEND"] + "/account/company/info/company-name-inc"
 
+    # Check if edit button exists
     edit_button = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.LINK_TEXT, "Edit")),
     )

@@ -2,46 +2,34 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-import AuthContext from '../context/AuthContext'
 import PMItem from '../components/PMItem'
 import PMForm from '../components/PMForm'
-import { useNavigate } from 'react-router-dom'
+import { useListCompanyProductManagersQuery } from '../api/ProductManager'
+import LoadingComponent from '../components/LoadingComponent'
 
 const CompanyPM = () => {
-  const [PMs, setPM] = useState([])
-  const { authTokens } = useContext(AuthContext)
+  const { isLoading, isError, data: pms, error } = useListCompanyProductManagersQuery()
 
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    async function getPMs () {
-      const config = {
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ' + authTokens.access
-        }
-      }
-
-      let response = ''
-      try {
-        response = await fetch('/api/pm/list/', config)
-      } catch (error) {
-        alert('Server is not responding')
-        return
-      }
-
-      const data = await response.json()
-
-      if (response.status !== 200) {
-        alert('Permission denied')
-        navigate('/')
-      }
-      setPM(data)
-    }
-    getPMs()
-  }, [authTokens, navigate])
+  let results
+  if (isLoading) {
+    results = (
+      <LoadingComponent />
+    )
+  } else if (isError) {
+    results = <Row><h2 className="text-center">An error has occurred: { error.message }</h2></Row>
+  } else if (pms.length === 0) {
+    results = <Row><h2 className="text-center">No origin reports found...</h2></Row>
+  } else {
+    results = (
+      <Row className="justify-content-md-center">
+        {pms.map((PM, index) => (
+          <PMItem key={index} PM={PM}/>
+        ))}
+      </Row>
+    )
+  }
 
   return (
     <Container>
@@ -50,11 +38,7 @@ const CompanyPM = () => {
             <PMForm />
         </Col>
         <Col>
-          <Row className="justify-content-md-center">
-            {PMs.map((PM, index) => (
-              <PMItem key={index} PM={PM}/>
-            ))}
-          </Row>
+          {results}
         </Col>
       </Row>
     </Container>

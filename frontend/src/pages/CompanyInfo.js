@@ -2,94 +2,74 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import Container from 'react-bootstrap/Container'
-import AuthContext from '../context/AuthContext'
 import { Col, Row, Button } from 'react-bootstrap'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import ImageComponent from '../components/ImageComponent'
+import { useGetCompanyQuery } from '../api/Company'
+import { useUser } from '../lib/Auth'
+import LoadingComponent from '../components/LoadingComponent'
 
 const CompanyInfo = () => {
-  const { user, authTokens } = useContext(AuthContext)
+  const user = useUser({})
 
   const { companyName } = useParams()
-  const [company, setCompany] = useState([])
 
-  const navigate = useNavigate()
+  const { isLoading, isError, data: company, error } = useGetCompanyQuery({ name: companyName })
 
-  useEffect(() => {
-    async function getCompanyInfo () {
-      const config = {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authTokens.access
-        }
-      }
-
-      let response = ''
-
-      try {
-        response = await fetch('/api/company/patch_retrieve/' + companyName + '/', config)
-      } catch (error) {
-        alert('Server is not working')
-        return
-      }
-
-      const result = await response.json()
-
-      if (response.status !== 200) {
-        alert('Action not allowed')
-        navigate('/')
-      } else {
-        setCompany(result)
-      }
-    }
-    getCompanyInfo()
-  }, [navigate, companyName, authTokens])
-
-  const isAdmin = () => {
-    return user.groups.map(pair => (pair.name === 'Administrator'))
+  const isAdmin = (user) => {
+    if (user.isLoading || user.isError || !user.data) return false
+    return user.data.groups.map(pair => (pair.name === 'Administrator'))
   }
 
-  return (
-    <Container>
-      <h3 className='text-center'>Company information</h3>
-      <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
-        <Row className='text-secondary'><p>Company website</p></Row>
-        <Row><p>{company.website}</p></Row>
+  if (isLoading) {
+    return (
+      <LoadingComponent />
+    )
+  } else if (isError) {
+    return (
+      <h2 className="text-center">An error has occurred: { error.message }</h2>
+    )
+  } else {
+    return (
+      <Container>
+        <h3 className='text-center'>Company information</h3>
+        <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
+          <Row className='text-secondary'><p>Company website</p></Row>
+          <Row><p>{company.website}</p></Row>
 
-        <Row className='text-secondary'><p>Company name</p></Row>
-        <Row><p>{company.name}</p></Row>
+          <Row className='text-secondary'><p>Company name</p></Row>
+          <Row><p>{company.name}</p></Row>
 
-        <Row className='text-secondary'><p>Company jurisdiction</p></Row>
-        <Row><p>{company.jurisdiction}</p></Row>
+          <Row className='text-secondary'><p>Company jurisdiction</p></Row>
+          <Row><p>{company.jurisdiction}</p></Row>
 
-        {
-          // If logo is set
-          company.logo
-            ? <ImageComponent src={company.logo} text={'Company logo'}/>
-            : ' '
-        }
+          {
+            // If logo is set
+            company.logo
+              ? <ImageComponent src={company.logo} text={'Company logo'}/>
+              : ' '
+          }
 
-        {
-          isAdmin()
-            ? <Row>
-            <Col>
-              <Button
-                variant='primary'
-                as={Link}
-                to={'/account/company/edit/' + companyName}
-            >Edit</Button>
-            </Col>
-          </Row>
-            : ' '
-        }
+          {
+            isAdmin(user)
+              ? <Row>
+                  <Col>
+                    <Button
+                      variant='primary'
+                      as={Link}
+                      to={'/account/company/edit/' + companyName}
+                    >Edit</Button>
+                  </Col>
+                </Row>
+              : ' '
+          }
 
-      </Col>
-    </Container>
-  )
+        </Col>
+      </Container>
+    )
+  }
 }
 
 export default CompanyInfo

@@ -2,46 +2,16 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useState, useEffect, useContext } from 'react'
+import React from 'react'
 import ListItem from '../components/ListItem'
 import { Col, Container, Form, Row, Button } from 'react-bootstrap'
-import AuthContext from '../context/AuthContext'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useSearchCompanyOriginReportsQuery } from '../api/OriginReport'
+import LoadingComponent from '../components/LoadingComponent'
 
 const CompanyOriginReport = () => {
-  const [originReports, setOriginReports] = useState([])
-  const { user, authTokens } = useContext(AuthContext)
-
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    async function getOriginReports () {
-      const config = {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authTokens.access
-        }
-      }
-      let response = ''
-      try {
-        response = await fetch('/api/origin_report/get_by_company/', config)
-      } catch (error) {
-        alert('Server is not responding')
-        return
-      }
-      const data = await response.json()
-
-      if (response.status === 200) {
-        setOriginReports(data)
-      } else {
-        alert('Not authenticated or permission denied')
-        navigate('/')
-      }
-    }
-    getOriginReports()
-  }, [user, authTokens, navigate])
+  const [query, setQuery] = React.useState({})
+  const { isLoading, isError, data: originReports, error } = useSearchCompanyOriginReportsQuery({ query })
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -55,29 +25,32 @@ const CompanyOriginReport = () => {
       }
     })
 
-    let query = '?'
+    const q = {}
     Object.keys(params).forEach(function (param) {
       if (params[param]) {
-        query += param + '=' + params[param] + '&'
+        q[param] = params[param]
       }
     })
-    const config = {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
-      }
-    }
-    let response = ''
-    try {
-      response = await fetch('/api/origin_report/get/' + query, config)
-    } catch (error) {
-      alert('Server is not responding')
-      return
-    }
-    const result = await response.json()
-    setOriginReports(result)
+    setQuery(q)
+  }
+
+  let results
+  if (isLoading) {
+    results = (
+      <LoadingComponent />
+    )
+  } else if (isError) {
+    results = <Row><h2 className="text-center">An error has occurred: { error.message }</h2></Row>
+  } else if (originReports.length === 0) {
+    results = <Row><h2 className="text-center">No origin reports found...</h2></Row>
+  } else {
+    results = (
+      <Row className="justify-content-md-center">
+        {originReports.map((originReport, index) => (
+          <ListItem key={index} originReport={originReport}/>
+        ))}
+      </Row>
+    )
   }
 
   return (
@@ -122,11 +95,7 @@ const CompanyOriginReport = () => {
           </Container>
         </Col>
         <Col>
-          <Row className="justify-content-md-center">
-            {originReports.map((originReport, index) => (
-              <ListItem key={index} originReport={originReport}/>
-            ))}
-          </Row>
+          {results}
         </Col>
       </Row>
     </Container>
