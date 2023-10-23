@@ -2,17 +2,16 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext } from 'react'
+import React from 'react'
 import { Button, Form } from 'react-bootstrap'
-import AuthContext from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { useCreateProductManager } from '../api/ProductManager'
 
 const PMForm = () => {
-  // authTokens are for sending request to the backend
-  // updateUser for updating current user localStorage
-  const { authTokens } = useContext(AuthContext)
   // If successfully edited, go to account/pm to prevent multiple editing
   const navigate = useNavigate()
+
+  const createProductManager = useCreateProductManager()
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -32,41 +31,24 @@ const PMForm = () => {
       }
     })
 
-    // Config for POST request
-    const config = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
+    createProductManager.mutate(data, {
+      onSuccess: (data, variables, context) => {
+        alert('Successfully created')
+        navigate('/account/pm')
       },
-      body: JSON.stringify(data)
-    }
-
-    let response = ''
-    try {
-      response = await fetch('/api/pm/create/', config)
-    } catch (error) {
-      alert('Server is not working')
-      return
-    }
-
-    const result = await response.json()
-
-    if (response.status === 201) {
-      alert('Successfully created')
-      navigate('/account/pm')
-    } else if (response.status === 400) {
-      let message = 'Invalid input data:'
-      for (const invalidElement in result) {
-        event.target[invalidElement].style = 'border-color: red'
-
-        message += '\n' + invalidElement + ': ' + result[invalidElement]
+      onError: (error, variables, context) => {
+        if (error.request?.status === 400) {
+          let message = 'Invalid input data:'
+          for (const invalidElement in error.response.data) {
+            event.target[invalidElement].style = 'border-color: red'
+            message += '\n' + invalidElement + ': ' + error.response.data[invalidElement]
+          }
+          alert(message)
+        } else {
+          alert('Not authenticated or permission denied')
+        }
       }
-      alert(message)
-    } else {
-      alert('Not authenticated or permission denied')
-    }
+    })
   }
 
   return (

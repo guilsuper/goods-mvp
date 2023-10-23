@@ -2,52 +2,21 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useState, useEffect } from 'react'
+import React from 'react'
 import { Button, Form } from 'react-bootstrap'
-import AuthContext from '../context/AuthContext'
 import { useNavigate, useParams } from 'react-router-dom'
 import FormContainer from '../utils/FormContainer'
+import { useGetProductManagerQuery, useEditProductManager } from '../api/ProductManager'
+import LoadingComponent from './LoadingComponent'
 
 const EditPMForm = () => {
-  // authTokens are for sending request to the backend
-  // updateUser for updating current user localStorage
-  // user is needed to display local storage information
-  const { authTokens } = useContext(AuthContext)
   const { pmEmail } = useParams()
-  const [pm, setPM] = useState([])
   // If successfully edited, go to home page to prevent multiple editing
   const navigate = useNavigate()
 
-  useEffect(() => {
-    async function getPMInfo () {
-      const config = {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + authTokens.access
-        }
-      }
+  const { isLoading, isError, data: pm, error } = useGetProductManagerQuery({ email: pmEmail })
 
-      let response = ''
-      try {
-        response = await fetch('/api/pm/patch_delete_retrieve/' + pmEmail + '/', config)
-      } catch (error) {
-        alert('Server is not working')
-        return
-      }
-
-      const result = await response.json()
-
-      if (response.status !== 200) {
-        alert('Action not allowed')
-        navigate('/')
-      } else {
-        setPM(result)
-      }
-    }
-    getPMInfo()
-  }, [authTokens, navigate, pmEmail])
+  const editProductManager = useEditProductManager()
 
   const submitHandler = async (event) => {
     event.preventDefault()
@@ -69,72 +38,66 @@ const EditPMForm = () => {
       }
     })
 
-    // Config for PATCH request
-    const config = {
-      method: 'PATCH',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
+    editProductManager.mutate({ email: pmEmail, update: data }, {
+      onSuccess: (data, variables, context) => {
+        alert('Successfully edited')
+        navigate('/account/pm')
       },
-      body: JSON.stringify(data)
-    }
+      onError: (error, variables, context) => {
+        if (error.request?.status === 400) {
+          let message = 'Invalid input data:'
+          for (const invalidElement in error.response.data) {
+            event.target[invalidElement].style = 'border-color: red'
 
-    let response = ''
-    try {
-      response = await fetch('/api/pm/patch_delete_retrieve/' + pmEmail + '/', config)
-    } catch (error) {
-      alert('Server is not responding')
-      return
-    }
-
-    const result = await response.json()
-
-    if (response.status === 200) {
-      alert('Successfully edited')
-      navigate('/account/pm')
-    } else if (response.status === 400) {
-      let message = 'Invalid input data:'
-      for (const invalidElement in result) {
-        event.target[invalidElement].style = 'border-color: red'
-
-        message += '\n' + invalidElement + ': ' + result[invalidElement]
+            message += '\n' + invalidElement + ': ' + error.response.data[invalidElement]
+          }
+          alert(message)
+        } else {
+          alert('Not authenticated or permission denied')
+        }
       }
-      alert(message)
-    } else {
-      alert('Not authenticated or permission denied')
-    }
+    })
   }
 
-  return (
-    <FormContainer>
-      <Form onSubmit={submitHandler}>
-      <Form.Group className="mb-3" controlId="email">
+  if (isLoading) {
+    return (
+      <LoadingComponent />
+    )
+  } else if (isError) {
+    return (
+      <h2 className="text-center">An error has occurred: { error.message }</h2>
+    )
+  } else {
+    return (
+      <FormContainer>
+        <Form onSubmit={submitHandler}>
+          <Form.Group className="mb-3" controlId="email">
             <Form.Label>Email</Form.Label>
             <Form.Control type="email" placeholder={pm.email} />
-        </Form.Group>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="password">
+          <Form.Group className="mb-3" controlId="password">
             <Form.Label>Password</Form.Label>
             <Form.Control type="password" placeholder="Enter password" />
-        </Form.Group>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="first_name">
+          <Form.Group className="mb-3" controlId="first_name">
             <Form.Label>First name</Form.Label>
             <Form.Control type="text" placeholder={pm.first_name} />
-        </Form.Group>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="last_name">
+          <Form.Group className="mb-3" controlId="last_name">
             <Form.Label>Last name</Form.Label>
             <Form.Control type="text" placeholder={pm.last_name} />
-        </Form.Group>
+          </Form.Group>
 
-        <Button className="mb-3" variant="primary" type="submit">
+          <Button className="mb-3" variant="primary" type="submit">
             Edit
-        </Button>
-      </Form>
-    </FormContainer>
-  )
+          </Button>
+        </Form>
+      </FormContainer>
+    )
+  }
 }
 
 export default EditPMForm

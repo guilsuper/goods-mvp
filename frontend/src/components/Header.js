@@ -2,16 +2,32 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { Navbar, Nav, NavLink, Button, ButtonGroup, Dropdown, DropdownButton } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import AuthContext from '../context/AuthContext'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { supportedLngs } from '../i18n'
+import { useUser, useLogout } from '../lib/Auth'
 const langmap = require('langmap')
 
 const Header = () => {
-  const { authTokens, logoutUser, user } = useContext(AuthContext)
+  const navigate = useNavigate()
+  const user = useUser({
+    onSuccess: (data, variables, context) => {
+    },
+    onError: (error, variables, context) => {
+      if (error.request?.status === 401) {
+        logout.mutate({})
+      }
+    }
+  })
+  const logout = useLogout({
+    onSuccess: (data, variables, context) => {
+      navigate('/sign-in')
+    },
+    onError: (_, variables, context) => {
+    }
+  })
 
   const { t, i18n } = useTranslation()
 
@@ -26,7 +42,7 @@ const Header = () => {
 
   const authButton = () => {
     // If authorize display the dropdown menu, else -- sign in and sign up buttons
-    if (authTokens === null) {
+    if (user.isLoading || user.isError || !user.data) {
       return (
         <ButtonGroup className="me-3">
           <Button variant="dark" as={Link} to="/sign-in">{ t('common.sign-in') }</Button>
@@ -38,20 +54,21 @@ const Header = () => {
         <DropdownButton
           as={ButtonGroup}
           variant="success"
-          title={user.email}
+          title={user.data?.email}
           align={isToggle ? 'start' : 'end'}
           className="me-3"
         >
           <Dropdown.Item eventKey="accountInfo" href="/account/info">{ t('navigation.profile-settings') }</Dropdown.Item>
-          <Dropdown.Item eventKey="signOut" onClick={logoutUser}>{ t('common.sign-out') }</Dropdown.Item>
+          <Dropdown.Item eventKey="signOut" disabled={logout.isLoading} onClick={() => logout.mutate({})}>{ t('common.sign-out') }</Dropdown.Item>
 
         </DropdownButton>
       )
     }
   }
 
-  const isAdmin = () => {
-    return user.groups.map(pair => (pair.name === 'Administrator'))
+  const isAdmin = (user) => {
+    if (user.isLoading || user.isError || !user.data) return false
+    return user.data?.groups.map(pair => (pair.name === 'Administrator'))
   }
 
   const languageButton = () => {
@@ -96,8 +113,8 @@ const Header = () => {
         <Nav>
           <NavLink eventKey="home" as={Link} to="/">{ t('navigation.home') }</NavLink>
           <NavLink eventKey="originReport" as={Link} to="/origin_report">{ t('common.origin-report_other') }</NavLink>
-          {user ? <NavLink eventKey="ourOriginReport" as={Link} to="/account/origin_report">{ t('navigation.our-origin-reports') }</NavLink> : ' '}
-          { user && isAdmin()
+          {user.data ? <NavLink eventKey="ourOriginReport" as={Link} to="/account/origin_report">{ t('navigation.our-origin-reports') }</NavLink> : ' '}
+          { isAdmin(user)
             ? <NavLink eventKey="accountPM" as={Link} to="/account/pm">
                 { t('navigation.create-product-owner') }
           </NavLink>

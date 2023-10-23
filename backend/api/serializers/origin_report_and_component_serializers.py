@@ -1,5 +1,7 @@
 # Copyright 2023 Free World Certified -- all rights reserved.
 """Module with serializers."""
+import json
+
 from api.models import Country
 from api.models import ORIGIN_REPORT_ID_TYPES
 from api.models import ORIGIN_REPORT_STATES
@@ -8,6 +10,7 @@ from api.models import SOURCE_COMPONENT_TYPE
 from api.models import SourceComponent
 from api.serializers import CompanyRetrieveSerializer
 from api.serializers import CountrySerializer
+from django.db import transaction
 from rest_framework.serializers import BooleanField
 from rest_framework.serializers import CharField
 from rest_framework.serializers import ChoiceField
@@ -228,6 +231,7 @@ class OriginReportCreateGetSerializer(ModelSerializer):
 
         return super().validate(attrs)
 
+    @transaction.atomic
     def create(self, validated_data):
         """Overwritten create method for setting up the OriginReport info."""
         # Setup state
@@ -290,6 +294,7 @@ class OriginReportDraftSerializer(ModelSerializer):
             "thumbnail_url",
         )
 
+    @transaction.atomic
     def create(self, validated_data):
         """Overwritten create method for setting up the OriginReport info."""
         # Setup state
@@ -324,6 +329,63 @@ class OriginReportDraftSerializer(ModelSerializer):
                 SourceComponent.objects.create(parent_origin_report=origin_report, **component)
 
         return origin_report
+
+    @transaction.atomic
+    def update(self, origin_report, validated_data):
+        """Update origin report method."""
+        if "components" not in self.initial_data:
+            return super().update(origin_report, validated_data)
+
+        # Components are list of string that looks like a dictionaries
+        components_data = dict(**self.initial_data)["components"]
+
+        # In case it will be a list, that contains string that looks like
+        # list of dictionaries (data from the frontend)
+        # Or a list of dictionaries (from the django.test.client.encode_multipart in tests)
+        try:
+            components_data = json.loads(components_data[0])
+        except json.decoder.JSONDecodeError:
+            components_data = [
+                component.replace("'", '"')
+                for component in components_data
+            ]
+            components_data = [
+                json.loads(component)
+                for component in components_data
+            ]
+
+        # Validate componetns data
+        component_serializer = SourceComponentDraftSerializer(data=components_data, many=True)
+        if not component_serializer.is_valid():
+            raise ValidationError(component_serializer.errors)
+
+        # Get validated data
+        components_data = [dict(**component) for component in component_serializer.validated_data]
+        # Replace all components
+        SourceComponent.objects.filter(
+            parent_origin_report=origin_report,
+        ).all().delete()
+
+        # Create each component
+        for component in components_data:
+            if "component_type_str" in component:
+                component["component_type"] = component.pop("component_type_str")
+
+        components_data = [
+            SourceComponent(parent_origin_report=origin_report, **component)
+            for component in components_data
+        ]
+
+        SourceComponent.objects.bulk_create(components_data)
+
+        origin_report.cogs = sum([
+            component.fraction_cogs
+            for component in components_data
+        ])
+        # To save COGS update
+        origin_report.save()
+
+        return super().update(origin_report, validated_data)
 
     def get_thumbnail_url(self, instance: OriginReport) -> str | None:
         """Return relative url for thumbnail.

@@ -2,46 +2,38 @@
  * Copyright 2023 Free World Certified -- all rights reserved.
  */
 
-import React, { useContext } from 'react'
+import React from 'react'
 import Container from 'react-bootstrap/Container'
-import AuthContext from '../context/AuthContext'
 import { Col, Row, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useDeleteAccount } from '../api/Account'
+import { useUser, useLogout } from '../lib/Auth'
 
 const AccountInfo = () => {
-  const { user, logoutUser, authTokens } = useContext(AuthContext)
-  const deleteAccount = async (event) => {
+  const user = useUser({})
+  const logout = useLogout({})
+
+  const deleteAccount = useDeleteAccount()
+
+  const actionDeleteAccount = async (event) => {
     if (!window.confirm('Are you sure you want to permanently delete your account?')) {
       return
     }
 
-    const config = {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + authTokens.access
+    deleteAccount.mutate({}, {
+      onSuccess: (data, variables, context) => {
+        alert('Successfully deleted')
+        logout.mutate({})
+      },
+      onError: (_, variables, context) => {
+        alert('Wasn\'t deleted or permission denied')
       }
-    }
-
-    let response = ''
-    try {
-      response = await fetch('/api/self/patch_delete_retrieve/', config)
-    } catch (error) {
-      alert('Server is not working')
-      return
-    }
-
-    if (response.status === 204) {
-      alert('Successfully deleted')
-      logoutUser()
-    } else {
-      alert('Wasn\'t deleted or permission denied')
-    }
+    })
   }
 
-  const isAdmin = () => {
-    return user.groups.map(pair => (pair.name === 'Administrator'))
+  const isAdmin = (user) => {
+    if (user.isLoading || user.isError || !user.data) return false
+    return user.data?.groups.map(pair => (pair.name === 'Administrator'))
   }
 
   return (
@@ -49,25 +41,25 @@ const AccountInfo = () => {
       <h3 className='text-center'>User information</h3>
       <Col className='p-5 mb-5 mx-auto w-75 rounded shadow'>
         <Row className='text-secondary'><p>User First Name</p></Row>
-        <Row><p>{user.first_name}</p></Row>
+        <Row><p>{user.data?.first_name}</p></Row>
         <Row className='text-secondary'><p>User Last Name</p></Row>
-        <Row><p>{user.last_name}</p></Row>
+        <Row><p>{user.data?.last_name}</p></Row>
         <Row className='text-secondary'><p>Email</p></Row>
-        <Row><p>{user.email}</p></Row>
+        <Row><p>{user.data?.email}</p></Row>
         {
-          isAdmin()
+          isAdmin(user)
             ? <Row>
             <Col>
               <Button variant='primary' as={Link} to='/account/edit'>Edit</Button>
             </Col>
             <Col>
-              <Button variant='danger' onClick={deleteAccount}>Delete account</Button>
+              <Button variant='danger' onClick={actionDeleteAccount}>Delete account</Button>
             </Col>
             <Col>
               <Button
                 variant='primary'
                 as={Link}
-                to={'/account/company/info/' + user.company.slug}
+                to={'/account/company/info/' + user.data?.company.slug}
               >Company info</Button>
             </Col>
           </Row>
