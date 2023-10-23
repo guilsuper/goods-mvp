@@ -35,6 +35,10 @@ def driver():
         )
     else:
         driver = webdriver.Chrome(options=options)
+
+    # default window size is 800x600; set this to 1600x1200
+    driver.set_window_size(1600, 1200)
+
     yield driver
     driver.quit()
 
