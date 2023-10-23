@@ -25,6 +25,14 @@ const PMItem = ({ PM }) => {
       <Row>
         {'Email: ' + PM.email}
       </Row>
+      { PM.first_name
+        ? <Row>{'First Name: ' + PM.first_name}</Row>
+        : ' '
+      }
+      { PM.last_name
+        ? <Row>{'Last Name: ' + PM.last_name}</Row>
+        : ' '
+      }
     </Col>
   )
 }
